@@ -26,16 +26,19 @@ class LaratrustSeeder extends Seeder
             $this->command->line('');
         } else {
             // create new teams
-            foreach ($teams as $key) {
-                DB::table('teams')->insertOrIgnore([
-                    'name' => $key,
-                    'display_name' => ucwords(str_replace('_', ' ', $key)),
-                    'description' => ucwords(str_replace('_', ' ', $key)),
-                    'created_at' => now(),
-                    'updated_at' => now(),
+            foreach ($teams as $team_key) {
+                $team = Team::create([
+                    'name' => $team_key,
+                    'display_name' => ucwords(str_replace('_', ' ', $team_key)),
+                    'description' => ucwords(str_replace('_', ' ', $team_key)),
+
                 ]);
+
+                $this->command->info('Creating team '. strtoupper($team->display_name));
             }
         }
+
+        $this->command->line('');
 
         $config = Config::get('laratrust_seeder.roles_structure');
 
@@ -57,7 +60,7 @@ class LaratrustSeeder extends Seeder
             ]);
             $permissions = [];
 
-            $this->command->info('Creating Role '. strtoupper($key));
+            $this->command->info('Creating Role '. strtoupper($role->display_name));
 
             // Reading role permission modules
             foreach ($modules as $module => $value) {

@@ -15,7 +15,8 @@ return [
      * Added to allow a seeding of team names as well
      */
     'teams_list' => [
-        'elliptic_works',
+        'elliptic_works_llc',
+        'pool_service_company_llc',
     ],
 
     'roles_structure' => [
