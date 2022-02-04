@@ -45,20 +45,43 @@
                                 name="password_confirmation" required />
             </div>
 
-            {{--                Select Option Roll Type --}}
-            <div class="mt-4 hidden">
-                <x-label for="role_id" value="{{__('Register as:')}}" />
-                <select name="role_id" class="block mt-1 w-full border-gray-300
+            {{--                Select Option Organization --}}
+            <div class="mt-4 ">
+                <x-label for="team_id" value="{{__('Organization:')}}" />
+                <select name="team_id" class="block mt-1 w-full border-gray-300
                 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
                 rounded-md shadow-sm">
-                    {{$roles = \App\Models\Role::all()}}
-                    @foreach($roles as $role)
-                        <option value="{{$role->id}}">{{$role->display_name}}</option>
+                    {{$organizations = \App\Models\Team::all()}}
+{{--                    {{$organization = \App\Models\Team::where('name','elliptic_works_llc')->first()}}--}}
+{{--                    <option selected value="{{$organization->id}}">{{$organization->display_name}}</option>--}}
+                    @foreach($organizations as $organization)
+                        @if($organization->name == 'elliptic_works_llc')
+                            <option selected value="{{$organization->id}}">{{$organization->display_name}}</option>
+                        @else
+                            <option disabled value="{{$organization->id}}">{{$organization->display_name}}</option>
+                        @endif
                     @endforeach
                 </select>
             </div>
 
-            <div class="flex items-center justify-end mt-4">
+            {{--                Select Option Roll Type --}}
+            <div class="mt-4 ">
+                <x-label for="role_id" value="{{__('Register as:')}}" />
+                <select name="role_id" class="block mt-1 w-full border-gray-300
+            focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
+            rounded-md shadow-sm">
+                    {{--                    {{$roles = \App\Models\Role::all()}}--}}
+                    {{$userRole = \App\Models\Role::where('name','user')->first()}}
+                    <option selected value="{{$userRole->id}}">{{$userRole->display_name}}</option>
+
+                    {{--                @foreach($roles as $role)--}}
+                    {{--                        <option value="{{$role->id}}">{{$role->display_name}}</option>--}}
+                    {{--                    @endforeach--}}
+                </select>
+            </div>
+
+
+                <div class="flex items-center justify-end mt-4">
                 <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{ route('login') }}">
                     {{ __('Already registered?') }}
                 </a>
