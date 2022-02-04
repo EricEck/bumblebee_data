@@ -6,11 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Barryvdh\Debugbar\Facades\Debugbar;
-use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use App\Models\Team;
 use App\Models\Role;
@@ -49,12 +49,18 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $user->remember_token = Str::uuid();
+        $user->save();
+
+        // attach role and team to user
         $team = Team::find($request->team_id);
         $role = Role::find($request->role_id);
+        $user->attachRole($role, $team);
 
         event(new Registered($user));
+        Auth::login($user);
 
-        $user->attachRole($role, $team);
+        Debugbar::info('Registered: '.$user);
 
         return redirect(RouteServiceProvider::HOME);
     }
