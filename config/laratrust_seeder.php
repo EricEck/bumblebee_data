@@ -11,6 +11,13 @@ return [
      */
     'truncate_tables' => true,
 
+    /**
+     * Added to allow a seeding of team names as well
+     */
+    'teams_list' => [
+        'elliptic_works',
+    ],
+
     'roles_structure' => [
         'elliptic_admin' => [
 

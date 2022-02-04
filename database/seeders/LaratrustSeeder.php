@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Team;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -17,6 +18,24 @@ class LaratrustSeeder extends Seeder
     public function run()
     {
         $this->truncateLaratrustTables();
+
+        // added the teams list configuration
+        $teams = Config::get('laratrust_seeder.teams_list');
+        if($teams === null){
+            $this->command->info('No teams have been published');
+            $this->command->line('');
+        } else {
+            // create new teams
+            foreach ($teams as $key) {
+                DB::table('teams')->insertOrIgnore([
+                    'name' => $key,
+                    'display_name' => ucwords(str_replace('_', ' ', $key)),
+                    'description' => ucwords(str_replace('_', ' ', $key)),
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ]);
+            }
+        }
 
         $config = Config::get('laratrust_seeder.roles_structure');
 
@@ -91,7 +110,7 @@ class LaratrustSeeder extends Seeder
         if (Config::get('laratrust_seeder.truncate_tables')) {
             DB::table('roles')->truncate();
             DB::table('permissions')->truncate();
-            
+
             if (Config::get('laratrust_seeder.create_users')) {
                 $usersTable = (new \App\Models\User)->getTable();
                 DB::table($usersTable)->truncate();
