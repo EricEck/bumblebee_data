@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use Barryvdh\Debugbar\Facades\Debugbar;
+use Barryvdh\Debugbar\Middleware\DebugbarEnabled;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use App\Models\Team;
+use App\Models\Role;
 
 class RegisteredUserController extends Controller
 {
@@ -45,9 +49,12 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
+        $team = Team::find($request->team_id);
+        $role = Role::find($request->role_id);
+
         event(new Registered($user));
 
-        Auth::login($user);
+        $user->attachRole($role, $team);
 
         return redirect(RouteServiceProvider::HOME);
     }

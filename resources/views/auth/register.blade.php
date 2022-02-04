@@ -52,8 +52,6 @@
                 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
                 rounded-md shadow-sm">
                     {{$organizations = \App\Models\Team::all()}}
-{{--                    {{$organization = \App\Models\Team::where('name','elliptic_works_llc')->first()}}--}}
-{{--                    <option selected value="{{$organization->id}}">{{$organization->display_name}}</option>--}}
                     @foreach($organizations as $organization)
                         @if($organization->name == 'elliptic_works_llc')
                             <option selected value="{{$organization->id}}">{{$organization->display_name}}</option>
@@ -70,13 +68,8 @@
                 <select name="role_id" class="block mt-1 w-full border-gray-300
             focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50
             rounded-md shadow-sm">
-                    {{--                    {{$roles = \App\Models\Role::all()}}--}}
                     {{$userRole = \App\Models\Role::where('name','user')->first()}}
                     <option selected value="{{$userRole->id}}">{{$userRole->display_name}}</option>
-
-                    {{--                @foreach($roles as $role)--}}
-                    {{--                        <option value="{{$role->id}}">{{$role->display_name}}</option>--}}
-                    {{--                    @endforeach--}}
                 </select>
             </div>
 
