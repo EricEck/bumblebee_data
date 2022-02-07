@@ -2,6 +2,7 @@
 namespace App\Traits;
 
 use App\Models\Team;
+use App\Models\Role;
 use Illuminate\Support\Facades\DB;
 
 trait UserTeam {
@@ -21,6 +22,25 @@ trait UserTeam {
             $teams[] = Team::find($userRole->team_id);
         }
         return $teams;
+    }
+
+    /**
+     * Return a comma seperated string of user's roles
+     * @return string
+     */
+    public function getUserRoleNamesWithCommas(){
+        $roleNames = $this->getRoles();
+        $roleString = "";
+        $count = 0;
+        foreach ($roleNames as $roleName) {
+            $roleDisplay =  Role::where('name', $roleName)->first()->display_name;
+            $roleString .= $roleDisplay;
+            $count++;
+            if($count < count($roleNames)){
+                $roleString .= ", ";
+            }
+        }
+        return $roleString;
     }
 
     /**

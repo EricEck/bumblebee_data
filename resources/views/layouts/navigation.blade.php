@@ -15,12 +15,15 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
+                        {{ __('Profile') }}
+                    </x-nav-link>
                 </div>
             </div>
 
             <!-- Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
-                <x-dropdown align="right" width="48">
+                <x-dropdown align="right" width="100"> <!-- widened to allow for more data -->
                     <x-slot name="trigger">
                         <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                             <div>{{ Auth::user()->name }}</div>
@@ -36,11 +39,24 @@
                     <x-slot name="content">
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
-                            @csrf
-                            <x-dropdown-nolink>Hello</x-dropdown-nolink>
 
+                            <x-dropdown-nolink>
+                                {{__(Auth::user()->email)}}
+                            </x-dropdown-nolink>
+                            <x-dropdown-nolink>{{__(Auth::user()->getUserTeam()->display_name)}}
+                            </x-dropdown-nolink>
+                            @php
+                                $roles = Auth::user()->getRoles();
+                                $roleList = array();
+                            foreach ($roles as $role){
+                                $roleList[] = App\Models\Role::where('name',$role)->first()->display_name;
+                            }
+                            @endphp
+                            @foreach($roleList as $role)
+                                <x-dropdown-nolink>{{"  ".__($role)}}</x-dropdown-nolink>
+                            @endforeach
 
-
+                            <hr>
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
@@ -70,8 +86,13 @@
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
         </div>
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
+                {{ __('Profile') }}
+            </x-responsive-nav-link>
+        </div>
 
-        <!-- Responsive Settings Options -->
+        <!-- Responsive Settings Menu Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="px-4">
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
@@ -83,6 +104,11 @@
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
 
+                    <x-dropdown-nolink>{{__(Auth::user()->getUserTeam()->display_name)}}</x-dropdown-nolink>
+                    @foreach($roleList as $role)
+                        <x-dropdown-nolink>{{"  ".__($role)}}</x-dropdown-nolink>
+                    @endforeach
+                    <hr>
                     <x-responsive-nav-link :href="route('logout')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
