@@ -12,7 +12,7 @@
                     @php
 
                         $user = Auth()->user();
-                        Debugbar::info($user);
+                        Debugbar::info(Auth::user()->getUserTeam()->display_name);
 
                     @endphp
                     You're logged in!

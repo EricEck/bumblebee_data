@@ -37,6 +37,9 @@
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
+                            <x-dropdown-nolink>Hello</x-dropdown-nolink>
+
+
 
                             <x-dropdown-link :href="route('logout')"
                                     onclick="event.preventDefault();
