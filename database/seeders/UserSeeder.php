@@ -19,9 +19,9 @@ class UserSeeder extends Seeder
         User::truncate();
 
         $this->makeUser("admin", "admin@admin.com", "elliptic",["elliptic_admin"]);
-        $this->makeUser("Eric Alan Eckstein", "eric.alan.eckstein@gmail.com", "elliptic", ["elliptic_admin"]);
+        $this->makeUser("Eric Alan Eckstein", "eric.alan.eckstein@gmail.com", "elliptic", ["elliptic_admin", "elliptic_member"]);
         $this->makeUser("Tom Sowers", "tomsowers2@gmail.com", "bumblebee", ["elliptic_member"]);
-        $this->makeUser("Eric Eckstein", "eeckstein@ellipticworks.com", "elliptic", ["elliptic_member"]);
+        $this->makeUser("Eric Eckstein", "eeckstein@ellipticworks.com", "elliptic", ["elliptic_admin", "elliptic_member"]);
         $this->makeUser("Sean Walsh", "sean@ellipticworks.com", "elliptic", ["elliptic_member"]);
         $this->makeUser("Stefan Mangold", "smangold@ellipticworks.com", "elliptic", ["elliptic_member"]);
         $this->makeUser("John Tortorella", "jt@ellipticworks.com", "elliptic", ["elliptic_member"]);
