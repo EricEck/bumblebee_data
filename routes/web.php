@@ -13,6 +13,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Remove this when done with power grid
+Route::view('/powergrid', 'powergrid-demo');
+
 Route::get('/', function () {
     return view('welcome');
 });
