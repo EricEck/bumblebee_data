@@ -12,21 +12,45 @@ return [
     'truncate_tables' => true,
 
     'roles_structure' => [
-        'superadministrator' => [
+        'elliptic_admin' => [
+
+            'bumblebee_units' =>  'c,r,u,d',
+            'bumblebee_data' =>  'c,r,u,d',
+
+            'pool_clients' => 'c,r,u,d',
+            'pool_client_locations' => 'c,r,u,d',
+            'pool_client_bodies_of_water' => 'c,r,u,d',
+
+            'elliptic_admin' => 'c,r,u,d',
+            'elliptic_member' => 'c,r,u,d',
+
+            'service_owner' => 'c,r,u,d',
+            'service_manager' => 'c,r,u,d',
+            'service_supervisor' => 'c,r,u,d',
+            'service_scheduler' => 'c,r,u,d',
+            'service_technician' => 'c,r,u,d',
+
+            'laratrust_panel' => 'c,r,u,d',
+
             'users' => 'c,r,u,d',
-            'payments' => 'c,r,u,d',
-            'profile' => 'r,u'
+            'profile' => 'r,u',
         ],
-        'administrator' => [
+        'elliptic_member' => [
+            'elliptic_member' => 'c,r,u,d',
+
+            'bumblebee_units' =>  'c,r,u,d',
+            'bumblebee_data' =>  'c,r,u,d',
+
             'users' => 'c,r,u,d',
-            'profile' => 'r,u'
+
+            'profile' => 'r,u',
+        ],
+        'service_owner' => [
+            'profile' => 'r,u',
         ],
         'user' => [
             'profile' => 'r,u',
         ],
-        'role_name' => [
-            'module_1_name' => 'c,r,u,d',
-        ]
     ],
 
     'permissions_map' => [
