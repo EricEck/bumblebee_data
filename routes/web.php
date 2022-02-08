@@ -17,6 +17,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/token', function (Request $request) {
+//    $token = $request->session()->token();
+//    Debugbar::info($token);
+    Debugbar::info(csrf_token());
+    return view('welcome');
+
+});
+
+Route::group(['middleware' => ['auth']], function (){
+
+    Debugbar::info('router');
+    Route::get('/profile', 'App\Http\Controllers\DashboardController@profile')
+        ->name('profile');
+
+
+});
+
+
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
