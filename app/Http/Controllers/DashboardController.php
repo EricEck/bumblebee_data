@@ -9,14 +9,25 @@ class DashboardController extends Controller
 {
 
     /**
+     * Switch to Dashboard view
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function dashboard(Request $request){
+        \Debugbar::info('DashboardController@Index');
+        \Debugbar::info(csrf_token());
+        return view('dashboard');
+    }
+
+    /**
      * Switch to the Profile view
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function profile(Request $request){
-        \Debugbar::info('DashboardController@profile');
-        \Debugbar::info($request->session()->token());
-        \Debugbar::info(csrf_token());
+//        \Debugbar::info('DashboardController@profile');
+//        \Debugbar::info($request->session()->token());
+//        \Debugbar::info(csrf_token());
 
         return view('profile');
     }

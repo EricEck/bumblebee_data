@@ -25,18 +25,29 @@ Route::get('/token', function (Request $request) {
 
 });
 
+/**
+ * Only Authorized Users
+ */
 Route::group(['middleware' => ['auth']], function (){
 
-    Debugbar::info('router');
-    Route::get('/profile', 'App\Http\Controllers\DashboardController@profile')
+    // throws a warning on Str::
+    Route::get('/profile',
+        [   'middleware'    => ['permission:profile-read'],
+            'uses'          => 'App\Http\Controllers\DashboardController@profile'])
         ->name('profile');
+
+    Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
+        ->name('dashboard');
+
+//    Route::get('/profile', 'App\Http\Controllers\DashboardController@profile')
+//        ->name('profile');
 
 
 });
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth'])->name('dashboard');
 
 require __DIR__.'/auth.php';
