@@ -400,7 +400,7 @@ Ensure the default browser behavior of the `hidden` attribute.
 [type='text']:focus, [type='email']:focus, [type='url']:focus, [type='password']:focus, [type='number']:focus, [type='date']:focus, [type='datetime-local']:focus, [type='month']:focus, [type='search']:focus, [type='tel']:focus, [type='time']:focus, [type='week']:focus, [multiple]:focus, textarea:focus, select:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-  --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+  /*--tw-ring-inset: var(--tw-empty,!*!*! !*!*!);*/
   --tw-ring-offset-width: 0px;
   --tw-ring-offset-color: #fff;
   --tw-ring-color: #2563eb;
@@ -425,9 +425,9 @@ input::placeholder,textarea::placeholder {
   opacity: 1;
 }
 
-::-webkit-datetime-edit-fields-wrapper {
-  padding: 0;
-}
+/*::-webkit-datetime-edit-fields-wrapper {*/
+/*  padding: 0;*/
+/*}*/
 
 ::-webkit-date-and-time-value {
   min-height: 1.5em;
@@ -488,7 +488,7 @@ select {
 [type='checkbox']:focus,[type='radio']:focus {
   outline: 2px solid transparent;
   outline-offset: 2px;
-  --tw-ring-inset: var(--tw-empty,/*!*/ /*!*/);
+  /*--tw-ring-inset: var(--tw-empty,!*!*! !*!*!);*/
   --tw-ring-offset-width: 2px;
   --tw-ring-offset-color: #fff;
   --tw-ring-color: #2563eb;
