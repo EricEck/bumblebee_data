@@ -38,6 +38,8 @@ return [
             'service_scheduler' => 'c,r,u,d',
             'service_technician' => 'c,r,u,d',
 
+            'laratrust_panel' => 'c,r,u,d',
+
             'users' => 'c,r,u,d',
             'profile' => 'r,u',
         ],

@@ -37,5 +37,13 @@ class Handler extends ExceptionHandler
         $this->reportable(function (Throwable $e) {
             //
         });
+
+
+        // TODO: add to keep logout from crashing
+//        $this->renderable(function (\Exception $e) {
+//            if ($e->getPrevious() instanceof \Illuminate\Session\TokenMismatchException) {
+//                return redirect()->route('login');
+//            };
+//        });
     }
 }

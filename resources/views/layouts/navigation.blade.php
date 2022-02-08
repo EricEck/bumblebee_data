@@ -18,9 +18,11 @@
                     <x-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
                         {{ __('Profile') }}
                     </x-nav-link>
+                    @permission('laratrust_panel-read')
                     <x-nav-link href="/laratrust">
                         {{ __('Laratrust') }}
                     </x-nav-link>
+                    @endpermission
                 </div>
             </div>
 
@@ -41,7 +43,7 @@
 
                     <x-slot name="content">
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
+                        <form method="GET" action="{{ route('log_out') }}">
 
                             <x-dropdown-nolink>
                                 {{__(Auth::user()->email)}}
@@ -60,7 +62,7 @@
                             @endforeach
 
                             <hr>
-                            <x-dropdown-link :href="route('logout')"
+                            <x-dropdown-link :href="route('log_out')"
                                     onclick="event.preventDefault();
                                                 this.closest('form').submit();">
                                 {{ __('Log Out') }}
@@ -104,15 +106,11 @@
 
             <div class="mt-3 space-y-1">
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
+                <form method="GET" action="{{ route('log_out') }}">
                     @csrf
 
-                    <x-dropdown-nolink>{{__(Auth::user()->getUserTeam()->display_name)}}</x-dropdown-nolink>
-                    @foreach($roleList as $role)
-                        <x-dropdown-nolink>{{"  ".__($role)}}</x-dropdown-nolink>
-                    @endforeach
-                    <hr>
-                    <x-responsive-nav-link :href="route('logout')"
+
+                    <x-responsive-nav-link :href="route('log_out')"
                             onclick="event.preventDefault();
                                         this.closest('form').submit();">
                         {{ __('Log Out') }}
@@ -120,5 +118,6 @@
                 </form>
             </div>
         </div>
+    </div>
     </div>
 </nav>
