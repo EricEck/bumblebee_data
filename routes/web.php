@@ -17,6 +17,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/welcome', function () {
+    return view('welcome');
+});
+
 Route::get('/token', function (Request $request) {
 //    $token = $request->session()->token();
 //    Debugbar::info($token);
