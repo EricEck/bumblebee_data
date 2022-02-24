@@ -62,7 +62,7 @@
                     <td class="border px-4 py-2 flex">
 
                         <a wire:click="" href="#"><x-buttons.view></x-buttons.view></a>
-                        <a wire:click="" href="#"><x-buttons.text>Test</x-buttons.text></a>
+
 {{--                        <a href="#"><x-button-edit></x-button-edit></a>--}}
 {{--                        <a href="#"><x-button-delete class="cursor-not-allowed"></x-button-delete></a>--}}
                     </td>
