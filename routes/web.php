@@ -49,6 +49,8 @@ Route::group(['middleware' => ['auth']], function (){
 
     Route::get('/users_table', [UserController::class, 'index'])->name('users_table');
 
+    Route::get('/user_form/edit/{user_id}', [UserController::class, 'userFormEdit']);
+    Route::get('/user_form/show/{user_id}', [UserController::class, 'userFormShow']);
 
     Route::get('/bumblebees_table', 'App\Http\Controllers\DashboardController@bumblebees_table')
         ->name('bumblebees_table');

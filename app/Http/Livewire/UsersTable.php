@@ -32,13 +32,36 @@ class UsersTable extends Component
                 ->paginate($this->usersPerPage)]);
     }
 
-    public function userForm(int $userID)
+    public $likes = 0;
+
+    public function like()
+    {
+        $this->likes++;
+        debugbar()->info('Liked '.$this->likes);
+
+    }
+
+    /**
+     * Show the User Form
+     * @param int $userID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function userFormShow(int $userID)
     {
         $user = User::where('id', $userID)->first();
 
+        return redirect()->to('/user_form/show/'.$userID);
+    }
 
-        return redirect()->to('/user', [
-            'user' => User::where('id', $userID)->first(),
-        ]);
+    /**
+     * Edit the User Form
+     * @param int $userID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function userFormEdit(int $userID)
+    {
+        $user = User::where('id', $userID)->first();
+
+        return redirect()->to('/user_form/edit/'.$userID);
     }
 }

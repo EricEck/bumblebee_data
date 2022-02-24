@@ -80,7 +80,6 @@ class User extends Authenticatable
 
     }
 
-
     /**
      * Return a comma seperated string of user's roles
      * @return string

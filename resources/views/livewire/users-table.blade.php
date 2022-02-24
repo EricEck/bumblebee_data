@@ -60,23 +60,17 @@
                     <td class="border px-4 py-2">{{ $user->getUserRoleNamesWithCommas()}}</td>
                     <td class="border px-4 py-2">{{ $user->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2 flex">
-
-                        <a wire:click="" href="#"><x-buttons.view></x-buttons.view></a>
-{{--                        <a wire:click="" href="#"><x-buttons.edit></x-buttons.edit></a>--}}
-{{--                        <a wire:click="" href="#"><x-buttons.delete></x-buttons.delete></a>--}}
-
-{{--                        <a href="#"><x-button-edit></x-button-edit></a>--}}
-{{--                        <a href="#"><x-button-delete class="cursor-not-allowed"></x-button-delete></a>--}}
+                        <a wire:click="userFormShow({{$user->id}})" ><x-buttons.view></x-buttons.view></a>
+                        <a wire:click="userFormEdit({{$user->id}})"  ><x-buttons.edit></x-buttons.edit></a>
                     </td>
                 </tr>
             @endforeach
             </tbody>
         </table>
         {!! $users->links() !!}
-    @elseif(count($users) === 1)
-        1 user
     @else
         <p class="text-center">Sorry!   No Users found...   😿</p>
     @endif
+    <button wire:click.debounce:300="like">Like</button>
 
 </div>

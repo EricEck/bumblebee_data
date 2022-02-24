@@ -12,6 +12,88 @@
 
 namespace App\Models{
 /**
+ * App\Models\Bumblebee
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereUpdatedAt($value)
+ * @mixin \Eloquent
+ * @property string $serial_number
+ * @property string|null $manufactured_date
+ * @property string|null $current_version
+ * @property int|null $manufacturer_id
+ * @property int|null $owner_id
+ * @property int|null $install_id
+ * @property string|null $assigned_to_owner_on
+ * @property int $removed_from_service
+ * @property string|null $api_password
+ * @property string $remember_token
+ * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
+ * @property-read int|null $notifications_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
+ * @property-read int|null $tokens_count
+ * @method static \Database\Factories\BumblebeeFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereApiPassword($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereAssignedToOwnerOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereCurrentVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereInstallId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereManufacturedDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereManufacturerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRememberToken($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRemovedFromService($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereSerialNumber($value)
+ */
+	class Bumblebee extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\Measurement
+ *
+ * @property int $id
+ * @property string $bumblebee_id
+ * @property string $measurement_timestamp
+ * @property int $metric_sequence
+ * @property string $metric
+ * @property string $method
+ * @property string|null $value
+ * @property string|null $unit
+ * @property string|null $details
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereBumblebeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereDetails($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereMeasurementTimestamp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereMetric($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereMetricSequence($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereValue($value)
+ * @mixin \Eloquent
+ * @property string|null $process
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereProcess($value)
+ * @method static \Database\Factories\MeasurementFactory factory(...$parameters)
+ * @property int $calibration_value
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationValue($value)
+ */
+	class Measurement extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Permission
  *
  * @property int $id
@@ -80,12 +162,15 @@ namespace App\Models{
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
  * @property-read int|null $tokens_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User allUsersWithRoleIDs()
+ * @method static \Illuminate\Database\Eloquent\Builder|User allUsersWithRoleNames()
  * @method static \Database\Factories\UserFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|User newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|User orWherePermissionIs($permission = '')
  * @method static \Illuminate\Database\Eloquent\Builder|User orWhereRoleIs($role = '', $team = null)
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
+ * @method static \Illuminate\Database\Eloquent\Builder|User someUsers()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDoesntHavePermission()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDoesntHaveRole()
