@@ -80,4 +80,25 @@ class User extends Authenticatable
 
     }
 
+
+    /**
+     * Return a comma seperated string of user's roles
+     * @return string
+     */
+    public function getUserRoleNamesWithCommas(){
+        $roleNames = $this->getRoles();
+        $roleString = "";
+        $count = 0;
+        /** @var array $roleNames */
+        foreach ($roleNames as $roleName) {
+            $roleDisplay =  Role::where('name', $roleName)->first()->display_name;
+            $roleString .= $roleDisplay;
+            $count++;
+            if($count < count($roleNames)){
+                $roleString .= ", ";
+            }
+        }
+        return $roleString;
+    }
+
 }
