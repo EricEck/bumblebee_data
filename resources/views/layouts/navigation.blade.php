@@ -23,6 +23,22 @@
                     </x-nav-link>
                 </div>
                 @endpermission
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('users_table')" :active="request()->routeIs('users_table')">
+                        {{ __('Users') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
+                        {{ __('Bumblebees') }}
+                    </x-nav-link>
+                </div>
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
+                        {{ __('Measurements') }}
+                    </x-nav-link>
+                </div>
+
                 @permission('laratrust_panel-read')
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link href="/laratrust" >

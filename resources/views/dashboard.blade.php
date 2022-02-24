@@ -16,6 +16,7 @@
                     You're logged in!
                     <livewire:counter />
                 </div>
+
             </div>
         </div>
     </div>

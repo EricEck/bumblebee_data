@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Traits\UserRole;
+use PhpParser\Node\Stmt\Return_;
 
 class User extends Authenticatable
 {
@@ -45,4 +46,23 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function roleNames(){
+        return $this->getRoles();
+    }
+
+    public function scopeSomeUsers($query){
+        return $query->where('id', '>', 2);
+    }
+
+    public function scopeAllUsersWithRoleIDs($query){
+        return $query->join('role_user','users.id', '=', 'role_user.user_id')
+            ->select('users.*', 'role_user.role_id');
+    }
+
+    public function scopeAllUsersWithRoleNames($query){
+        return $query->allUsersWithRoleIDs()->join('roles','role_id', '=', 'roles.id')
+            ->select('users.id', 'users.name', 'users.email', 'roles.display_name as role_name');
+    }
+
 }
