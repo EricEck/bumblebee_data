@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -43,8 +44,11 @@ Route::group(['middleware' => ['auth']], function (){
             'uses'          => 'App\Http\Controllers\DashboardController@profile'])
         ->name('profile');
 
-    Route::get('/users_table', 'App\Http\Controllers\DashboardController@users_table')
-        ->name('users_table');
+//    Route::get('/users_table', 'App\Http\Controllers\DashboardController@users_table')
+//        ->name('users_table');
+
+    Route::get('/users_table', [UserController::class, 'index'])->name('users_table');
+
 
     Route::get('/bumblebees_table', 'App\Http\Controllers\DashboardController@bumblebees_table')
         ->name('bumblebees_table');

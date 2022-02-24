@@ -65,4 +65,19 @@ class User extends Authenticatable
             ->select('users.id', 'users.name', 'users.email', 'roles.display_name as role_name');
     }
 
+    /**
+     * Search for specific user(s) across all visible fields
+     *
+     * @param string $search
+     * @return User|\Illuminate\Database\Eloquent\Builder
+     */
+    public static function search(string $search)
+    {
+        return empty($search) ? static::query()
+            : static::query()->where('id', 'like', '%'.$search.'%')
+                ->orWhere('email', 'like', '%'.$search.'%')
+                ->orWhere('name', 'like', '%'.$search.'%');
+
+    }
+
 }
