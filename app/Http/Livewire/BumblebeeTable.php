@@ -48,4 +48,13 @@ class BumblebeeTable extends Component
         return redirect()->to('/bumblebee_form/edit/'.$bumblebeeID);
     }
 
+    /**
+     * Redirect to the Bumblebee Form URL Route to Create a New Bumblebee
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function bumblebeeFormNew()
+    {
+        return redirect()->to('/bumblebee_form/new');
+    }
+
 }

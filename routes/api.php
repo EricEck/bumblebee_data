@@ -63,3 +63,7 @@ Route::get('/version', function (){
         'api_version' => config('app.api_version'),
     ], 200);
 });
+
+//Route::post('/register', [AuthController::class, 'register']);
+Route::post('/login', [AuthController::class, 'login']);
+

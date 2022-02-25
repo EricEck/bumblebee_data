@@ -5,7 +5,7 @@
         <div class="md:grid md:grid-cols-3 md:gap-6">
             <div class="md:col-span-1">
                 <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Bumblebee {{$allow_edit ? 'Edit' : 'Information'}}</h3>
+                    <h3 class="text-lg font-medium leading-6 text-gray-900">Bumblebee {{$create_new ? 'New' : ($allow_edit ? 'Edit' : 'Information')}}</h3>
                     {{--                    <p class="mt-1 text-sm text-gray-600">Use a permanent address where you can receive mail.</p>--}}
                 </div>
             </div>
@@ -22,6 +22,7 @@
                                     <label for="id" class="text-sm font-medium text-gray-700">Bumblebee ID</label>
                                     <input type="number" name="id" id="id"
                                            value="{{ $bumblebee->id }}"
+                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
                                            disabled
                                            autocomplete=""
                                            class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
@@ -46,13 +47,22 @@
                                            class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
+                                <div class="col-span-6 sm:col-span-4 mt-2">
+                                    <label for="manufactured_date" class="block text-sm font-medium text-gray-700">Manufactured on</label>
+                                    <input type="date" name="manufactured_date" id="manufactured_date"
+                                           wire:model.lazy="bumblebee.manufactured_date"
+                                           {{ $allow_edit ?  '' : 'disabled'}}
+                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                </div>
+
                                 <div class="col-span-6 sm:col-span-3 mt-2">
                                     <label for="owner_id" class="text-sm font-medium text-gray-700">Owner</label>
-                                    @php($users = \App\Models\User::query()->where('id','>','0')->orderBy('name', 'desc')->get())
+                                    @php($users = \App\Models\User::query()->where('id','>','0')->orderBy('name', 'asc')->get())
                                     <select name="owner_id" id="owner_id"
                                         wire:model.lazy="bumblebee.owner_id"
                                         {{ $allow_edit ?  '' : 'disabled'}}
                                             class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        <option value='' disabled>Select Owner---</option>
                                         @foreach($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                                         @endforeach
@@ -68,9 +78,21 @@
                                 </div>
 
                                 <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="api_password" class="block text-sm font-medium text-gray-700">API Password (leave blank to not change)</label>
-                                    <input type="password" minlength="6" name="api_password" id="api_password"
-                                           wire:model.lazy="bumblebee.api_password"
+                                    <label for="removed_from_service" class="block text-sm font-medium text-gray-700">Service status</label>
+                                    <select  name="removed_from_service" id="removed_from_service"
+                                           wire:model.lazy="bumblebee.removed_from_service"
+                                           {{ $allow_edit ?  '' : 'disabled'}}
+                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                        <option value="0">In Service</option>
+                                        <option value="1">Out of Service</option>
+                                    </select>
+                                </div>
+
+                                <div class="col-span-6 sm:col-span-4 mt-2">
+                                    <label for="new_password" class="block text-sm font-medium text-gray-700">API Password (leave blank to not change)</label>
+                                    <input type="password"  name="new_password" id="new_password"
+                                           wire:model.lazy="new_password"
+                                           placeholder="{{ $create_new ? 'Must be at least 6 characters, record in secure place' : '' }}"
                                            {{ $allow_edit ?  '' : 'disabled'}}
                                            class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
@@ -79,6 +101,7 @@
                                     <label for="remember_token" class="block text-sm font-medium text-gray-700">Remember Token</label>
                                     <input type="text" name="remember_token" id="remember_token"
                                            value="{{ $bumblebee->remember_token }}"
+                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
                                            disabled
                                            class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
@@ -87,6 +110,7 @@
                                     <label for="created_at" class="block text-sm font-medium text-gray-700">Created at</label>
                                     <input type="text" name="created_at" id="created_at"
                                            value="{{ $bumblebee->created_at }}"
+                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
                                            disabled
                                            class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
@@ -95,17 +119,21 @@
                                     <label for="updated_at" class="block text-sm font-medium text-gray-700">Updated at</label>
                                     <input type="text" name="updated_at" id="updated_at"
                                            value="{{ $bumblebee->updated_at }}"
+                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
                                            disabled
                                            class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </div>
 
                             </div>
                         </div>
-                        <div class="flow-root mt-6 ">
+                        <div class="flow-root mt-6 items-center">
 
                             @if($allow_edit)
                                 <div class="float-right">
                                     <x-buttons.save></x-buttons.save>
+                                </div>
+                                <div class="float-right">
+                                    <x-buttons.reset>Reset</x-buttons.reset>
                                 </div>
                             @endif
                             <div class="float-left">
@@ -114,7 +142,19 @@
                         </div>
 
                     </div>
+
+
                 </form>
+                @if ($errors->any())
+                    <div class="bg-gray-100 py-8 px-8">
+                        <h1 class="text-7xl py-4">ERROR(s)</h1>
+                        <ul>
+                            @foreach ($errors->all() as $error)
+                                <li class="px-10">==> {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </h1>
+                @endif
 
             </div>
         </div>

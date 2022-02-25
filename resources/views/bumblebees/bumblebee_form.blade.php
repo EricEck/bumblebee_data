@@ -11,6 +11,7 @@
                 @livewire('bumblebee-form', [
                         'bumblebee' => $bumblebee,
                         'allow_edit' => $allow_edit,
+                        'create_new' => $create_new,
                         ])
             </div>
         </div>

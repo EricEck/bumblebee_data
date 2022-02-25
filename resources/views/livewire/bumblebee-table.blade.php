@@ -37,9 +37,13 @@
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
+        <div class="w-1/12 relative mx-1">
+            <a wire:click="bumblebeeFormNew()"  ><x-buttons.new></x-buttons.new></a>
+        </div>
     </div>
 
     @if(count($bumblebees) )
+
         <table class="table-auto w-full mb-6">
             <thead>
             <tr>
@@ -48,6 +52,7 @@
                 <th class="px-4 py-2">Mfg on</th>
                 <th class="px-4 py-2">Version</th>
                 <th class="px-4 py-2">Owner</th>
+                <th class="px-4 py-2">In Service</th>
                 <th class="px-4 py-2">Last Measurement</th>
                 <th class="px-4 py-2">Updated At</th>
                 <th class="px-4 py-2">Created At</th>
@@ -64,14 +69,16 @@
                     <td class="border px-4 py-2">{{ $bumblebee->manufactured_date }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
                     <td class="border px-4 py-2">{{ $owner->name }}</td>
-                    <td class="border px-4 py-2">{{ $lastMeasurement->created_at->diffForHumans() }}</td>
+                    <td class="border px-4 py-2">{{ $bumblebee->removed_from_service ? 'No' : 'Yes' }}</td>
+                    <td class="border px-4 py-2">{{ empty($lastMeasurement) ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->updated_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2 flex-auto">
-                        <a wire:click="" ><x-buttons.measurement></x-buttons.measurement></a>
+                        @if(!empty($lastMeasurement))
+                            <a wire:click="" ><x-buttons.measurement></x-buttons.measurement></a>
+                        @endif
                         <a wire:click="bumblebeeFormShow({{ $bumblebee->id }})"  ><x-buttons.view ></x-buttons.view></a>
                         <a wire:click="bumblebeeFormEdit({{ $bumblebee->id }})"  ><x-buttons.edit></x-buttons.edit></a>
-{{--                        <a wire:click="userFormEdit({{$bumblebee->id}})"  ><x-buttons.edit></x-buttons.edit></a>--}}
                     </td>
                 </tr>
             @endforeach

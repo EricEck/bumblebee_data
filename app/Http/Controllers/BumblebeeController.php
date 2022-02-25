@@ -29,6 +29,7 @@ class BumblebeeController extends Controller
 
         return view('bumblebees.bumblebee_form', [
             'allow_edit' => true,
+            'create_new' => false,
             'bumblebee' => $bumblebee,
         ]);
     }
@@ -44,8 +45,31 @@ class BumblebeeController extends Controller
 
         return view('bumblebees.bumblebee_form', [
             'allow_edit' => false,
+            'create_new' => false,
             'bumblebee' => $bumblebee,
         ]);
+    }
+
+    public function bumblebeeFormNew(){
+        $bumblebee = new Bumblebee([
+            'owner_id' => 1,
+            'manufacturer_id' => 1,
+            'removed_from_service' => 0,
+            'api_password' => '',
+            'install_id' => 0,
+            ]);
+
+        // Defaults for New Bumblebee
+//        $bumblebee->owner_id = 1;
+//        $bumblebee->manufacturer_id = 1;
+//        $bumblebee->removed_from_service = 0;
+//        $bumblebee->api_password = '';
+
+         return view('bumblebees.bumblebee_form', [
+                'allow_edit' => true,
+                'create_new' => true,
+                'bumblebee' => $bumblebee,
+            ]);
     }
 
 
@@ -58,6 +82,7 @@ class BumblebeeController extends Controller
     {
         return response(Bumblebee::all());
     }
+
 
     /**
      * Store a newly created resource in storage.
