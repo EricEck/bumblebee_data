@@ -46,9 +46,10 @@
                 <th class="px-4 py-2">ID</th>
                 <th class="px-4 py-2">Serial Number</th>
                 <th class="px-4 py-2">Mfg on</th>
-                <th class="px-4 py-2">Current Version</th>
+                <th class="px-4 py-2">Version</th>
                 <th class="px-4 py-2">Owner</th>
                 <th class="px-4 py-2">Last Measurement</th>
+                <th class="px-4 py-2">Updated At</th>
                 <th class="px-4 py-2">Created At</th>
                 <th class="px-4 py-2">Actions</th>
             </tr>
@@ -64,11 +65,12 @@
                     <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
                     <td class="border px-4 py-2">{{ $owner->name }}</td>
                     <td class="border px-4 py-2">{{ $lastMeasurement->created_at->diffForHumans() }}</td>
+                    <td class="border px-4 py-2">{{ $bumblebee->updated_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
-                    <td class="border px-4 py-2 flex">
+                    <td class="border px-4 py-2 flex-auto">
                         <a wire:click="" ><x-buttons.measurement></x-buttons.measurement></a>
-                        <a wire:click=""  ><x-buttons.view ></x-buttons.view></a>
-                        <a wire:click=""  ><x-buttons.edit></x-buttons.edit></a>
+                        <a wire:click="bumblebeeFormShow({{ $bumblebee->id }})"  ><x-buttons.view ></x-buttons.view></a>
+                        <a wire:click="bumblebeeFormEdit({{ $bumblebee->id }})"  ><x-buttons.edit></x-buttons.edit></a>
 {{--                        <a wire:click="userFormEdit({{$bumblebee->id}})"  ><x-buttons.edit></x-buttons.edit></a>--}}
                     </td>
                 </tr>

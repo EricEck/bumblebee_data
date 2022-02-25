@@ -18,6 +18,36 @@ class BumblebeeController extends Controller
         return view('bumblebees.index');
     }
 
+    /**
+     * Render the Bumblebee Info Form with Editing
+     * @param $bumblebee_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function bumblebeeFormEdit($bumblebee_id){
+
+        $bumblebee = Bumblebee::where('id', $bumblebee_id)->first();
+
+        return view('bumblebees.bumblebee_form', [
+            'allow_edit' => true,
+            'bumblebee' => $bumblebee,
+        ]);
+    }
+
+    /**
+     * Render the Bumblebee Info Form No Edit
+     * @param $bumblebee_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function bumblebeeFormShow($bumblebee_id){
+
+        $bumblebee = Bumblebee::where('id', $bumblebee_id)->first();
+
+        return view('bumblebees.bumblebee_form', [
+            'allow_edit' => false,
+            'bumblebee' => $bumblebee,
+        ]);
+    }
+
 
     /**
      * API: Display a listing of the resource.

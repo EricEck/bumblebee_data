@@ -32,13 +32,14 @@ class UserForm extends Component
     }
 
     /**
+     * Save using the validation and Model
      * @return void
      */
     public function save()
     {
 //        dd($this->user);
         $this->validate();
-        $this->user2->save();
-        debugbar()->info('saved!');
+        $this->user->save();
+        debugbar()->info('user saved!');
     }
 }

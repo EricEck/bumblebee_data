@@ -45,15 +45,15 @@ Route::group(['middleware' => ['auth']], function (){
         ->name('profile');
 
     Route::get('/users_table', [UserController::class, 'indexView'])->name('users_table');
-    Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])->name('bumblebees_table');
-
     Route::get('/user_form/edit/{user_id}', [UserController::class, 'userFormEdit']);
     Route::get('/user_form/show/{user_id}', [UserController::class, 'userFormShow']);
 
+    Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])->name('bumblebees_table');
+    Route::get('/bumblebee_form/edit/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormEdit']);
+    Route::get('/bumblebee_form/show/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormShow']);
+
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
-
-
 
 });
 

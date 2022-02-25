@@ -47,6 +47,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    /**
+     * All Bumblebees that an user currently owns
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function bumblebees(){
+        return $this->hasMany(Bumblebee::class, 'owner_id', 'id');
+    }
+
+
     public function roleNames(){
         return $this->getRoles();
     }

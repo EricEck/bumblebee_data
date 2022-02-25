@@ -27,4 +27,25 @@ class BumblebeeTable extends Component
                 ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
                 ->paginate($this->bumblebeesPerPage)]);
     }
+
+    /**
+     * Redirect to the Bumblebee Form URL Route to Show Only
+     * @param int $bumblebeeID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function bumblebeeFormShow(int $bumblebeeID)
+    {
+        return redirect()->to('/bumblebee_form/show/'.$bumblebeeID);
+    }
+
+    /**
+     * Redirect to the Bumblebee Form URL Route to Show Only
+     * @param int $bumblebeeID
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function bumblebeeFormEdit(int $bumblebeeID)
+    {
+        return redirect()->to('/bumblebee_form/edit/'.$bumblebeeID);
+    }
+
 }
