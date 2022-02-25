@@ -25,7 +25,8 @@ class BumblebeeTable extends Component
         return view('livewire.bumblebee-table',[
             'bumblebees' => Bumblebee::searchView($this->searchString)
                 ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
-                ->paginate($this->bumblebeesPerPage)]);
+                ->paginate($this->bumblebeesPerPage)
+        ]);
     }
 
     /**

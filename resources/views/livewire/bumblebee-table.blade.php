@@ -84,6 +84,8 @@
             @endforeach
             </tbody>
         </table>
+        {!! $bumblebees->links() !!}
+
     @else
         <p class="text-center">Sorry!   No buzzing... No Bumblebees found...   😿</p>
     @endif

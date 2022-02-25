@@ -72,6 +72,53 @@ class Measurement extends Model
     }
 
     /**
+     * Search for specific measurements(s) across all visible fields
+     *
+     * @param string $search
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder
+     */
+    public static function searchView(string $search, bool $measurementMetric, bool $calibrationMetric){
+
+        return empty($search) ? static::query()
+            : static::query()->where('id', 'like', '%'.$search.'%')
+                ->where('calibration_value', 0)
+                ->orWhere('method', 'like', '%'.$search.'%')
+                ->orWhere('metric', 'like', '%'.$search.'%')
+                ->orWhere('process', 'like', '%'.$search.'%')
+                ->orWhere('details', 'like', '%'.$search.'%')
+                ->orWhere('unit', 'like', '%'.$search.'%');
+
+        if ($measurementMetric && $calibrationMetric){
+            return empty($search) ? static::query()
+                : static::query()->where('id', 'like', '%'.$search.'%')
+                    ->where('calibration_value', 0)
+                    ->orWhere('method', 'like', '%'.$search.'%')
+                    ->orWhere('metric', 'like', '%'.$search.'%')
+                    ->orWhere('process', 'like', '%'.$search.'%')
+                    ->orWhere('details', 'like', '%'.$search.'%')
+                    ->orWhere('unit', 'like', '%'.$search.'%');
+        } elseif ($calibrationMetric){
+            return empty($search) ? static::query()
+                : static::query()->where('id', 'like', '%'.$search.'%')
+                    ->where('calibration_value', 1)
+                    ->orWhere('method', 'like', '%'.$search.'%')
+                    ->orWhere('metric', 'like', '%'.$search.'%')
+                    ->orWhere('process', 'like', '%'.$search.'%')
+                    ->orWhere('details', 'like', '%'.$search.'%')
+                    ->orWhere('unit', 'like', '%'.$search.'%');
+        } else {
+            return empty($search) ? static::query()
+                : static::query()->where('id', 'like', '%' . $search . '%')
+                    ->where('calibration_value', 0)
+                    ->orWhere('method', 'like', '%' . $search . '%')
+                    ->orWhere('metric', 'like', '%' . $search . '%')
+                    ->orWhere('process', 'like', '%' . $search . '%')
+                    ->orWhere('details', 'like', '%' . $search . '%')
+                    ->orWhere('unit', 'like', '%' . $search . '%');
+        }
+    }
+
+    /**
      * Eloquent belongs to relationship Bumblebee Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
