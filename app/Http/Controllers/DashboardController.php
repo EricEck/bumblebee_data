@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Barryvdh\Debugbar\Facades\Debugbar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,7 +30,8 @@ class DashboardController extends Controller
 //        \Debugbar::info($request->session()->token());
 //        \Debugbar::info(csrf_token());
 
-        return view('users_table');
+        Debugbar::info('users_table');
+        return view('users.index');
     }
 
     /**
@@ -68,6 +70,6 @@ class DashboardController extends Controller
 //        \Debugbar::info($request->session()->token());
 //        \Debugbar::info(csrf_token());
 
-        return view('profile');
+        return view('users.profile');
     }
 }

@@ -26,8 +26,7 @@ Route::get('/welcome', function () {
 });
 
 Route::get('/token', function (Request $request) {
-//    $token = $request->session()->token();
-//    Debugbar::info($token);
+
     Debugbar::info(csrf_token());
     return view('welcome');
 
@@ -44,20 +43,14 @@ Route::group(['middleware' => ['auth']], function (){
             'uses'          => 'App\Http\Controllers\DashboardController@profile'])
         ->name('profile');
 
-//    Route::get('/users_table', 'App\Http\Controllers\DashboardController@users_table')
-//        ->name('users_table');
-
     Route::get('/users_table', [UserController::class, 'index'])->name('users_table');
 
     Route::get('/user_form/edit/{user_id}', [UserController::class, 'userFormEdit']);
     Route::get('/user_form/show/{user_id}', [UserController::class, 'userFormShow']);
 
-
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
 
-//    Route::get('/profile', 'App\Http\Controllers\DashboardController@profile')
-//        ->name('profile');
 
 
 });

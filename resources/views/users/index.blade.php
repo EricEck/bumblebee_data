@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ request()->get('niblet') ?? 'Users direct'}}
+        {{ request()->get('niblet') ?? 'Users'}}
     </x-slot>
 
 

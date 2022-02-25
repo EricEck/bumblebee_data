@@ -15,7 +15,7 @@ class UserController extends Controller
     }
 
     /**
-     * Render the User Info Form
+     * Render the User Info Form with Editing
      * @param $user_id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
@@ -23,7 +23,7 @@ class UserController extends Controller
 
         $user = User::where('id', $user_id)->first();
 
-        return view('user_form', [
+        return view('users.user_form', [
             'allow_edit' => true,
             'user' => $user,
         ]);
@@ -38,7 +38,7 @@ class UserController extends Controller
 
         $user = User::where('id', $user_id)->first();
 
-        return view('user_form', [
+        return view('users.user_form', [
             'allow_edit' => false,
             'user' => $user,
         ]);

@@ -42,26 +42,22 @@ class UsersTable extends Component
     }
 
     /**
-     * Show the User Form
+     * Redirect to the User Form URL Route to Show Only
      * @param int $userID
      * @return \Illuminate\Http\RedirectResponse
      */
     public function userFormShow(int $userID)
     {
-        $user = User::where('id', $userID)->first();
-
         return redirect()->to('/user_form/show/'.$userID);
     }
 
     /**
-     * Edit the User Form
+     * Redirect to the User Form URL Route to Show Only
      * @param int $userID
      * @return \Illuminate\Http\RedirectResponse
      */
     public function userFormEdit(int $userID)
     {
-        $user = User::where('id', $userID)->first();
-
         return redirect()->to('/user_form/edit/'.$userID);
     }
 }

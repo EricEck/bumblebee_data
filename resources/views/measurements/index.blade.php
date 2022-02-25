@@ -1,9 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ request()->get('niblet') ?? 'Users direct'}}
+        {{ request()->get('niblet') ?? 'Bumblebees direct'}}
     </x-slot>
 
 
-    <livewire:users-table></livewire:users-table>
+    <livewire:bumblebee-table></livewire:bumblebee-table>
 
 </x-app-layout>
