@@ -33,16 +33,16 @@ class DashboardController extends Controller
     }
 
     /**
-     * Switch to the Measurements Table view
+     * Switch to the Measurements Table view old way
      * @param Request $request
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
-    public function measurements_table(Request $request){
+    public function measurements_table_old(Request $request){
 //        \Debugbar::info('DashboardController@profile');
 //        \Debugbar::info($request->session()->token());
 //        \Debugbar::info(csrf_token());
 
-        return view('measurements_table');
+        return view('dashboard');   // fix this later or remove the whole method TODO
     }
 
     /**
@@ -55,9 +55,8 @@ class DashboardController extends Controller
 //        \Debugbar::info($request->session()->token());
 //        \Debugbar::info(csrf_token());
 
-        return view('bumblbees_table');
+        return view('dashboard');   // todo: change or delete whole method
     }
-
 
     /**
      * Switch to the Profile view

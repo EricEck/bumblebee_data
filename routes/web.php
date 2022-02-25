@@ -55,8 +55,8 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/bumblebees_table', 'App\Http\Controllers\DashboardController@bumblebees_table')
         ->name('bumblebees_table');
 
-    Route::get('/measurements_table', 'App\Http\Controllers\DashboardController@measurements_table')
-        ->name('measurements_table');
+    Route::get('/measurements_table_old', 'App\Http\Controllers\DashboardController@measurements_table_old')
+        ->name('measurements_table_old');
 
 
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
