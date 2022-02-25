@@ -3,7 +3,6 @@
         {{ request()->get('niblet') ?? 'Bumblebees direct'}}
     </x-slot>
 
-
-    <livewire:bumblebee-table></livewire:bumblebee-table>
+    <livewire:measurement-table/>
 
 </x-app-layout>

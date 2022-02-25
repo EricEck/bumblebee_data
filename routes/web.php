@@ -53,6 +53,8 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/bumblebee_form/show/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormShow']);
     Route::get('/bumblebee_form/new', [BumblebeeController::class, 'bumblebeeFormNew']);
 
+    Route::get('/measurements_table', [\App\Http\Controllers\MeasurementController::class, 'indexView'])->name('measurements_table');
+
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
 

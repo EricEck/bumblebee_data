@@ -9,6 +9,15 @@ use Illuminate\Http\Request;
 class MeasurementController extends Controller
 {
     /**
+     * VIEW: Show the Measurements Index View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function indexView(){
+        return view('measurements.index');
+    }
+
+
+    /**
      * Display a listing of all non calibration measurements
      *
      * @return \Illuminate\Http\Response

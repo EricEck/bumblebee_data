@@ -72,7 +72,7 @@ class Measurement extends Model
     }
 
     /**
-     * Elequent belongs to relationship Bumblebee Model
+     * Eloquent belongs to relationship Bumblebee Model
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
