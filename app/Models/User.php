@@ -71,7 +71,7 @@ class User extends Authenticatable
      * @param string $search
      * @return User|\Illuminate\Database\Eloquent\Builder
      */
-    public static function search(string $search)
+    public static function searchView(string $search)
     {
         return empty($search) ? static::query()
             : static::query()->where('id', 'like', '%'.$search.'%')

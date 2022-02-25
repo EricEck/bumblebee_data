@@ -18,6 +18,7 @@ class BumblebeeController extends Controller
         return view('bumblebees.index');
     }
 
+
     /**
      * API: Display a listing of the resource.
      *

@@ -38,7 +38,7 @@
         </div>
     </div>
 
-    @if(count($users) > 1)
+    @if(count($users) )
         <table class="table-auto w-full mb-6">
             <thead>
             <tr>
@@ -69,8 +69,7 @@
         </table>
         {!! $users->links() !!}
     @else
-        <p class="text-center">Sorry!   No Users found...   😿</p>
+        <p class="text-center">Sorry!   It's so lonely...  No Users found...   😿</p>
     @endif
-    <button wire:click.debounce:300="like">Like</button>
 
 </div>

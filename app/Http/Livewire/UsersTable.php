@@ -8,7 +8,7 @@ use Livewire\WithPagination;
 
 class UsersTable extends Component
 {
-    use WithPagination;
+    use WithPagination; // must add for livewire
 
     public $usersPerPage = 15;
     public $searchString = '';
@@ -27,19 +27,19 @@ class UsersTable extends Component
     public function render()
     {
         return view('livewire.users-table', [
-            'users' => User::search($this->searchString)
+            'users' => User::searchView($this->searchString)
                 ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
                 ->paginate($this->usersPerPage)]);
     }
 
-    public $likes = 0;
-
-    public function like()
-    {
-        $this->likes++;
-        debugbar()->info('Liked '.$this->likes);
-
-    }
+//    public $likes = 0;
+//
+//    public function like()
+//    {
+//        $this->likes++;
+//        debugbar()->info('Liked '.$this->likes);
+//
+//    }
 
     /**
      * Redirect to the User Form URL Route to Show Only

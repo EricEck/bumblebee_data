@@ -69,4 +69,18 @@ class Bumblebee extends Authenticatable
     protected $hidden = [
         'api_password'
     ];
+
+    /**
+     * Search for specific bumblebee(s) across all visible fields
+     *
+     * @param string $search
+     * @return Bumblebee|\Illuminate\Database\Eloquent\Builder
+     */
+    public static function searchView(string $search){
+
+        return empty($search) ? static::query()
+            : static::query()->where('id', 'like', '%'.$search.'%')
+            ->orWhere('serial_number', 'like', '%'.$search.'%');
+    }
+
 }
