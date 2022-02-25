@@ -49,6 +49,9 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRemovedFromService($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereSerialNumber($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Measurement[] $measurements
+ * @property-read int|null $measurements_count
+ * @property-read \App\Models\User|null $owner
  */
 	class Bumblebee extends \Eloquent {}
 }

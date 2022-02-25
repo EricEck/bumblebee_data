@@ -60,4 +60,15 @@ class Measurement extends Model
         'calibration_value'
     ];
 
+    /**
+     * Find the Newest Measurement for a Bumblebee
+     * @param $bumblebeeID
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function newestMeasurement($bumblebeeID){
+        return Measurement::where('id',$bumblebeeID)
+            ->orderBy('created_at', 'desc')
+            ->first();
+    }
+
 }

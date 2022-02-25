@@ -48,24 +48,26 @@
                 <th class="px-4 py-2">Mfg on</th>
                 <th class="px-4 py-2">Current Version</th>
                 <th class="px-4 py-2">Owner</th>
+                <th class="px-4 py-2">Last Measurement</th>
                 <th class="px-4 py-2">Created At</th>
                 <th class="px-4 py-2">Actions</th>
-
             </tr>
             </thead>
             <tbody>
             @foreach($bumblebees as  $bumblebee)
-                @php($owner = \App\Models\User::find($bumblebee->owner_id))
+                @php($owner = $bumblebee->owner)
+                @php($lastMeasurement = $bumblebee->measurements->last())
                 <tr>
                     <td class="border px-4 py-2">{{ $bumblebee->id }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->serial_number }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->manufactured_date }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
                     <td class="border px-4 py-2">{{ $owner->name }}</td>
+                    <td class="border px-4 py-2">{{ $lastMeasurement->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2 flex">
                         <a wire:click="" ><x-buttons.measurement></x-buttons.measurement></a>
-                        <a wire:click=""  ><x-buttons.view></x-buttons.view></a>
+                        <a wire:click=""  ><x-buttons.view ></x-buttons.view></a>
                         <a wire:click=""  ><x-buttons.edit></x-buttons.edit></a>
 {{--                        <a wire:click="userFormEdit({{$bumblebee->id}})"  ><x-buttons.edit></x-buttons.edit></a>--}}
                     </td>

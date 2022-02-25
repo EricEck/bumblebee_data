@@ -71,6 +71,23 @@ class Bumblebee extends Authenticatable
     ];
 
     /**
+     * Elequent has many relationship to Measurement Model
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function measurements(){
+        return $this->hasMany(Measurement::class);
+    }
+
+    /**
+     * Elequent belongs to relationship User Model for Owner
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function owner(){
+        return $this->belongsTo(User::class);
+    }
+
+
+    /**
      * Search for specific bumblebee(s) across all visible fields
      *
      * @param string $search
