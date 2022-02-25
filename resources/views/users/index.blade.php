@@ -3,8 +3,7 @@
         {{ request()->get('niblet') ?? 'Users'}}
     </x-slot>
 
-
-    <livewire:users-table></livewire:users-table>
+    <livewire:users-table />
 
 </x-app-layout>
 

@@ -8,9 +8,11 @@ use Illuminate\Http\Request;
 class UserController extends Controller
 {
 
-    //
-    //  Show all the users
-    public function index(){
+    /**
+     * Show the User Index View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function indexView(){
         return view('users.index');
     }
 

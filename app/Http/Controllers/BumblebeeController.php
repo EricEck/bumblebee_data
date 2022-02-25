@@ -9,8 +9,17 @@ use Illuminate\Support\Str;
 
 class BumblebeeController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * VIEW: Show the Bumblebee Index View
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function indexView(){
+        return view('bumblebees.index');
+    }
+
+    /**
+     * API: Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */

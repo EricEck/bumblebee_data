@@ -23,16 +23,19 @@
                     </x-nav-link>
                 </div>
                 @endpermission
+
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('users_table')" :active="request()->routeIs('users_table')">
                         {{ __('Users') }}
                     </x-nav-link>
                 </div>
+
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-{{--                    <x-nav-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">--}}
-{{--                        {{ __('Bumblebees') }}--}}
-{{--                    </x-nav-link>--}}
+                    <x-nav-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
+                        {{ __('Bumblebees') }}
+                    </x-nav-link>
                 </div>
+
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
 {{--                    <x-nav-link :href="route('measurements_table_old')" :active="request()->routeIs('measurements_table_old')">--}}
 {{--                        {{ __('Measurements') }}--}}

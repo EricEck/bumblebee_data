@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BumblebeeController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,7 +44,8 @@ Route::group(['middleware' => ['auth']], function (){
             'uses'          => 'App\Http\Controllers\DashboardController@profile'])
         ->name('profile');
 
-    Route::get('/users_table', [UserController::class, 'index'])->name('users_table');
+    Route::get('/users_table', [UserController::class, 'indexView'])->name('users_table');
+    Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])->name('bumblebees_table');
 
     Route::get('/user_form/edit/{user_id}', [UserController::class, 'userFormEdit']);
     Route::get('/user_form/show/{user_id}', [UserController::class, 'userFormShow']);
