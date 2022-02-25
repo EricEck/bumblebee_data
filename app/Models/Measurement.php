@@ -71,4 +71,13 @@ class Measurement extends Model
             ->first();
     }
 
+    /**
+     * Elequent belongs to relationship Bumblebee Model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bumblebee(){
+        return $this->belongsTo(Bumblebee::class);
+    }
+
 }
