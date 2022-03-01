@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Psy\Util\Json;
@@ -175,7 +176,7 @@ class Measurement extends Model
     public function valueDecodeTable(){
 
         if ($this->manualMethod()){
-            debugbar()->info('manualMethod: '.$this->value);
+//            debugbar()->info('manualMethod: '.$this->value);
             return floatval(json_decode($this->valueJSON())->value);
         }
         if ($this->probeMethod()){
@@ -213,7 +214,16 @@ class Measurement extends Model
      * @param string $search
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
-    public static function searchView(string $search, int $bumblebeeID, string $metric, string $method
+    public static function searchView(string $search,
+                                      int $bumblebeeID,
+                                      string $metric,
+                                      string $method,
+                                      string $type,
+                                      string $start_datetime,
+                                      string $end_datetime,
+                                      string $sort_by,
+                                      string $orderAscending
+
 //                                      bool $measurementMetric,
 //                                      bool $calibrationMetric
     ){
@@ -236,68 +246,39 @@ class Measurement extends Model
             $method = "%manual%";
         }
 
-        debugbar()->info('metric '.$metric_search_operator.' '.$metric);
-        debugbar()->info('method '.$method_search_operator.' '.$method);
+        $type_search_operator = "=";
+        if($type == "2") $type_search_operator = "<";
+
+        switch($sort_by){
+            case 'time':
+                $sort_by = "measurement_timestamp";
+                break;
+            case 'id':
+                $sort_by = "id";
+                break;
+            default:
+            case 'seq':
+                $sort_by = "metric_sequence";
+        }
+
+
+
+//        debugbar()->info('metric '.$metric_search_operator.' '.$metric);
+//        debugbar()->info('method '.$method_search_operator.' '.$method);
+//        debugbar()->info('type '.$type_search_operator.' '.$type);
+//        debugbar()->info('start '.$start_datetime);
+//        debugbar()->info('end '.$end_datetime);
+
+        debugbar()->info('order by: '.$sort_by." ".$orderAscending );
 
         return static::query()
             ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
             ->where('metric', $metric_search_operator, $metric)
-            ->where('method', $method_search_operator, $method);
-
-//        $ms = Measurement::where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
-//        debugbar()->info($ms);
-//        debugbar()->info('bumblebee_id '.$bumblebee_search_operator.' '. $bumblebeeID);
-//        debugbar()->info('search:'.$search);
-
-        $q = static::query();
-
-        debugbar()->info($q);
-
-//        if (empty($search)){
-//
-//        } else {
-//
-//        }
-
-
-        return $q;
-
-        return empty($search) ? static::query()
-            : static::query()->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
-//                ->orWhere('method', 'like', '%'.$search.'%')
-//                ->orWhere('metric', 'like', '%'.$search.'%')
-//                ->orWhere('process', 'like', '%'.$search.'%')
-//                ->orWhere('details', 'like', '%'.$search.'%')
-//                ->orWhere('unit', 'like', '%'.$search.'%');
-
-        if ($measurementMetric && $calibrationMetric){
-            return empty($search) ? static::query()
-                : static::query()->where('id', 'like', '%'.$search.'%')
-                    ->where('calibration_value', 0)
-                    ->orWhere('method', 'like', '%'.$search.'%')
-                    ->orWhere('metric', 'like', '%'.$search.'%')
-                    ->orWhere('process', 'like', '%'.$search.'%')
-                    ->orWhere('details', 'like', '%'.$search.'%')
-                    ->orWhere('unit', 'like', '%'.$search.'%');
-        } elseif ($calibrationMetric){
-            return empty($search) ? static::query()
-                : static::query()->where('id', 'like', '%'.$search.'%')
-                    ->where('calibration_value', 1)
-                    ->orWhere('method', 'like', '%'.$search.'%')
-                    ->orWhere('metric', 'like', '%'.$search.'%')
-                    ->orWhere('process', 'like', '%'.$search.'%')
-                    ->orWhere('details', 'like', '%'.$search.'%')
-                    ->orWhere('unit', 'like', '%'.$search.'%');
-        } else {
-            return empty($search) ? static::query()
-                : static::query()->where('id', 'like', '%' . $search . '%')
-                    ->where('calibration_value', 0)
-                    ->orWhere('method', 'like', '%' . $search . '%')
-                    ->orWhere('metric', 'like', '%' . $search . '%')
-                    ->orWhere('process', 'like', '%' . $search . '%')
-                    ->orWhere('details', 'like', '%' . $search . '%')
-                    ->orWhere('unit', 'like', '%' . $search . '%');
-        }
+            ->where('method', $method_search_operator, $method)
+            ->where('calibration_value', $type_search_operator, $type)
+            ->where('measurement_timestamp', '>', $start_datetime)
+            ->where('measurement_timestamp', '<', $end_datetime)
+            ->orderBy($sort_by, $orderAscending );
     }
 
     /**
