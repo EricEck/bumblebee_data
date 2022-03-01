@@ -145,11 +145,12 @@
                 <tbody>
                 @foreach($measurements as $measurement)
                     @php($bumblebee = $measurement->bumblebee)
+                    @php($owner = $bumblebee->owner)
                     @php($value = $measurement->val)
                     <tr>
                         <td class="border px-4 py-2">{{ $measurement->id }}</td>
                         <td class="border px-4 py-2 text-xs">{{ date('l',strtotime($measurement->measurement_timestamp)) }}<br>{{  date('d-m-Y',strtotime($measurement->measurement_timestamp)) }}<br>{{ date('h:m',strtotime($measurement->measurement_timestamp)) }}</td>
-                        <td class="border px-4 py-2">{{ $bumblebee->serial_number }}</td>
+                        <td class="border px-4 py-2 font-thin text-xs">{{ $bumblebee->serial_number }}<br>({{ $owner->name }})</td>
                         <td class="border px-4 py-2">{{ $measurement->calibration_value ? 'Yes' : 'No' }}</td>
                         <td class="border px-4 py-2">{{ $measurement->method }}</td>
                         <td class="border px-4 py-2">{{ $measurement->metric_sequence }}</td>
