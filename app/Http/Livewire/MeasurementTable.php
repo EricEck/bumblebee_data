@@ -15,10 +15,12 @@ class MeasurementTable extends Component
     public $measurementsPerPage = 10;
     public $searchString = '';
     public $orderAscending = false;
-    public $orderBy = 'measurement_timestamp';
+    public $orderBy = 'id';
     public $calibrationMetric = false;
     public $measurementMetric = true;
+    public $bumblebeeID = 4;
 
+    public  $renders =0;
     /**
      * All Measurements Index/Search
      *
@@ -26,10 +28,19 @@ class MeasurementTable extends Component
      */
     public function render()
     {
+
+        debugbar()->info('Renders: '.$this->renders++);
+        debugbar()->info('Per Page: '.$this->measurementsPerPage);
+        debugbar()->info('BB ID: '.$this->bumblebeeID);
+
         return view('livewire.measurement-table',[
-            'measurements' => Measurement::searchView($this->searchString, $this->measurementMetric, $this->calibrationMetric)
-                ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
+
+            'measurements' => Measurement::searchView($this->searchString,
+                                                        $this->bumblebeeID)
+                ->orderBy($this->orderBy,
+                        $this->orderAscending ? 'asc' : 'desc')
                 ->paginate($this->measurementsPerPage),
+
             'bumblebees' => Bumblebee::all(),
         ]);
     }

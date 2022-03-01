@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Psy\Util\Json;
+use function Livewire\str;
 
 /**
  * App\Models\Measurement
@@ -60,6 +62,7 @@ class Measurement extends Model
         'calibration_value'
     ];
 
+
     /**
      * Find the Newest Measurement for a Bumblebee
      * @param $bumblebeeID
@@ -71,22 +74,184 @@ class Measurement extends Model
             ->first();
     }
 
+
+
+    /**
+     * All Possible metrics for measurements
+     *
+     * @return array
+     */
+    public static function metricEnums(){
+        return array(
+            'ph','orp', 'conductivity', 'free chlorine', 'total chlorine', 'alkalinity', 'calcium',
+                'temperature', 'pressure', 'flow', 'other');
+    }
+
+    /**
+     * All Possible methods for measurements
+     *
+     * @return array
+     */
+    public static function methodEnums(){
+        return array(
+            'probe', 'colorimetric', 'other',
+            'manual_titration', 'manual_colorimetric', 'manual_teststrip');
+    }
+
+    /**
+     * Check the type of Method is Colorimetric
+     *
+     * @return bool if a Colorimetric Method
+     */
+    public function colorimetricMethod(){
+        switch ($this->method){
+            case 'colorimetric':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check the type of Method is Manual
+     *
+     * @return bool if a manual Method
+     */
+    public function manualMethod(){
+        switch ($this->method){
+            case 'manual_titration':
+            case 'manual_colorimetric':
+            case 'manual_teststrip':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check the type of Method is Probe
+     *
+     * @return bool if a voltage Method
+     */
+    public function probeMethod(){
+        switch ($this->method){
+            case 'probe':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+
+
+    /**
+     * All Possible units for measurements
+     *
+     * @return array
+     */
+    public static function unitEnums(){
+        return array(
+            'uV', 'mV', 'V', 'uA', 'mA', 'A',
+            'count',
+            'bar', 'psi', 'atm', 'Pa',
+            'F', 'C',
+            'gpm', 'cfs',
+            'ppm', 'ppb',
+            'uS/cm', 'mS/cm',
+            'none');
+    }
+
+    /**
+     * Return the corrected JSON format, pythod JSON used f'd up single quotes
+     * @return string
+     */
+    public function valueJSON(){
+        return str_replace("'", '"', $this->value);
+    }
+
+    /**
+     * Return the value of the measurement decoding the JSON send based upon the method
+     */
+    public function valueDecodeTable(){
+
+        if ($this->manualMethod()){
+            return floatval(json_decode($this->valueJSON())->value);
+        }
+        if ($this->probeMethod()){
+            return floatval(json_decode($this->valueJSON())->value->voltage);
+        }
+        if($this->colorimetricMethod()){
+            $v = json_decode($this->valueJSON())->value;
+            return  "violet =  ".$v->violet.PHP_EOL.
+                     ", indigo =  ".$v->indigo."\n".
+                     ", blue =  ".$v->blue."\n".
+                     ", cyan =  ".$v->cyan."\n".
+                ", green = ".$v->green."\n".
+                ", yellow = ".$v->yellow.PHP_EOL.
+                ", orange = ".$v->orange.PHP_EOL.
+                ", red = ".$v->red.PHP_EOL.
+                ", clear = ".$v->clear.PHP_EOL.
+                ", nearIR = ".$v->nearIR.PHP_EOL;
+
+//                green" =  ".$v->green."\n";
+//                     "yellow =  ".$v->yellow."\n".
+//                     "orange =  ".$v->violet."\n".
+//                     "red" =  ".$v->red."\n\n".
+//                     "clear =  ".$v->clear."\n".
+//                     "nearIR =  ".$v->nearIR."\n";
+//            return json_decode($this->valueJSON())->value;
+        }
+
+        return $this->valueJSON();
+    }
+
+
     /**
      * Search for specific measurements(s) across all visible fields
      *
      * @param string $search
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
-    public static function searchView(string $search, bool $measurementMetric, bool $calibrationMetric){
+    public static function searchView(string $search,
+                                      int $bumblebeeID,
+//                                      bool $measurementMetric,
+//                                      bool $calibrationMetric
+    ){
+
+        $bumblebee_search_operator = "=";
+
+        if($bumblebeeID == 0){
+            $bumblebee_search_operator = "!=";
+        }
+
+        return static::query()
+            ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
+
+//        $ms = Measurement::where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
+//        debugbar()->info($ms);
+//        debugbar()->info('bumblebee_id '.$bumblebee_search_operator.' '. $bumblebeeID);
+//        debugbar()->info('search:'.$search);
+
+        $q = static::query();
+
+        debugbar()->info($q);
+
+//        if (empty($search)){
+//
+//        } else {
+//
+//        }
+
+
+        return $q;
 
         return empty($search) ? static::query()
-            : static::query()->where('id', 'like', '%'.$search.'%')
-                ->where('calibration_value', 0)
-                ->orWhere('method', 'like', '%'.$search.'%')
-                ->orWhere('metric', 'like', '%'.$search.'%')
-                ->orWhere('process', 'like', '%'.$search.'%')
-                ->orWhere('details', 'like', '%'.$search.'%')
-                ->orWhere('unit', 'like', '%'.$search.'%');
+            : static::query()->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
+//                ->orWhere('method', 'like', '%'.$search.'%')
+//                ->orWhere('metric', 'like', '%'.$search.'%')
+//                ->orWhere('process', 'like', '%'.$search.'%')
+//                ->orWhere('details', 'like', '%'.$search.'%')
+//                ->orWhere('unit', 'like', '%'.$search.'%');
 
         if ($measurementMetric && $calibrationMetric){
             return empty($search) ? static::query()

@@ -91,6 +91,7 @@ namespace App\Models{
  * @method static \Database\Factories\MeasurementFactory factory(...$parameters)
  * @property int $calibration_value
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationValue($value)
+ * @property-read \App\Models\Bumblebee|null $bumblebee
  */
 	class Measurement extends \Eloquent {}
 }
