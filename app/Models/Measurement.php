@@ -94,8 +94,8 @@ class Measurement extends Model
      */
     public static function methodEnums(){
         return array(
-            'probe', 'colorimetric', 'other',
-            'manual_titration', 'manual_colorimetric', 'manual_teststrip');
+            'probe', 'colorimetric',
+            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'other');
     }
 
     /**
@@ -213,22 +213,36 @@ class Measurement extends Model
      * @param string $search
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
-    public static function searchView(string $search,
-                                        int $bumblebeeID,
-                                        string $metric
+    public static function searchView(string $search, int $bumblebeeID, string $metric, string $method
 //                                      bool $measurementMetric,
 //                                      bool $calibrationMetric
     ){
 
         $bumblebee_search_operator = "=";
         if($bumblebeeID == 0) $bumblebee_search_operator = "!=";
+
         $metric_search_operator = "=";
         if($metric == "all") $metric_search_operator = "!=";
+        $method_search_operator = "=";
+
+        $method_search_operator = "=";
+        if($method == "all") $method_search_operator = "!=";
+        if($method == "auto") {
+            $method_search_operator = "not like";
+            $method = "%manual%";
+        }
+        if($method == "man") {
+            $method_search_operator = "like";
+            $method = "%manual%";
+        }
 
         debugbar()->info('metric '.$metric_search_operator.' '.$metric);
+        debugbar()->info('method '.$method_search_operator.' '.$method);
+
         return static::query()
             ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
-            ->where('metric', $metric_search_operator, $metric);
+            ->where('metric', $metric_search_operator, $metric)
+            ->where('method', $method_search_operator, $method);
 
 //        $ms = Measurement::where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
 //        debugbar()->info($ms);

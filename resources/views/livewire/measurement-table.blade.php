@@ -32,8 +32,10 @@
             </div>
         </div>
         <div class="w-1/6 relative mx-1">
-            <select wire:model="" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="*">All Methods</option>
+            <select wire:model="method" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                <option value="all" selected>All Methods</option>
+                <option value="auto">All Auto</option>
+                <option value="man">All Manual</option>
                 @foreach(\App\Models\Measurement::methodEnums() as $method)
                     <option value="{{ $method }}"> {{ $method }} </option>
                 @endforeach

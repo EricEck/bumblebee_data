@@ -20,6 +20,7 @@ class MeasurementTable extends Component
     public $measurementMetric = true;
     public $bumblebeeID = 0;
     public $metric = "all";
+    public $method = "all";
 
     public  $renders =0;
     /**
@@ -37,7 +38,7 @@ class MeasurementTable extends Component
 
         return view('livewire.measurement-table',[
 
-            'measurements' => Measurement::searchView($this->searchString,$this->bumblebeeID,$this->metric)
+            'measurements' => Measurement::searchView($this->searchString,$this->bumblebeeID,$this->metric, $this->method)
                 ->orderBy($this->orderBy,
                         $this->orderAscending ? 'asc' : 'desc')
                 ->paginate($this->measurementsPerPage),
