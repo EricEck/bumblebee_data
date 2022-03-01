@@ -29,6 +29,9 @@ class MeasurementFactory extends Factory
             'none'
         ];
 
+
+        // TODO: check factory change for JSON formatting
+
         return [
             'bumblebee_id' => $this->faker->numberBetween(1,10),
             'measurement_timestamp' => $this->faker->dateTimeBetween("2022-01-01 00:00:01", now()),
@@ -36,7 +39,7 @@ class MeasurementFactory extends Factory
             'metric' => $metricEnum[rand(0,count($metricEnum) - 1)],
             'method' => $methodEnum[rand(0,count($methodEnum) - 1)],
             'process'=> "{}",
-            'value' => strval($this->faker->randomFloat(5,0,100)),
+            'value' => '{"value:":'.strval($this->faker->randomFloat(5,0,100)).'}',
             'unit' => $unitEnum[rand(0,count($unitEnum) - 1)],
             'details' => $this->faker->sentence(),
             'calibration_value' => false

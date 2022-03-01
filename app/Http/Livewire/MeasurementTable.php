@@ -18,7 +18,8 @@ class MeasurementTable extends Component
     public $orderBy = 'id';
     public $calibrationMetric = false;
     public $measurementMetric = true;
-    public $bumblebeeID = 4;
+    public $bumblebeeID = 0;
+    public $metric = "all";
 
     public  $renders =0;
     /**
@@ -32,11 +33,11 @@ class MeasurementTable extends Component
         debugbar()->info('Renders: '.$this->renders++);
         debugbar()->info('Per Page: '.$this->measurementsPerPage);
         debugbar()->info('BB ID: '.$this->bumblebeeID);
+        debugbar()->info('Metrics: '.$this->metric);
 
         return view('livewire.measurement-table',[
 
-            'measurements' => Measurement::searchView($this->searchString,
-                                                        $this->bumblebeeID)
+            'measurements' => Measurement::searchView($this->searchString,$this->bumblebeeID,$this->metric)
                 ->orderBy($this->orderBy,
                         $this->orderAscending ? 'asc' : 'desc')
                 ->paginate($this->measurementsPerPage),

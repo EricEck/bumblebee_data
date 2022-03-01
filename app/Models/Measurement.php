@@ -175,6 +175,7 @@ class Measurement extends Model
     public function valueDecodeTable(){
 
         if ($this->manualMethod()){
+            debugbar()->info('manualMethod: '.$this->value);
             return floatval(json_decode($this->valueJSON())->value);
         }
         if ($this->probeMethod()){
@@ -213,19 +214,21 @@ class Measurement extends Model
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
     public static function searchView(string $search,
-                                      int $bumblebeeID,
+                                        int $bumblebeeID,
+                                        string $metric
 //                                      bool $measurementMetric,
 //                                      bool $calibrationMetric
     ){
 
         $bumblebee_search_operator = "=";
+        if($bumblebeeID == 0) $bumblebee_search_operator = "!=";
+        $metric_search_operator = "=";
+        if($metric == "all") $metric_search_operator = "!=";
 
-        if($bumblebeeID == 0){
-            $bumblebee_search_operator = "!=";
-        }
-
+        debugbar()->info('metric '.$metric_search_operator.' '.$metric);
         return static::query()
-            ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
+            ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
+            ->where('metric', $metric_search_operator, $metric);
 
 //        $ms = Measurement::where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID);
 //        debugbar()->info($ms);

@@ -21,8 +21,8 @@
             </div>
         </div>
         <div class="w-1/6 relative mx-1">
-            <select wire:model="" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="*">All Metrics</option>
+            <select wire:model="metric" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                <option value="all" selected>All Metrics</option>
                 @foreach(\App\Models\Measurement::metricEnums() as $metric)
                     <option value="{{ $metric }}"> {{ $metric }} </option>
                 @endforeach
