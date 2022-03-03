@@ -18,6 +18,8 @@ class MeasurementForm extends Component
     public $measurement_datetime;
     public $process = "";
 
+    public $scaledColorimetric = 0;
+
     protected $rules = [
 
         'measurement.bumblebee_id' => 'string',

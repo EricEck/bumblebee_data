@@ -19,11 +19,10 @@
 
                 <div class="shadow overflow-hidden sm:rounded-md">
 
+                    <!-- Form Data -->
                     <div class="px-4 py-5 bg-white sm:p-6">
+
                         <div class="grid grid-cols-6 gap-6">
-
-                            @php(debugbar()->info($measurement->attributesToArray()))
-
 
                             <div class="col-span-6 sm:col-span-3 mt-2">
                                 <label for="id" class="text-sm font-medium text-gray-700">Measurement ID</label>
@@ -138,12 +137,65 @@
                                 </textarea>
                             </div>
 
-
-
                         </div>
+
                     </div>
 
+                    @if($measurement->colorimetricMethod())
+                        <div class="px-4 py-5 mt-8">
+                            <h4 class="text-lg font-medium leading-6 text-gray-900">Colorimetric Spectrum Data</h4>
+                            <div class="w-1/6 relative mx-1 ">
+                                <select wire:model="scaledColorimetric" class="block appearance-none bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                                    <option disabled>Colorimetric Data Scaling</option>
+                                    <option value="0" selected>Raw Colorimetric</option>
+                                    <option value="1">Scaled to Clear</option>
+                                    <option value="2">Scaled to Peak</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                                </div>
+                            </div>
+                            <table class="table-auto w-full mb-6 bg-gray-50 mt-2">
+                                <thead>
+                                    <tr>
+                                        <th colspan="8" class="border bg-indigo-50">Visible Light Spectrum (nm)</th>
+                                        <th class="border">Non Vis</th>
+                                        <th class="border">Wideband</th>
+                                    </tr>
+                                    <tr>
+                                        <th class=" border bg-indigo-50">VIO (415)</th>
+                                        <th class=" border bg-indigo-50">IND (445)</th>
+                                        <th class="border bg-indigo-50">BLU (490)</th>
+                                        <th class=" border bg-indigo-50">CYN (525)</th>
+                                        <th class="border bg-indigo-50">GRN (565)</th>
+                                        <th class=" border bg-indigo-50">YLW (600)</th>
+                                        <th class=" border bg-indigo-50">ORG (640)</th>
+                                        <th class=" border bg-indigo-50">RED (690)</th>
+                                        <th class=" border ">IRD (910)</th>
+                                        <th class=" border ">CLEAR (all)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php($colorValue = $measurement->valueDecodeColor($scaledColorimetric))
+                                    <tr>
+                                        <!-- Color Spectrum -->
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->blue : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->cyan : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->green : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->yellow : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->orange : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    @endif
 
+                    <!-- Process Buttons -->
                     <div class="flow-root mt-6 items-center">
 
                         @if($allow_edit ?? '')
@@ -161,19 +213,21 @@
 
                 </div>
 
-
             </form>
 
-{{--            @if ($errors->any())--}}
-{{--                <div class="bg-gray-100 py-8 px-8">--}}
-{{--                    <h1 class="text-7xl py-4">ERROR(s)</h1>--}}
-{{--                    <ul>--}}
-{{--                        @foreach ($errors->all() as $error)--}}
-{{--                            <li class="px-10">==> {{ $error }}</li>--}}
-{{--                        @endforeach--}}
-{{--                    </ul>--}}
-{{--                </div>--}}
-{{--            @endif--}}
+
+
+            @if ($errors->any())
+                <div class="bg-gray-100 py-8 px-8">
+                    <h1 class="text-7xl py-4">ERROR(s)</h1>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="px-10">==> {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
         </div>
     </div>
 </div>
