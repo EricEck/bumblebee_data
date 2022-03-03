@@ -16,6 +16,40 @@ class MeasurementController extends Controller
         return view('measurements.index');
     }
 
+    /**
+     * VIEW: Show the Measurements View for one bumblebee
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function indexViewOneBB($bumblebee_id){
+
+        $bumblebee = Bumblebee::where('id', $bumblebee_id)->first();
+        if (!isset($bumblebee)){
+            abort(403, 'Bumblebee Unit ID Not Found');
+        }
+
+        return view('measurements.one',[
+            'bumblebee_select' => $bumblebee,
+        ]);
+    }
+
+    /**
+     * @param $measurement_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function measurementFormShow($measurement_id){
+
+        $measurement = Measurement::where('id', $measurement_id)->first();
+
+        return view('measurements.measurement_form', [
+            'measurement' => $measurement,
+            'allow_edit' => false,
+            'create_new' => false,
+        ]);
+
+    }
+
+
+
 
     /**
      * Display a listing of all non calibration measurements

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BumblebeeController;
+use App\Http\Controllers\MeasurementController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,8 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// Remove this when done with power grid
-Route::view('/powergrid', 'powergrid-demo');
+//// Remove this when done with power grid
+//Route::view('/powergrid', 'powergrid-demo');
 
 Route::get('/', function () {
     return view('welcome');
@@ -50,10 +51,15 @@ Route::group(['middleware' => ['auth']], function (){
 
     Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])->name('bumblebees_table');
     Route::get('/bumblebee_form/edit/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormEdit']);
-    Route::get('/bumblebee_form/show/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormShow']);
+    Route::get('/bumblebee_form/show/{bumblebee_id}',
+        [BumblebeeController::class, 'bumblebeeFormShow'])
+        ->name('bumblebeeFormShow');
     Route::get('/bumblebee_form/new', [BumblebeeController::class, 'bumblebeeFormNew']);
 
-    Route::get('/measurements_table', [\App\Http\Controllers\MeasurementController::class, 'indexView'])->name('measurements_table');
+    Route::get('/measurements_table', [MeasurementController::class, 'indexView'])->name('measurements_table');
+    Route::get('/measurements_table/{bumblebee_id}', [MeasurementController::class, 'indexViewOneBB'])->name('measurements_bumblebee');
+    Route::get('/measurements_form/show/{measurement_id}',
+        [MeasurementController::class, 'measurementFormShow']);
 
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');

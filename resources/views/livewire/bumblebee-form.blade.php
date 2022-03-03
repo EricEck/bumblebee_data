@@ -145,6 +145,7 @@
 
 
                 </form>
+
                 @if ($errors->any())
                     <div class="bg-gray-100 py-8 px-8">
                         <h1 class="text-7xl py-4">ERROR(s)</h1>
@@ -153,11 +154,12 @@
                                 <li class="px-10">==> {{ $error }}</li>
                             @endforeach
                         </ul>
-                    </h1>
+                    </div>
                 @endif
 
             </div>
         </div>
+
     </div>
 
 </div>

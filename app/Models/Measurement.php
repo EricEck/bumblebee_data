@@ -76,6 +76,25 @@ class Measurement extends Model
     }
 
 
+    /**
+     * Utility method to test Process is JSON
+     *
+     * will 'fix' this instance (not save) if saves as single quoted python dictionary
+     *
+     * @return bool
+     */
+    public function processIsJSON() {
+        json_decode($this->process);
+        if (json_last_error() == JSON_ERROR_NONE) return true;
+
+        // python has a wierd way of uploading JSON
+        $temp = json_decode(str_replace("'", '"', $this->process));
+        if (json_last_error() == JSON_ERROR_NONE) {
+            $this->process = $temp;
+            return true;
+        }
+        return false;
+    }
 
     /**
      * All Possible metrics for measurements
@@ -100,6 +119,16 @@ class Measurement extends Model
     }
 
     /**
+     * All Possible methods for measurements (manual only)
+     *
+     * @return array
+     */
+    public static function methodManualEnums(){
+        return array('manual_titration', 'manual_colorimetric', 'manual_teststrip');
+    }
+
+
+    /**
      * Check the type of Method is Colorimetric
      *
      * @return bool if a Colorimetric Method
@@ -107,6 +136,23 @@ class Measurement extends Model
     public function colorimetricMethod(){
         switch ($this->method){
             case 'colorimetric':
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Check the type of Method is Manual
+     *
+     * @param $method
+     * @return bool if a manual Method
+     */
+    public function isManualMethod($method){
+        switch ($method){
+            case 'manual_titration':
+            case 'manual_colorimetric':
+            case 'manual_teststrip':
                 return true;
             default:
                 return false;
@@ -166,46 +212,78 @@ class Measurement extends Model
      * Return the corrected JSON format, pythod JSON used f'd up single quotes
      * @return string
      */
-    public function valueJSON(){
+    public function forceDoubleQuotedJSON(){
         return str_replace("'", '"', $this->value);
     }
+
+
 
     /**
      * Return the value of the measurement decoding the JSON send based upon the method
      */
-    public function valueDecodeTable(){
+    public function valueDecodeNumber(){
 
         if ($this->manualMethod()){
 //            debugbar()->info('manualMethod: '.$this->value);
-            return floatval(json_decode($this->valueJSON())->value);
+            return floatval(json_decode($this->forceDoubleQuotedJSON())->value);
         }
         if ($this->probeMethod()){
-            return floatval(json_decode($this->valueJSON())->value->voltage);
+            return floatval(json_decode($this->forceDoubleQuotedJSON())->value->voltage);
         }
         if($this->colorimetricMethod()){
-            $v = json_decode($this->valueJSON())->value;
-            return  "violet =  ".$v->violet.PHP_EOL.
-                     ", indigo =  ".$v->indigo."\n".
-                     ", blue =  ".$v->blue."\n".
-                     ", cyan =  ".$v->cyan."\n".
-                ", green = ".$v->green."\n".
-                ", yellow = ".$v->yellow.PHP_EOL.
-                ", orange = ".$v->orange.PHP_EOL.
-                ", red = ".$v->red.PHP_EOL.
-                ", clear = ".$v->clear.PHP_EOL.
-                ", nearIR = ".$v->nearIR.PHP_EOL;
-
-//                green" =  ".$v->green."\n";
-//                     "yellow =  ".$v->yellow."\n".
-//                     "orange =  ".$v->violet."\n".
-//                     "red" =  ".$v->red."\n\n".
-//                     "clear =  ".$v->clear."\n".
-//                     "nearIR =  ".$v->nearIR."\n";
-//            return json_decode($this->valueJSON())->value;
+            // for this return the color JSON
+            $v = json_decode($this->forceDoubleQuotedJSON())->value;
+            return  $v;
         }
 
-        return $this->valueJSON();
+        return $this->forceDoubleQuotedJSON();
     }
+
+    /**
+     * Return Just the Colorimetry Data Scaled or Not zScalled
+     * @param int $scaled
+     * @return null|JSON
+     */
+    public function valueDecodeColor($scaled = 0){
+
+        if($this->colorimetricMethod()){
+            $c = json_decode($this->forceDoubleQuotedJSON())->value;
+            if ($scaled > 0){
+                $reference = $c->clear;
+                if ($scaled == 2) $reference = $this->maximumColorValue();
+                $c->violet = round($c->violet / $reference, 3);
+                $c->indigo = round($c->indigo / $reference, 3);
+                $c->blue = round($c->blue / $reference, 3);
+                $c->cyan = round($c->cyan / $reference, 3);
+                $c->green = round($c->green / $reference, 3);
+                $c->yellow = round($c->yellow / $reference, 3);
+                $c->orange = round($c->orange / $reference, 3);
+                $c->red = round($c->red / $reference, 3);
+                $c->nearIR = round($c->nearIR / $reference, 3);
+            }
+            return $c;
+        }
+        return null;
+    }
+
+    public function maximumColorValue()
+    {
+        if ($this->colorimetricMethod()){
+            $c = json_decode($this->forceDoubleQuotedJSON())->value;
+
+            $max = $c->violet;
+            if ($c->indigo > $max) $max = $c->indigo;
+            elseif ($c->blue > $max) $max = $c->blue;
+            elseif ($c->cyan > $max)  $max = $c->cyan;
+            elseif ($c->green > $max)  $max = $c->green;
+            elseif ($c->yellow > $max)  $max = $c->yellow;
+            elseif ($c->orange > $max)  $max = $c->orange;
+            elseif ($c->red > $max)  $max = $c->red;
+            return $max;
+        }
+        return null;
+    }
+
 
 
     /**
@@ -214,7 +292,7 @@ class Measurement extends Model
      * @param string $search
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
-    public static function searchView(string $search,
+    public static function searchView(
                                       int $bumblebeeID,
                                       string $metric,
                                       string $method,
@@ -260,16 +338,6 @@ class Measurement extends Model
             case 'seq':
                 $sort_by = "metric_sequence";
         }
-
-
-
-//        debugbar()->info('metric '.$metric_search_operator.' '.$metric);
-//        debugbar()->info('method '.$method_search_operator.' '.$method);
-//        debugbar()->info('type '.$type_search_operator.' '.$type);
-//        debugbar()->info('start '.$start_datetime);
-//        debugbar()->info('end '.$end_datetime);
-
-        debugbar()->info('order by: '.$sort_by." ".$orderAscending );
 
         return static::query()
             ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)

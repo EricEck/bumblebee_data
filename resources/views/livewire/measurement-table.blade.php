@@ -6,15 +6,22 @@
     <div class="w-full flex pb-10">
 
         <div class="w-1/6 relative mx-1">
-            <select wire:model="bumblebeeID" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="0" selected>All Bumblebees</option>
-                @foreach($bumblebees as $bumblebee)
-                    <option value="{{$bumblebee->id}}">{{ $bumblebee->serial_number }} (owner: {{ $bumblebee->owner->name }})</option>
-                @endforeach
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
-            </div>
+
+            @if(isset($bumblebee_select))
+                <div class="block text-xs appearance-none w-full bg-blue-200 border border-gray-200 text-gray-700 py-3 px-4 rounded leading-tight" id="grid-state">
+                    <b>{{ $bumblebee_select->serial_number}}</b><br>owned by {{ $bumblebee_select->owner->name }}
+                </div>
+            @else
+                <select wire:model="bumblebeeID" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                    <option value="0" selected>All Bumblebees</option>
+                    @foreach($bumblebees as $bumblebee)
+                        <option value="{{$bumblebee->id}}">{{ $bumblebee->serial_number }} (owner: {{ $bumblebee->owner->name }})</option>
+                    @endforeach
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
+            @endif
         </div>
         <div class="w-1/6 relative mx-1">
             <select wire:model="metric" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
@@ -50,13 +57,18 @@
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
-        <div class="w-3/6 relative mx-1">
-            <input wire:model.debounce.500ms="searchString" type="text"
-                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
-                   placeholder="Search...">
+        <div class="w-1/6 relative mx-1 ">
+            <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                <option disabled>Colorimetric Data Scaling</option>
+                <option value="0" selected>Raw Colorimetric</option>
+                <option value="1">Scaled to Clear</option>
+                <option value="2">Scaled to Peak</option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            </div>
         </div>
     </div>
-
 
     <div class="w-full flex pb-10">
 
@@ -80,7 +92,7 @@
         <div class="w-1/6 relative mx-1">
             <select wire:model="sort_by" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 <option disabled>Sort by</option>
-                <option value="seq" selected>Sequence</option>
+                <option value="seq">Sequence</option>
                 <option value="time">Timestamp</option>
                 <option value="id">ID</option>
             </select>
@@ -127,44 +139,89 @@
     <!-- Return Data -->
     @if(count($measurements))
 
-            <table class="table-auto w-full mb-6">
-                <thead>
+        <table class="table-auto w-full mb-6 bg-gray-50">
+            <thead>
+            <tr>
+                <th colspan="7"></th>
+{{--                @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
+                <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
+{{--                @endif--}}
+                <th class="border bg-blue-100">Probe</th>
+                <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>
+
+                <th></th>
+            </tr>
+            <tr>
+                <th class="">ID</th>
+                <th class="">Time<br>Stamp</th>
+                <th class="">BB<br>Unit</th>
+                <th class="">Cal?</th>
+                <th class="">Method</th>
+                <th class="">Seq</th>
+                <th class="">Metric</th>
+{{--                @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
+                    <th class=" bg-indigo-50">VIO</th>
+                    <th class=" bg-indigo-50">IND</th>
+                    <th class=" bg-indigo-50">BLU</th>
+                    <th class=" bg-indigo-50">CYN</th>
+                    <th class=" bg-indigo-50">GRN</th>
+                    <th class=" bg-indigo-50">YLW</th>
+                    <th class=" bg-indigo-50">ORG</th>
+                    <th class=" bg-indigo-50">RED</th>
+                    <th class=" bg-indigo-50">IRD</th>
+                    <th class=" bg-indigo-50">CLEAR</th>
+{{--                @endif--}}
+                <th class=" bg-blue-100">VOLT</th>
+                <th class=" bg-gray-200">Actual</th>
+                <th class=" bg-gray-200">Unit</th>
+                <th class="">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($measurements as $measurement)
+                @php($bumblebee = $measurement->bumblebee)
+                @php($owner = $bumblebee->owner)
+                @php($value = $measurement->val)
                 <tr>
-                    <th class="px-4 py-2">ID</th>
-                    <th class="px-4 py-2">Timestamp</th>
-                    <th class="px-4 py-2">Bumblebee</th>
-                    <th class="px-4 py-2">Calibration</th>
-                    <th class="px-4 py-2">Method</th>
-                    <th class="px-4 py-2">Sequence</th>
-                    <th class="px-4 py-2">Metric</th>
-                    <th class="px-4 py-2">Value</th>
-                    <th class="px-4 py-2">Unit</th>
-                    <th class="px-4 py-2">Actions</th>
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->id }}</td>
+                    <td class="border px-1 py-2 text-xs">{{ date('l',strtotime($measurement->measurement_timestamp)) }}<br>{{  date('m-d-Y',strtotime($measurement->measurement_timestamp)) }}<br>{{ date('g:i a',strtotime($measurement->measurement_timestamp)) }}</td>
+                    <td class="border px-1 py-2 font-thin text-xs text-center">
+                        <a href="{{route('bumblebeeFormShow', ['bumblebee_id' => $bumblebee->id])}}">
+                            <b>{{ $bumblebee->serial_number }}</b><br>({{ $owner->name }})
+                        </a>
+                    </td>
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_value ? 'Yes' : 'No' }}</td>
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->method }}</td>
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->metric_sequence }}</td>
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->metric }}</td>
+                   @php( $colorValue = $measurement->valueDecodeColor($scaledColorimetric) )
+{{--                    @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
+                        <!-- Color Spectrum -->
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->blue : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->cyan : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->green : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->yellow : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->orange : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
+{{--                    @endif--}}
+                        <!-- Probe Value -->
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
+                    <!-- Calibrated or Manual Number -->
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->manualMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
+
+                    <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
+                    <td class="border px-1 py-2 flex-auto">
+                        <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view ></x-buttons.view></a>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                @foreach($measurements as $measurement)
-                    @php($bumblebee = $measurement->bumblebee)
-                    @php($owner = $bumblebee->owner)
-                    @php($value = $measurement->val)
-                    <tr>
-                        <td class="border px-4 py-2">{{ $measurement->id }}</td>
-                        <td class="border px-4 py-2 text-xs">{{ date('l',strtotime($measurement->measurement_timestamp)) }}<br>{{  date('d-m-Y',strtotime($measurement->measurement_timestamp)) }}<br>{{ date('h:m',strtotime($measurement->measurement_timestamp)) }}</td>
-                        <td class="border px-4 py-2 font-thin text-xs">{{ $bumblebee->serial_number }}<br>({{ $owner->name }})</td>
-                        <td class="border px-4 py-2">{{ $measurement->calibration_value ? 'Yes' : 'No' }}</td>
-                        <td class="border px-4 py-2">{{ $measurement->method }}</td>
-                        <td class="border px-4 py-2">{{ $measurement->metric_sequence }}</td>
-                        <td class="border px-4 py-2">{{ $measurement->metric }}</td>
-                        <td class="border px-4 py-2">{{ $measurement->valueDecodeTable() }}</td>
-                        <td class="border px-4 py-2">{{ $measurement->unit }}</td>
-                        <td class="border px-4 py-2 flex-auto">
-                            <a wire:click=""  ><x-buttons.view ></x-buttons.view></a>
-                        </td>
-                    </tr>
-                @endforeach
-                </tbody>
-            </table>
-            {!! $measurements->links() !!}
+            @endforeach
+            </tbody>
+        </table>
+        {!! $measurements->links() !!}
 
     @else
         <p class="text-center">Sorry!   We need a recount... No Measurements found...   😿</p>

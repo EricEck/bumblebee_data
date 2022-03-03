@@ -75,7 +75,7 @@
                     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
                     <td class="border px-4 py-2 flex-auto">
                         @if(!empty($lastMeasurement))
-                            <a wire:click="" ><x-buttons.measurement></x-buttons.measurement></a>
+                            <a href="{{ route('measurements_bumblebee',['bumblebee_id' => $bumblebee->id]) }}" ><x-buttons.measurement></x-buttons.measurement></a>
                         @endif
                         <a wire:click="bumblebeeFormShow({{ $bumblebee->id }})"  ><x-buttons.view ></x-buttons.view></a>
                         <a wire:click="bumblebeeFormEdit({{ $bumblebee->id }})"  ><x-buttons.edit></x-buttons.edit></a>
