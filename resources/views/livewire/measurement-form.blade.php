@@ -47,7 +47,6 @@
                                 </select>
                             </div>
 
-
                             <div class="col-span-6 sm:col-span-3 mt-2">
                                 <label for="measurement_timestamp" class="text-sm font-medium text-gray-700">Measurement Date</label>
                                 <input type="datetime-local" name="measurement_timestamp" id="measurement_timestamp"
@@ -62,7 +61,7 @@
                                 <label for="metric" class="block text-sm font-medium text-gray-700">Metric</label>
                                 <select name="metric" id="metric"
                                         wire:model.lazy="measurement.metric"
-{{--                                            {{ $allow_edit ?  '' : 'disabled'}}--}}
+                                        {{ $allow_edit ?  '' : 'disabled'}}
                                         class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     <option value='' disabled>Select Metric---</option>
                                     @php($metrics = \App\Models\Measurement::metricEnums())
@@ -137,15 +136,29 @@
                                 </textarea>
                             </div>
 
+                            <div class="col-span-6 sm:col-span-3 mt-2 flex">
+                                <label for="uncalibration_valueit" class="block text-sm font-medium text-gray-700">This is a Calibration Measurement</label>
+                                <select name="calibration_value" id="calibration_value"
+                                        wire:model.lazy="measurement.calibration_value"
+                                        {{ $allow_edit ?  '' : 'disabled'}}
+                                        class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <option value='0'>No</option>
+                                    <option value='1'>Yes</option>
+                                </select>
+                            </div>
                         </div>
-
                     </div>
 
+
+                    <!-- Colorimetric Data -->
                     @if($measurement->colorimetricMethod())
-                        <div class="px-4 py-5 mt-8">
-                            <h4 class="text-lg font-medium leading-6 text-gray-900">Colorimetric Spectrum Data</h4>
-                            <div class="w-1/6 relative mx-1 ">
-                                <select wire:model="scaledColorimetric" class="block appearance-none bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                        <div class="mt-4 border py-2 bg-gray-200">
+
+                            <div class="px-4 py-5 mt-2 ">
+                            <h4 class="text-lg font-medium leading-6 text-gray-900">This Colorimetric Spectrum Data</h4>
+                            <div class="w-1/6 relative mx-3 my-3">
+                                <select wire:model="scaledColorimetric"
+                                        class="block appearance-none bg-indigo-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                                     <option disabled>Colorimetric Data Scaling</option>
                                     <option value="0" selected>Raw Colorimetric</option>
                                     <option value="1">Scaled to Clear</option>
@@ -155,8 +168,66 @@
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                                 </div>
                             </div>
+
+                            <div class="border ml-1 px-1 py-2 text-xs">
+                                <p class="">Measurement ID: {{$measurement->id}}</p>
+                                <p class="">{{ date('l',strtotime($measurement->measurement_timestamp)) }} {{  date('m-d-Y',strtotime($measurement->measurement_timestamp)) }} at {{ date('g:i a',strtotime($measurement->measurement_timestamp)) }}</p>
+                            </div>
+
                             <table class="table-auto w-full mb-6 bg-gray-50 mt-2">
                                 <thead>
+                                <tr>
+                                    <th colspan="8" class="border bg-indigo-50">Visible Light Spectrum (nm)</th>
+                                    <th class="border">Non Vis</th>
+                                    <th class="border">Wideband</th>
+                                </tr>
+                                <tr>
+                                    <th class=" border bg-indigo-50">VIO (415)</th>
+                                    <th class=" border bg-indigo-50">IND (445)</th>
+                                    <th class="border bg-indigo-50">BLU (490)</th>
+                                    <th class=" border bg-indigo-50">CYN (525)</th>
+                                    <th class="border bg-indigo-50">GRN (565)</th>
+                                    <th class=" border bg-indigo-50">YLW (600)</th>
+                                    <th class=" border bg-indigo-50">ORG (640)</th>
+                                    <th class=" border bg-indigo-50">RED (690)</th>
+                                    <th class=" border ">IRD (910)</th>
+                                    <th class=" border ">CLEAR (all)</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @php($colorValue = $measurement->valueDecodeColor($scaledColorimetric))
+                                <tr>
+                                    <!-- Color Spectrum -->
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->blue : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->cyan : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->green : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->yellow : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->orange : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
+                                    <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+
+                            <!-- Display Last Calibration Value -->
+                            @if(!$measurement->calibration_value)
+                            <div class="px-4 py-5 mt-4">
+                                <h4 class="text-lg font-medium leading-6 text-gray-900">Last Calibration Data (no reagents)</h4>
+                                @php($last_cal_measurement = $measurement->previousCalibrationMeasurement())
+                                <div class="border ml-1 px-1 py-2 text-xs hover:bg-gray-50">
+                                    <a  href="{{route('measurementFormShow', ['measurement_id' => $last_cal_measurement->id])}}">
+                                        <p class="">Measurement ID: {{$last_cal_measurement->id}}</p>
+                                        <p class="">{{ date('l',strtotime($last_cal_measurement->measurement_timestamp)) }} {{  date('m-d-Y',strtotime($last_cal_measurement->measurement_timestamp)) }} at {{ date('g:i a',strtotime($last_cal_measurement->measurement_timestamp)) }}</p>
+                                    </a>
+                                </div>
+
+                                <table class="table-auto w-full mb-6 bg-gray-50 mt-2">
+                                    <thead>
                                     <tr>
                                         <th colspan="8" class="border bg-indigo-50">Visible Light Spectrum (nm)</th>
                                         <th class="border">Non Vis</th>
@@ -174,26 +245,88 @@
                                         <th class=" border ">IRD (910)</th>
                                         <th class=" border ">CLEAR (all)</th>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @php($colorValue = $measurement->valueDecodeColor($scaledColorimetric))
+                                    </thead>
+                                    <tbody>
+                                    @php($colorValue = $last_cal_measurement->valueDecodeColor($scaledColorimetric))
                                     <tr>
                                         <!-- Color Spectrum -->
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->blue : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->cyan : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->green : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->yellow : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->orange : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
-                                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->violet }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->indigo }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->blue  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->cyan }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->green }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->yellow }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->orange  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->red  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->nearIR  }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $colorValue->clear  }}</td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        @endif
+
+                        </div>
+                    @endif
+
+                    <!-- Last Manual Method Data -->
+                    <div class="mt-4 border px-2 py-2 bg-gray-200">
+                        <h4 class="py-4 text-lg font-medium leading-6 text-gray-900">Last Manual Measurement</h4>
+                        @php($last_man_measurement = $measurement->previousManualMeasurement())
+                        @if(isset($last_man_measurement))
+                            <table class="table-auto w-full mb-6 bg-gray-50">
+                                <thead>
+                                <tr>
+{{--                                    <th colspan="7"></th>--}}
+
+{{--                                    <th class="border bg-blue-100">Probe</th>--}}
+{{--                                    <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>--}}
+{{--                                    <th></th>--}}
+                                </tr>
+                                <tr>
+                                    <th class="">ID</th>
+                                    <th class="">Time<br>Stamp</th>
+                                    <th class="">BB<br>Unit</th>
+                                    <th class="">Cal?</th>
+                                    <th class="">Method</th>
+                                    <th class="">Seq</th>
+                                    <th class="">Metric</th>
+                                    <th class=" bg-indigo-50">Actual</th>
+                                    <th class=" bg-indigo-50">Unit</th>
+                                    <th class="">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->id }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ date('l',strtotime($last_man_measurement->measurement_timestamp)) }}<br>{{  date('m-d-Y',strtotime($last_man_measurement->measurement_timestamp)) }}<br>{{ date('g:i a',strtotime($last_man_measurement->measurement_timestamp)) }}</td>
+                                        <td class="border px-1 py-2 font-thin text-xs text-center hover:bg-gray-50">
+                                            <a  href="{{route('bumblebeeFormShow', ['bumblebee_id' => $last_man_measurement->bumblebee->id])}}">
+                                                <b>{{ $last_man_measurement->bumblebee->serial_number }}</b><br>({{ $last_man_measurement->bumblebee->owner->name }})
+                                            </a>
+                                        </td>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->calibration_value ? 'Yes' : 'No' }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->method }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->metric_sequence }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->metric }}</td>
+
+                                        <!-- Calibrated or Manual Number -->
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->manualMethod() ? $last_man_measurement->valueDecodeNumber() : '' }}</td>
+                                        <td class="border px-1 py-2 text-xs">{{ $last_man_measurement->unit }}</td>
+                                        <td class="border px-1 py-2 flex-auto">
+                                            <a href="{{route('measurementFormShow', ['measurement_id' => $last_man_measurement->id])}}"><x-buttons.view ></x-buttons.view></a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                    @endif
+
+                        @else
+                            <p class="px-4 py-5">No Manual Measurements Available</p>
+                        @endif
+
+                    </div>
+
 
                     <!-- Process Buttons -->
                     <div class="flow-root mt-6 items-center">

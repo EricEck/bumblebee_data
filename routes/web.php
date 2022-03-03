@@ -59,7 +59,8 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/measurements_table', [MeasurementController::class, 'indexView'])->name('measurements_table');
     Route::get('/measurements_table/{bumblebee_id}', [MeasurementController::class, 'indexViewOneBB'])->name('measurements_bumblebee');
     Route::get('/measurements_form/show/{measurement_id}',
-        [MeasurementController::class, 'measurementFormShow']);
+        [MeasurementController::class, 'measurementFormShow'])
+        ->name('measurementFormShow');
 
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');

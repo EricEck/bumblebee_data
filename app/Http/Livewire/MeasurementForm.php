@@ -17,6 +17,7 @@ class MeasurementForm extends Component
 
     public $measurement_datetime;
     public $process = "";
+    public $calibration_value;
 
     public $scaledColorimetric = 0;
 
@@ -45,6 +46,9 @@ class MeasurementForm extends Component
         if (isset($this->measurement)){
             $this->measurement_datetime = str_replace(' ','T',$this->measurement->measurement_timestamp);
         }
+
+        $this->calibration_value = $this->measurement->calibration_value === 1;
+
 //        if ($this->measurement->processIsJSON()) {
 //            $this->process = $this->measurement->process;
 //        }

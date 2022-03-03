@@ -63,6 +63,36 @@ class Measurement extends Model
         'calibration_value'
     ];
 
+    /**
+     * Find the previous Calibration value
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function previousCalibrationMeasurement(){
+
+        return Measurement::query()
+            ->where('calibration_value',1)
+            ->where('bumblebee_id',$this->bumblebee_id)
+            ->where('method',$this->method)
+            ->where('metric',$this->metric)
+            ->orderBy('measurement_timestamp','desc')
+            ->first();
+    }
+
+    /**
+     * Find the previous Manual value
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function previousManualMeasurement(){
+
+        return Measurement::query()
+            ->where('bumblebee_id',$this->bumblebee_id)
+            ->where('metric',$this->metric)
+            ->where('method','manual_titration')
+            ->orWhere('method', 'manual_colorimetric')
+            ->orWhere('method', 'manual_teststrip')
+            ->orderBy('measurement_timestamp','desc')
+            ->first();
+    }
 
     /**
      * Find the Newest Measurement for a Bumblebee
