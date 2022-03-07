@@ -2,11 +2,41 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\UsersExport;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
+
+    /**
+     * Export a list of Model Users to an Excel File
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportExcel(){
+        return Excel::download(new UsersExport('','id', 1),
+            'ellipticUsers.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX);
+    }
+    public function exportCSV(){
+        return Excel::download(new UsersExport('', 'id', 1),
+            'ellipticUsers.csv',
+            \Maatwebsite\Excel\Excel::CSV,
+            ['Content-Type' => 'text/csv']);
+    }
+
+    public function exportSearchExcel(){
+
+        $searchString = \Session::get('searchString');
+        $orderBy = \Session::get('orderBy');
+        $orderAscending = \Session::get('orderAscending');
+
+        return Excel::download(new UsersExport($searchString, $orderBy, $orderAscending),
+            'ellipticUsers.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX);
+    }
 
     /**
      * Show the User Index View

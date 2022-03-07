@@ -64,6 +64,11 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/measurements_form/new',
         [MeasurementController::class, 'measurementFormNew']);
 
+    // Data Table Downloads
+//    Route::get('/export/users/excel', [UserController::class, 'exportExcel']);
+//    Route::get('/export/users/csv', [UserController::class, 'exportCSV']);
+    Route::get('/export/users/search', [UserController::class, 'exportSearchExcel']);
+
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
 

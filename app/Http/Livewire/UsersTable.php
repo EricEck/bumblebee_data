@@ -27,19 +27,30 @@ class UsersTable extends Component
     public function render()
     {
         return view('livewire.users-table', [
-            'users' => User::searchView($this->searchString)
-                ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
-                ->paginate($this->usersPerPage)]);
+            'users' => $this->renderSearch()]);
     }
 
-//    public $likes = 0;
-//
-//    public function like()
-//    {
-//        $this->likes++;
-//        debugbar()->info('Liked '.$this->likes);
-//
-//    }
+    public function renderSearch(){
+        return User::searchView($this->searchString)
+            ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
+            ->paginate($this->usersPerPage);
+    }
+
+    /**
+     * Export currently found Users to Excel
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function excel(){
+
+        return redirect('/export/users/search')->with([
+            'searchString' => $this->searchString,
+            'orderBy' => $this->orderBy,
+            'orderAscending' => $this->orderAscending,
+        ]) ;
+    }
+
+
 
     /**
      * Redirect to the User Form URL Route to Show Only
