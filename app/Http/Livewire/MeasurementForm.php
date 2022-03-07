@@ -24,9 +24,7 @@ class MeasurementForm extends Component
     protected $rules = [
 
         'measurement.bumblebee_id' => 'string',
-        'measurement_date' => 'date|required',
-        'measurement_datetime' => 'date_format:Y-m-d\TH:i:sP',
-        'measurement_time' => 'string|required',
+        'measurement_datetime' => 'string',
         'measurement.metric_sequence' => 'integer',
         'measurement.metric' => 'string|required',
         'measurement.method' => 'string|required',
@@ -41,18 +39,20 @@ class MeasurementForm extends Component
     {
         debugbar()->info('Rendering: '.$this->render_count++);
 
-        $this->measurement_datetime = Carbon::now()->toDateTimeLocalString();
+//        $this->measurement_datetime = Carbon::now()->toDateTimeLocalString();
 
-        if (isset($this->measurement)){
+        if (isset($this->measurement) && !$this->create_new){
             $this->measurement_datetime = str_replace(' ','T',$this->measurement->measurement_timestamp);
         }
 
+        if(strlen($this->measurement->value) > 0 && $this->create_new){
+            debugbar()->info($this->measurement->value);
+            debugbar()->info(json_decode($this->measurement->value));
+            debugbar()->info(json_decode($this->measurement->value)->value);
+//            $this->measurement->value = json_decode($this->measurement->value)->value;
+        }
+
         $this->calibration_value = $this->measurement->calibration_value === 1;
-
-//        if ($this->measurement->processIsJSON()) {
-//            $this->process = $this->measurement->process;
-//        }
-
 
         return view('livewire.measurement-form',[
             'measurement' => $this->measurement,
@@ -63,6 +63,35 @@ class MeasurementForm extends Component
     }
 
     public function save(){
+        debugbar()->info('Saving New Measurement');
 
+        // Update variables
+        $this->measurement->measurement_timestamp = str_replace('T', ' ', $this->measurement_datetime);
+
+//        $prevMeasurement = Measurement::where('bumblebee_id', $this->measurement->bumblebee_id)
+//            ->where('metric', $this->measurement->metric)
+//            ->where('method', $this->measurement->method)
+//            ->orderBy('measurement_timestamp', 'desc')
+//            ->first();
+
+        $this->measurement->metric_sequence = 1;
+        $prevMeasurement = $this->measurement->previousManualMeasurement();
+        if (isset($prevMeasurement)){
+            $this->measurement->metric_sequence = $prevMeasurement->metric_sequence + 1;
+        }
+
+        $this->measurement->value = json_encode([
+            'value' => strval($this->measurement->value),
+            ]);
+
+        $validatedData = $this->validate();
+
+        try {
+            $this->measurement->saveOrFail();
+            debugbar()->info('saved!');
+        } catch (\Exception $e){
+            debugbar()->info('Error...');
+            debugbar()->error($e);
+        }
     }
 }

@@ -50,6 +50,10 @@ class BumblebeeController extends Controller
         ]);
     }
 
+    /**
+     * Add a New Bumblebee Form
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function bumblebeeFormNew(){
         $bumblebee = new Bumblebee([
             'owner_id' => 1,
@@ -58,12 +62,6 @@ class BumblebeeController extends Controller
             'api_password' => '',
             'install_id' => 0,
             ]);
-
-        // Defaults for New Bumblebee
-//        $bumblebee->owner_id = 1;
-//        $bumblebee->manufacturer_id = 1;
-//        $bumblebee->removed_from_service = 0;
-//        $bumblebee->api_password = '';
 
          return view('bumblebees.bumblebee_form', [
                 'allow_edit' => true,

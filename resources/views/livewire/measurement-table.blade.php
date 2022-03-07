@@ -36,11 +36,11 @@
         </div>
         <div class="w-1/6 relative mx-1">
             <select wire:model="method" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="all" selected>All Methods</option>
+                <option value="all" >All Methods</option>
                 <option value="auto">All Auto</option>
                 <option value="man">All Manual</option>
-                @foreach(\App\Models\Measurement::methodEnums() as $method)
-                    <option value="{{ $method }}"> {{ $method }} </option>
+                @foreach(\App\Models\Measurement::methodEnums() as $methods)
+                    <option value="{{ $methods }}"> {{ $methods }} </option>
                 @endforeach
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
@@ -58,7 +58,7 @@
             </div>
         </div>
         <div class="w-1/6 relative mx-1 ">
-            <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+            <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 <option disabled>Colorimetric Data Scaling</option>
                 <option value="0" selected>Raw Colorimetric</option>
                 <option value="1">Scaled to Clear</option>
@@ -67,6 +67,9 @@
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
+        </div>
+        <div class="w-1/12 relative px-6">
+            <a wire:click="measurementFormNew()"><x-buttons.new></x-buttons.new></a>
         </div>
     </div>
 
@@ -143,10 +146,13 @@
             <thead>
             <tr>
                 <th colspan="7"></th>
-{{--                @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
-                <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
-{{--                @endif--}}
-                <th class="border bg-blue-100">Probe</th>
+
+                @if($method == "all" | $method == "auto" | $method == "colorimetric" )
+                    <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
+                @endif
+                @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
+                    <th class="border bg-blue-100">Probe</th>
+                @endif
                 <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>
 
                 <th></th>
@@ -159,7 +165,7 @@
                 <th class="">Method</th>
                 <th class="">Seq</th>
                 <th class="">Metric</th>
-{{--                @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
+                @if($method == "all" | $method == "auto" | $method == "colorimetric" )
                     <th class=" bg-indigo-50">VIO</th>
                     <th class=" bg-indigo-50">IND</th>
                     <th class=" bg-indigo-50">BLU</th>
@@ -170,8 +176,10 @@
                     <th class=" bg-indigo-50">RED</th>
                     <th class=" bg-indigo-50">IRD</th>
                     <th class=" bg-indigo-50">CLEAR</th>
-{{--                @endif--}}
-                <th class=" bg-blue-100">VOLT</th>
+                @endif
+                @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
+                    <th class=" bg-blue-100">VOLT</th>
+                @endif
                 <th class=" bg-gray-200">Actual</th>
                 <th class=" bg-gray-200">Unit</th>
                 <th class="">Actions</th>
@@ -194,8 +202,8 @@
                     <td class="border px-1 py-2 text-xs">{{ $measurement->method }}</td>
                     <td class="border px-1 py-2 text-xs">{{ $measurement->metric_sequence }}</td>
                     <td class="border px-1 py-2 text-xs">{{ $measurement->metric }}</td>
-                   @php( $colorValue = $measurement->valueDecodeColor($scaledColorimetric) )
-{{--                    @if($method == "all" || $method =="auto" || $method == "colorimetric")--}}
+                    @php( $colorValue = $measurement->valueDecodeColor($scaledColorimetric) )
+                    @if($method == "all" | $method == "auto" | $method == "colorimetric" )
                         <!-- Color Spectrum -->
                         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
                         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
@@ -207,9 +215,11 @@
                         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
                         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
                         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
-{{--                    @endif--}}
+                    @endif
+                    @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
                         <!-- Probe Value -->
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
+                        <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? round($measurement->valueDecodeNumber(),3) : '' }}</td>
+                    @endif
                     <!-- Calibrated or Manual Number -->
                     <td class="border px-1 py-2 text-xs">{{ $measurement->manualMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
 

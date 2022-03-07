@@ -72,6 +72,7 @@ class Measurement extends Model
         return Measurement::query()
             ->where('calibration_value',1)
             ->where('bumblebee_id',$this->bumblebee_id)
+            ->where('measurement_timestamp', '<', $this->measurement_timestamp)
             ->where('method',$this->method)
             ->where('metric',$this->metric)
             ->orderBy('measurement_timestamp','desc')
@@ -84,12 +85,29 @@ class Measurement extends Model
      */
     public function previousManualMeasurement(){
 
+        $m =  Measurement::query()
+            ->where('bumblebee_id',$this->bumblebee_id)
+            ->where('metric',$this->metric)
+            ->where('method','like', '%'.'manual'.'%')
+            ->where('measurement_timestamp', '<', $this->measurement_timestamp)
+            ->orderBy('measurement_timestamp','desc')
+            ->first();
+
+        return $m;
+
+    }
+
+    /**
+     * Find the next Manual value
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function nextManualMeasurement(){
+
         return Measurement::query()
             ->where('bumblebee_id',$this->bumblebee_id)
             ->where('metric',$this->metric)
-            ->where('method','manual_titration')
-            ->orWhere('method', 'manual_colorimetric')
-            ->orWhere('method', 'manual_teststrip')
+            ->where('method','like', '%'.'manual'.'%')
+            ->where('measurement_timestamp', '>', $this->measurement_timestamp)
             ->orderBy('measurement_timestamp','desc')
             ->first();
     }
@@ -145,7 +163,7 @@ class Measurement extends Model
     public static function methodEnums(){
         return array(
             'probe', 'colorimetric',
-            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'other');
+            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe', 'other');
     }
 
     /**
@@ -154,7 +172,7 @@ class Measurement extends Model
      * @return array
      */
     public static function methodManualEnums(){
-        return array('manual_titration', 'manual_colorimetric', 'manual_teststrip');
+        return array('manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe');
     }
 
 
@@ -183,6 +201,7 @@ class Measurement extends Model
             case 'manual_titration':
             case 'manual_colorimetric':
             case 'manual_teststrip':
+            case 'manual_probe':
                 return true;
             default:
                 return false;
@@ -199,6 +218,7 @@ class Measurement extends Model
             case 'manual_titration':
             case 'manual_colorimetric':
             case 'manual_teststrip':
+            case 'manual_probe':
                 return true;
             default:
                 return false;
@@ -302,13 +322,28 @@ class Measurement extends Model
             $c = json_decode($this->forceDoubleQuotedJSON())->value;
 
             $max = $c->violet;
-            if ($c->indigo > $max) $max = $c->indigo;
-            elseif ($c->blue > $max) $max = $c->blue;
-            elseif ($c->cyan > $max)  $max = $c->cyan;
-            elseif ($c->green > $max)  $max = $c->green;
-            elseif ($c->yellow > $max)  $max = $c->yellow;
-            elseif ($c->orange > $max)  $max = $c->orange;
-            elseif ($c->red > $max)  $max = $c->red;
+
+            if ($c->indigo > $max) {
+                $max = $c->indigo;
+            }
+            if ($c->blue > $max) {
+                $max = $c->blue;
+            }
+            if ($c->cyan > $max) {
+                $max = $c->cyan;
+            }
+            if ($c->green > $max) {
+                $max = $c->green;
+            }
+            if ($c->yellow > $max) {
+                $max = $c->yellow;
+            }
+            if ($c->orange > $max) {
+                $max = $c->orange;
+            }
+            if ($c->red > $max) {
+                $max = $c->red;
+            }
             return $max;
         }
         return null;

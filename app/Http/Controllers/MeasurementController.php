@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class MeasurementController extends Controller
 {
@@ -33,6 +34,8 @@ class MeasurementController extends Controller
     }
 
     /**
+     * Display an Existing Measurement
+     *
      * @param $measurement_id
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
@@ -45,9 +48,35 @@ class MeasurementController extends Controller
             'allow_edit' => false,
             'create_new' => false,
         ]);
-
     }
 
+    /**
+     * Create a new Measurement
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function measurementFormNew(){
+
+        debugbar()->info('MeasurementController::measurementFormNew()');
+
+        $measurement = new Measurement([
+            'calibration_value' => 1,
+            'bumblebee_id' => 0,
+            'metric' => 'ph',
+            'unit' => 'none',
+            'method' => 'manual_teststrip',
+            'process' => '',
+            'details' => '',
+            'measurement_timestamp' => Carbon::now()->toDateTimeLocalString(),
+
+        ]);
+
+        return view('measurements.measurement_form',[
+            'allow_edit' => true,
+            'create_new' => true,
+            'measurement' => $measurement,
+            ]);
+    }
 
 
 

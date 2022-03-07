@@ -49,7 +49,7 @@ class BumblebeeForm extends Component
      */
     public function save(){
 
-        debugbar()->info('Pre save');
+        debugbar()->info('Saving New Bumblebee');
 
         // assign token and hash the password for new bumblebees
         if ($this->create_new){

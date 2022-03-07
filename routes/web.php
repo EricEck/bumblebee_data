@@ -61,6 +61,8 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/measurements_form/show/{measurement_id}',
         [MeasurementController::class, 'measurementFormShow'])
         ->name('measurementFormShow');
+    Route::get('/measurements_form/new',
+        [MeasurementController::class, 'measurementFormNew']);
 
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
