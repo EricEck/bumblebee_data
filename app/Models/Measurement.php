@@ -357,26 +357,20 @@ class Measurement extends Model
      * @param string $search
      * @return Measurement|\Illuminate\Database\Eloquent\Builder
      */
-    public static function searchView(
-                                      int $bumblebeeID,
+    public static function searchView(int $bumblebeeID,
                                       string $metric,
                                       string $method,
                                       string $type,
                                       string $start_datetime,
                                       string $end_datetime,
                                       string $sort_by,
-                                      string $orderAscending
-
-//                                      bool $measurementMetric,
-//                                      bool $calibrationMetric
-    ){
+                                      string $orderAscending){
 
         $bumblebee_search_operator = "=";
         if($bumblebeeID == 0) $bumblebee_search_operator = "!=";
 
         $metric_search_operator = "=";
         if($metric == "all") $metric_search_operator = "!=";
-        $method_search_operator = "=";
 
         $method_search_operator = "=";
         if($method == "all") $method_search_operator = "!=";

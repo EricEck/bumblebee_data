@@ -15,18 +15,25 @@ class UserController extends Controller
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function exportExcel(){
-        return Excel::download(new UsersExport('','id', 1),
-            'ellipticUsers.xlsx',
-            \Maatwebsite\Excel\Excel::XLSX);
-    }
-    public function exportCSV(){
-        return Excel::download(new UsersExport('', 'id', 1),
-            'ellipticUsers.csv',
-            \Maatwebsite\Excel\Excel::CSV,
-            ['Content-Type' => 'text/csv']);
-    }
+//    public function exportExcel(){
+//        return Excel::download(new UsersExport('','id', 1),
+//            'ellipticUsers.xlsx',
+//            \Maatwebsite\Excel\Excel::XLSX);
+//    }
+//    public function exportCSV(){
+//        return Excel::download(new UsersExport('', 'id', 1),
+//            'ellipticUsers.csv',
+//            \Maatwebsite\Excel\Excel::CSV,
+//            ['Content-Type' => 'text/csv']);
+//    }
 
+    /**
+     * Export a specific list of users
+     *
+     * parameters passed via Session and ->with() function
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
     public function exportSearchExcel(){
 
         $searchString = \Session::get('searchString');

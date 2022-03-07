@@ -22,17 +22,19 @@ class UsersExport implements FromQuery
         $this->orderAscending = $orderAscending;
     }
 
-    public function forSearch(string $searchString = ''){
-        $this->searchString = $searchString;
-        return $this;
-    }
-
-    public function forOrder(string $orderBy = ''){
-        $this->orderBy = $orderBy;
-        return $this;
-    }
+//    public function forSearch(string $searchString = ''){
+//        $this->searchString = $searchString;
+//        return $this;
+//    }
+//
+//    public function forOrder(string $orderBy = ''){
+//        $this->orderBy = $orderBy;
+//        return $this;
+//    }
 
     /**
+     * Find and Return Specific Users
+     *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Relations\Relation|\Illuminate\Database\Query\Builder
      */
     public function query(){

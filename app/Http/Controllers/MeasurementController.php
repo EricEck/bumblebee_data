@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MeasurementsExport;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
+use Excel;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Session;
 
 class MeasurementController extends Controller
 {
@@ -31,6 +34,35 @@ class MeasurementController extends Controller
         return view('measurements.one',[
             'bumblebee_select' => $bumblebee,
         ]);
+    }
+
+    /**
+     * Export a specific list of Measurements
+     *
+     * parameters passed via Session and ->with() function
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportSearchExcel(){
+
+//        dd(Session::all());
+
+        $bumblebeeID = \Session::get('bumblebeeID');
+        $metric = \Session::get('metric');
+        $method = \Session::get('method');
+        $types = \Session::get('types');
+        $start_datetime = \Session::get('start_datetime');
+        $end_datetime = \Session::get('end_datetime');
+        $sort_by = \Session::get('sort_by');
+        $orderAscending = \Session::get('orderAscending');
+
+        debugbar()->info('exportSearchExcel():');
+        debugbar()->info('$start_datetime: '.$start_datetime);
+        debugbar()->info('$end_datetime: '.$end_datetime);
+
+        return Excel::download(new MeasurementsExport($bumblebeeID, $metric, $method, $types, $start_datetime, $end_datetime, $sort_by, $orderAscending),
+            'ellipticMeasurements.xlsx',
+            \Maatwebsite\Excel\Excel::XLSX);
     }
 
     /**

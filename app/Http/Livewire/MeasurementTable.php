@@ -53,13 +53,13 @@ class MeasurementTable extends Component
             $this->end_datetime = Carbon::tomorrow()->format('Y-m-d\Th:i');
         }
 
-
+        debugbar()->info('MeasurementTble.php');
         debugbar()->info('Renders: '.$this->renders++);
         debugbar()->info('Per Page: '.$this->measurementsPerPage);
         debugbar()->info('BB ID: '.$this->bumblebeeID);
         debugbar()->info('Metrics: '.$this->metric);
-        debugbar()->info('Start: '.$this->start_datetime);
-        debugbar()->info('End: '.$this->end_datetime);
+        debugbar()->info('$this->start_datetime: '.$this->start_datetime);
+        debugbar()->info('$this->end_datetim: '.$this->end_datetime);
         debugbar()->info('Sort by: '.$this->sort_by);
         debugbar()->info('Order in: '.$this->orderAscending );
 
@@ -67,12 +67,38 @@ class MeasurementTable extends Component
         return view('livewire.measurement-table',[
 
             'measurements' => Measurement::searchView(
-                $this->bumblebeeID, $this->metric, $this->method, $this->types,
-                $this->start_datetime, $this->end_datetime, $this->sort_by, $this->orderAscending)
+                $this->bumblebeeID,
+                $this->metric,
+                $this->method,
+                $this->types,
+                $this->start_datetime,
+                $this->end_datetime,
+                $this->sort_by,
+                $this->orderAscending)
                 ->paginate($this->measurementsPerPage),
 
             'bumblebees' => Bumblebee::all(),
         ]);
+    }
+
+    /**
+     * Export a specific set of Measurements to Excel
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function excel(){
+
+        return redirect('/export/measurements/search')->with([
+            'bumblebeeID' => $this->bumblebeeID,
+            'metric' => $this->metric,
+            'method' => $this->method,
+            'types' => $this->types,
+            'start_datetime' => $this->start_datetime,
+            'end_datetime' => $this->end_datetime,
+            'sort_by' => $this->sort_by,
+            'orderAscending' => $this->orderAscending,
+        ]);
+
     }
 
     /**
