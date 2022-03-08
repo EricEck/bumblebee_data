@@ -7,13 +7,16 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        <!-- Favicon -->
+        <link rel="shortcut icon" type="image/svg" href="{{ asset('images/EW-LOGO_ns.svg') }}">
+
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
         @livewireStyles
-        @powerGridStyles
+{{--        @powerGridStyles--}}
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>
@@ -43,6 +46,6 @@
                 </main>
         </div>
         @livewireScripts
-        @powerGridScripts
+{{--        @powerGridScripts--}}
     </body>
 </html>

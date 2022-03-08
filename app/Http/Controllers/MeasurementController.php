@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\MeasurementsAllExport;
 use App\Exports\MeasurementsExport;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
@@ -37,13 +38,27 @@ class MeasurementController extends Controller
     }
 
     /**
+     * Use CSV as it takes less memory.
+     *
+     * @TODO Solve 500 Error memory issue for excel
+     *
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
+     */
+    public function exportCSV(){
+
+        return Excel::download(new MeasurementsAllExport,
+            'ellipticMeasurements.csv',
+            \Maatwebsite\Excel\Excel::CSV);
+    }
+
+    /**
      * Export a specific list of Measurements
      *
      * parameters passed via Session and ->with() function
      *
      * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
-    public function exportSearchExcel(){
+    public function exportSearchCSV(){
 
 //        dd(Session::all());
 
@@ -61,8 +76,8 @@ class MeasurementController extends Controller
         debugbar()->info('$end_datetime: '.$end_datetime);
 
         return Excel::download(new MeasurementsExport($bumblebeeID, $metric, $method, $types, $start_datetime, $end_datetime, $sort_by, $orderAscending),
-            'ellipticMeasurements.xlsx',
-            \Maatwebsite\Excel\Excel::XLSX);
+            'ellipticMeasurements.csv',
+            \Maatwebsite\Excel\Excel::CSV);
     }
 
     /**

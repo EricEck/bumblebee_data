@@ -7,10 +7,9 @@ use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Database\Query\Builder;
 use Maatwebsite\Excel\Concerns\Exportable;
-use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\FromQuery;
 
-class MeasurementsExport implements FromQuery, FromCollection
+class MeasurementsExport implements FromQuery
 {
     use Exportable;
 
@@ -34,14 +33,6 @@ class MeasurementsExport implements FromQuery, FromCollection
         $this->end_datetime = $end_datetime;
         $this->sort_by = $sort_by;
         $this->orderAscending = $orderAscending;
-    }
-
-    /**
-    * @return \Illuminate\Support\Collection
-    */
-    public function collection()
-    {
-        return Measurement::all();
     }
 
     /**

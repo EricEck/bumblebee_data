@@ -68,7 +68,8 @@ Route::group(['middleware' => ['auth']], function (){
 //    Route::get('/export/users/excel', [UserController::class, 'exportExcel']);
 //    Route::get('/export/users/csv', [UserController::class, 'exportCSV']);
     Route::get('/export/users/search', [UserController::class, 'exportSearchExcel']);
-    Route::get('/export/measurements/search', [MeasurementController::class, 'exportSearchExcel']);
+    Route::get('/export/measurements/search', [MeasurementController::class, 'exportSearchCSV']);
+    Route::get('/export/measurements/all/csv', [MeasurementController::class, 'exportCSV']);
 
     Route::get('/dashboard', 'App\Http\Controllers\DashboardController@dashboard')
         ->name('dashboard');
