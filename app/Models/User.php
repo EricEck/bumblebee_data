@@ -55,6 +55,14 @@ class User extends Authenticatable
         return $this->hasMany(Bumblebee::class, 'owner_id', 'id');
     }
 
+    /**
+     * Eloquent has many relationship Calibration Model
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function calibrations(){
+        return $this->hasMany(Calibration::class);
+    }
+
 
     public function roleNames(){
         return $this->getRoles();

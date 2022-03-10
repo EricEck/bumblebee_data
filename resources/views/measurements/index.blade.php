@@ -3,6 +3,6 @@
         {{ request()->get('niblet') ?? 'Measurements'}}
     </x-slot>
 
-    <livewire:measurement-table/>
+    @livewire('measurement-table')
 
 </x-app-layout>

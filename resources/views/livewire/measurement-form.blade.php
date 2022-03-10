@@ -12,7 +12,7 @@
             </div>
         </div>
 
-
+        <!-- Content Markup -->
         <div class="mt-5 md:mt-0 md:col-span-6">
 
             <!--  Form Markup -->
@@ -58,7 +58,6 @@
                                        autofocus
                                        class="mt-1 px-3 text-black {{ $allow_edit ?? '' ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
-
 
                             <div class="col-span-6 sm:col-span-3 mt-2">
                                 <label for="metric" class="block text-sm font-medium text-gray-700">Metric</label>
@@ -150,9 +149,12 @@
                                 </select>
                             </div>
                         </div>
+
                     </div>
 
-                    @if(!$create_new) <!-- Only for Existing Measurements -->
+
+                    <!-- Only for Existing Measurements -->
+                    @if(!$create_new)
 
                         <!-- Colorimetric Data -->
                         @if($measurement->colorimetricMethod())
@@ -382,6 +384,8 @@
                     </div>
 
                     @endif
+
+
                     <!-- Process Buttons -->
                     <div class="flow-root mt-6 items-center">
 
@@ -418,4 +422,5 @@
         </div>
 
     </div>
+
 </div>

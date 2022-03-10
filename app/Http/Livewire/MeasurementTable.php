@@ -45,6 +45,7 @@ class MeasurementTable extends Component
             debugbar()->info($this->bumblebee_select);
         }
 
+        if($this->method == null) $this->method = "all";
         if ($this->start_datetime == null){
             $this->start_datetime = Carbon::now()->sub("7 days")->format('Y-m-d\Th:i');
         }
@@ -53,11 +54,12 @@ class MeasurementTable extends Component
             $this->end_datetime = Carbon::tomorrow()->format('Y-m-d\Th:i');
         }
 
-        debugbar()->info('MeasurementTble.php');
+        debugbar()->info('MeasurementTable.php');
         debugbar()->info('Renders: '.$this->renders++);
         debugbar()->info('Per Page: '.$this->measurementsPerPage);
         debugbar()->info('BB ID: '.$this->bumblebeeID);
         debugbar()->info('Metrics: '.$this->metric);
+        debugbar()->info('Methods: '.$this->method);
         debugbar()->info('$this->start_datetime: '.$this->start_datetime);
         debugbar()->info('$this->end_datetim: '.$this->end_datetime);
         debugbar()->info('Sort by: '.$this->sort_by);
@@ -106,8 +108,7 @@ class MeasurementTable extends Component
      * @param int $measurementID
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function measurementFormShow(int $measurementID)
-    {
+    public function measurementFormShow(int $measurementID){
         return redirect()->to('/measurements_form/show/'.$measurementID);
     }
 
@@ -115,8 +116,23 @@ class MeasurementTable extends Component
      * Redirect to the Measurement Form URL Route to Create a New Measurement
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function measurementFormNew()
-    {
+    public function measurementFormNew(){
         return redirect()->to('/measurements_form/new');
+    }
+
+    /**
+     * Redirect to the New Calibrations form URL with the reference seed information
+     * @param int $measurmentID optional
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function calibrationFormNew(int $measurmentID = 0){
+        $m = Measurement::find($measurmentID);
+        if($measurmentID){
+            $m = Measurement::find($measurmentID);
+            return redirect()->to('/calibrations/new/')->with([
+                "measurement" => $m,
+            ]);
+        }
+        return redirect()->to('/calibrations/new/');
     }
 }

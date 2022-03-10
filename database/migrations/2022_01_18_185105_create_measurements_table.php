@@ -25,7 +25,7 @@ class CreateMeasurementsTable extends Migration
 
             $table->enum( 'method',[
                 'probe', 'colorimetric', 'other',
-                'manual_titration', 'manual_colorimetric', 'manual_teststrip'])->default('other');
+                'manual_titration', 'manual_colorimetric', 'manual_teststrip','manual_probe'])->default('other');
 
             $table->string('process', 2048)->nullable();    // added 01-19-22 by eae
 

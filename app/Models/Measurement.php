@@ -12,7 +12,7 @@ use function Livewire\str;
  * App\Models\Measurement
  *
  * @property int $id
- * @property string $bumblebee_id
+ * @property int $bumblebee_id
  * @property string $measurement_timestamp
  * @property int $metric_sequence
  * @property string $metric
@@ -62,6 +62,20 @@ class Measurement extends Model
         'details',
         'calibration_value'
     ];
+
+    /**
+     * Find the Effective Calibration for this Measurement
+     *
+     * @return Calibration|\Illuminate\Database\Eloquent\Builder|Model|object|null
+     */
+    public function getEffectiveCalibration(){
+        return Calibration::where('bumblebee_id', $this->bumblebee_id)
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('effective', 1)
+            ->where('effective_timestamp', '<=', $this->measurement_timestamp)
+            ->first();
+    }
 
     /**
      * Find the previous Calibration value
@@ -123,6 +137,24 @@ class Measurement extends Model
             ->first();
     }
 
+    /**
+     * Valid Output Units for a given Metric
+     * @param $metric
+     * @return string[]
+     */
+    public function validOutputUnitsForMetric($metric = null){
+
+        if ($metric == null) $metric = $this->metric;
+
+        return match ($metric) {
+            'conductivity' => ['uS/cm', 'mS/cm'],
+            'free chlorine', 'total chlorine', 'alkalinity', 'calcium' => ['ppm', 'ppb'],
+            'temperature' => ['F', 'C'],
+            'pressure' => ['bar', 'psi', 'atm', 'Pa'],
+            'flow' => ['gpm', 'cfs'],
+            default => ['none'],
+        };
+    }
 
     /**
      * Utility method to test Process is JSON
@@ -155,6 +187,25 @@ class Measurement extends Model
                 'temperature', 'pressure', 'flow', 'other');
     }
 
+
+    /**
+     * All Possible units for measurements
+     *
+     * @return array
+     */
+    public static function unitEnums(){
+        return array(
+            'uV', 'mV', 'V', 'uA', 'mA', 'A',
+            'count',
+            'bar', 'psi', 'atm', 'Pa',
+            'F', 'C',
+            'gpm', 'cfs',
+            'ppm', 'ppb',
+            'uS/cm', 'mS/cm',
+            'none');
+    }
+
+
     /**
      * All Possible methods for measurements
      *
@@ -175,7 +226,6 @@ class Measurement extends Model
         return array('manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe');
     }
 
-
     /**
      * Check the type of Method is Colorimetric
      *
@@ -193,19 +243,15 @@ class Measurement extends Model
     /**
      * Check the type of Method is Manual
      *
-     * @param $method
+     * @param $method string if empty uses class value
      * @return bool if a manual Method
      */
-    public function isManualMethod($method){
-        switch ($method){
-            case 'manual_titration':
-            case 'manual_colorimetric':
-            case 'manual_teststrip':
-            case 'manual_probe':
-                return true;
-            default:
-                return false;
-        }
+    public function isManualMethod($method = null){
+        if($method == null) $method = $this->method;
+        return match ($method) {
+            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe' => true,
+            default => false,
+        };
     }
 
     /**
@@ -240,24 +286,6 @@ class Measurement extends Model
     }
 
 
-
-    /**
-     * All Possible units for measurements
-     *
-     * @return array
-     */
-    public static function unitEnums(){
-        return array(
-            'uV', 'mV', 'V', 'uA', 'mA', 'A',
-            'count',
-            'bar', 'psi', 'atm', 'Pa',
-            'F', 'C',
-            'gpm', 'cfs',
-            'ppm', 'ppb',
-            'uS/cm', 'mS/cm',
-            'none');
-    }
-
     /**
      * Return the corrected JSON format, pythod JSON used f'd up single quotes
      * @return string
@@ -267,7 +295,6 @@ class Measurement extends Model
     }
 
 
-
     /**
      * Return the value of the measurement decoding the JSON send based upon the method
      */
@@ -275,6 +302,7 @@ class Measurement extends Model
 
         if ($this->manualMethod()){
 //            debugbar()->info('manualMethod: '.$this->value);
+            debugbar()->info('ID: '.$this->id.' value: '.$this->value);
             return floatval(json_decode($this->forceDoubleQuotedJSON())->value);
         }
         if ($this->probeMethod()){
@@ -316,6 +344,10 @@ class Measurement extends Model
         return null;
     }
 
+    /**
+     * Return the maximum value of Color
+     * @return null|float
+     */
     public function maximumColorValue()
     {
         if ($this->colorimetricMethod()){
@@ -348,8 +380,6 @@ class Measurement extends Model
         }
         return null;
     }
-
-
 
     /**
      * Search for specific measurements(s) across all visible fields

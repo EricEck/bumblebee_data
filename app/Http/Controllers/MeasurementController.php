@@ -18,6 +18,7 @@ class MeasurementController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function indexView(){
+        debugbar()->info('New Index');
         return view('measurements.index');
     }
 

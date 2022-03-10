@@ -49,6 +49,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereRemovedFromService($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereSerialNumber($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Calibration[] $calibrations
+ * @property-read int|null $calibrations_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Measurement[] $measurements
  * @property-read int|null $measurements_count
  * @property-read \App\Models\User|null $owner
@@ -58,10 +60,51 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Calibration
+ *
+ * @property int $id
+ * @property int $bumblebee_id
+ * @property int $calibrator_id
+ * @property string $calibration_type
+ * @property string $metric
+ * @property string $method
+ * @property string $default_input_units
+ * @property string $default_output_units
+ * @property float $slope_m
+ * @property float $offset_b
+ * @property boolean $effective
+ * @property string $effective_timestamp
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Bumblebee|null $bumblebee
+ * @property-read \App\Models\User|null $calibrator
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereBumblebeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereCalibrationType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereCalibratorId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereDefaultInputUnits($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereDefaultOutputUnits($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereEffective($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereEffectiveTimestamp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereMethod($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereMetric($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereOffsetB($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereSlopeM($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Calibration whereUpdatedAt($value)
+ */
+	class Calibration extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Measurement
  *
  * @property int $id
- * @property string $bumblebee_id
+ * @property int $bumblebee_id
  * @property string $measurement_timestamp
  * @property int $metric_sequence
  * @property string $metric
@@ -160,6 +203,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bumblebee[] $bumblebees
  * @property-read int|null $bumblebees_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Calibration[] $calibrations
+ * @property-read int|null $calibrations_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions

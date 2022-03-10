@@ -84,6 +84,7 @@
             @endforeach
             </tbody>
         </table>
+
         {!! $bumblebees->links() !!}
 
     @else

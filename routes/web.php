@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\BumblebeeController;
+use App\Http\Controllers\CalibrationController;
 use App\Http\Controllers\MeasurementController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,10 @@ Route::group(['middleware' => ['auth']], function (){
         ->name('measurementFormShow');
     Route::get('/measurements_form/new',
         [MeasurementController::class, 'measurementFormNew']);
+
+    Route::get('/calibrations/new',
+        [CalibrationController::class, 'calibrationFormNew'])
+        ->name('calibrationFormNew');
 
     // Data Table Downloads
 //    Route::get('/export/users/excel', [UserController::class, 'exportExcel']);

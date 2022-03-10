@@ -2,7 +2,7 @@
     {{-- Because she competes with no one, no one can compete with her. --}}
 
 
-    <!-- Search Heading -->
+    <!-- Search Headings -->
     <div class="w-full flex pb-10">
 
         <div class="w-1/6 relative mx-1">
@@ -35,7 +35,7 @@
             </div>
         </div>
         <div class="w-1/6 relative mx-1">
-            <select wire:model="method" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+            <select wire:model.lazy="method" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 <option value="all" >All Methods</option>
                 <option value="auto">All Auto</option>
                 <option value="man">All Manual</option>
@@ -130,107 +130,18 @@
             </div>
         </div>
 
-{{--        <div class="w-1/6 mx-1 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">--}}
-{{--            <label for="measurementMetric">Measurements</label>--}}
-{{--            <input name="measurementMetric" id="measurementMetric" type="checkbox"--}}
-{{--                   wire:model="measurementMetric">--}}
-{{--        </div>--}}
-{{--        <div class="w-1/6 mx-1 appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">--}}
-{{--            <label for="calibrationMetric">Calibrations</label>--}}
-{{--            <input name="calibrationMetric" id="calibrationMetric" type="checkbox"--}}
-{{--                   wire:model="calibrationMetric">--}}
-{{--        </div>--}}
     </div>
 
-    <!-- Return Data -->
+    <!-- Return Table Data -->
     @if(count($measurements))
 
         <table class="table-auto w-full mb-6 bg-gray-50">
-            <thead>
-            <tr>
-                <th colspan="7"></th>
 
-                @if($method == "all" | $method == "auto" | $method == "colorimetric" )
-                    <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
-                @endif
-                @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
-                    <th class="border bg-blue-100">Probe</th>
-                @endif
-                <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>
+            <x-measurement-table-header :show-actions="1" :method="$method"></x-measurement-table-header>
 
-                <th></th>
-            </tr>
-            <tr>
-                <th class="">ID</th>
-                <th class="">Time<br>Stamp</th>
-                <th class="">BB<br>Unit</th>
-                <th class="">Cal?</th>
-                <th class="">Method</th>
-                <th class="">Seq</th>
-                <th class="">Metric</th>
-                @if($method == "all" | $method == "auto" | $method == "colorimetric" )
-                    <th class=" bg-indigo-50">VIO</th>
-                    <th class=" bg-indigo-50">IND</th>
-                    <th class=" bg-indigo-50">BLU</th>
-                    <th class=" bg-indigo-50">CYN</th>
-                    <th class=" bg-indigo-50">GRN</th>
-                    <th class=" bg-indigo-50">YLW</th>
-                    <th class=" bg-indigo-50">ORG</th>
-                    <th class=" bg-indigo-50">RED</th>
-                    <th class=" bg-indigo-50">IRD</th>
-                    <th class=" bg-indigo-50">CLEAR</th>
-                @endif
-                @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
-                    <th class=" bg-blue-100">VOLT</th>
-                @endif
-                <th class=" bg-gray-200">Actual</th>
-                <th class=" bg-gray-200">Unit</th>
-                <th class="">Actions</th>
-            </tr>
-            </thead>
             <tbody>
             @foreach($measurements as $measurement)
-                @php($bumblebee = $measurement->bumblebee)
-                @php($owner = $bumblebee->owner)
-                @php($value = $measurement->val)
-                <tr>
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->id }}</td>
-                    <td class="border px-1 py-2 text-xs">{{ date('l',strtotime($measurement->measurement_timestamp)) }}<br>{{  date('m-d-Y',strtotime($measurement->measurement_timestamp)) }}<br>{{ date('g:i a',strtotime($measurement->measurement_timestamp)) }}</td>
-                    <td class="border px-1 py-2 font-thin text-xs text-center">
-                        <a href="{{route('bumblebeeFormShow', ['bumblebee_id' => $bumblebee->id])}}">
-                            <b>{{ $bumblebee->serial_number }}</b><br>({{ $owner->name }})
-                        </a>
-                    </td>
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_value ? 'Yes' : 'No' }}</td>
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->method }}</td>
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->metric_sequence }}</td>
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->metric }}</td>
-                    @php( $colorValue = $measurement->valueDecodeColor($scaledColorimetric) )
-                    @if($method == "all" | $method == "auto" | $method == "colorimetric" )
-                        <!-- Color Spectrum -->
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->blue : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->cyan : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->green : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->yellow : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->orange : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
-                    @endif
-                    @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
-                        <!-- Probe Value -->
-                        <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? round($measurement->valueDecodeNumber(),3) : '' }}</td>
-                    @endif
-                    <!-- Calibrated or Manual Number -->
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->manualMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
-
-                    <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
-                    <td class="border px-1 py-2 flex-auto">
-                        <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view ></x-buttons.view></a>
-                    </td>
-                </tr>
+                <x-measurement-table-row :measurement="$measurement" :method="$method" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
             @endforeach
             </tbody>
         </table>

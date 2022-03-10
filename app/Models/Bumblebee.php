@@ -71,7 +71,7 @@ class Bumblebee extends Authenticatable
     ];
 
     /**
-     * Elequent has many relationship to Measurement Model
+     * Eloquent has many relationship to Measurement Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function measurements(){
@@ -79,11 +79,19 @@ class Bumblebee extends Authenticatable
     }
 
     /**
-     * Elequent belongs to relationship User Model for Owner
+     * Eloquent belongs to relationship User Model for Owner
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function owner(){
         return $this->belongsTo(User::class);
+    }
+
+    /**
+     * Eloquent has many relationship Calibration Model
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function calibrations(){
+        return $this->hasMany(Calibration::class);
     }
 
 
