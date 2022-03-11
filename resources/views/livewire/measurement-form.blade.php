@@ -41,9 +41,12 @@
                                 <select name="bumblebee_id" id="bumblebee_id"
                                         wire:model.lazy="measurement.bumblebee_id"
                                         {{ $allow_edit ?  '' : 'disabled'}}
+                                        autofocus
+                                        required
                                         class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
 {{--                                    <option selected disabled>Select Bumblebee being used in Pool</option>--}}
                                     {{ $create_new ? '<option selected disabled>Select Bumblebee being used in for Pool</option>' : '' }}
+                                    <option value='0' disabled>Select Bumblebee---</option>
                                     @foreach($bumblebees as $bumblebee)
                                         <option value="{{ $bumblebee->id }}">{{ $bumblebee->serial_number }} owner: ({{ $bumblebee->owner->name }})</option>
                                     @endforeach
@@ -54,8 +57,8 @@
                                 <label for="measurement_timestamp" class="text-sm font-medium text-gray-700">Measurement Date</label>
                                 <input type="datetime-local" name="measurement_timestamp" id="measurement_timestamp"
                                        wire:model.lazy="measurement_datetime"
+                                       required
                                        {{ $allow_edit ?? '' ?  '' : 'disabled'}}
-                                       autofocus
                                        class="mt-1 px-3 text-black {{ $allow_edit ?? '' ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                             </div>
 
@@ -63,6 +66,7 @@
                                 <label for="metric" class="block text-sm font-medium text-gray-700">Metric</label>
                                 <select name="metric" id="metric"
                                         wire:model.lazy="measurement.metric"
+                                        required
                                         {{ $allow_edit ?  '' : 'disabled'}}
                                         class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     <option value='' disabled>Select Metric---</option>
@@ -86,12 +90,39 @@
                                 <label for="method" class="block text-sm font-medium text-gray-700">Method</label>
                                 <select name="method" id="method"
                                         wire:model.lazy="measurement.method"
+                                        required
                                         {{ $allow_edit ?  '' : 'disabled'}}
                                         class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                     <option value='' disabled>Select Method---</option>
                                     @php($methods = \App\Models\Measurement::methodEnums())
                                     @foreach($methods as $method)
                                         <option {{ $measurement->isManualMethod($method) ? '' : 'disabled' }} value="{{ $method }}">{{ $method }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+
+                            <div class="col-span-6 sm:col-span-3 mt-2">
+                                <label for="value" class="text-sm font-medium text-gray-700">{{ $create_new ? 'Manual Measurment Value' : 'Raw Data Value <span class="text-xs">(calibrated in system)' }}</span></label>
+                                <textarea name="value" id="value"
+                                        wire:model.lazy="measurement.value"
+                                        required
+                                        {{ $allow_edit ?  '' : 'disabled'}}
+                                        class="px-3 text-black {{ $allow_edit ?? '' ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                </textarea>
+                            </div>
+
+                            <div class="col-span-6 sm:col-span-3 mt-2">
+                                <label for="unit" class="block text-sm font-medium text-gray-700">Units</label>
+                                <select name="unit" id="unit"
+                                        wire:model.lazy="measurement.unit"
+                                        {{ $allow_edit ?  '' : 'disabled'}}
+                                        class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                                    <option value='' disabled>Select Units---</option>
+                                    @php($units = $measurement->validOutputUnitsForMetric())
+                                    @foreach($units as $unit)
+                                        <option  value="{{ $unit }}">{{ $unit }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -104,29 +135,6 @@
                                            placeholder="{{ $create_new ?? '' ? 'describe the process' : '' }}"
                                            class="px-3 text-black {{ $allow_edit ?? '' ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
                                 </textarea>
-                            </div>
-
-                            <div class="col-span-6 sm:col-span-3 mt-2">
-                                <label for="value" class="text-sm font-medium text-gray-700">{{ $create_new ? 'Manual Measurment Value' : 'Raw Data Value <span class="text-xs">(calibrated in system)' }}</span></label>
-                                <textarea type="text" name="value" id="value"
-                                       wire:model.lazy="measurement.value"
-                                       {{ $allow_edit ?  '' : 'disabled'}}
-                                       class="px-3 text-black {{ $allow_edit ?? '' ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </textarea>
-                            </div>
-
-                            <div class="col-span-6 sm:col-span-3 mt-2">
-                                <label for="unit" class="block text-sm font-medium text-gray-700">Units</label>
-                                <select name="unit" id="unit"
-                                        wire:model.lazy="measurement.unit"
-                                        {{ $allow_edit ?  '' : 'disabled'}}
-                                        class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                    <option value='' disabled>Select Units---</option>
-                                    @php($units = \App\Models\Measurement::unitEnums())
-                                    @foreach($units as $unit)
-                                        <option  value="{{ $unit }}">{{ $unit }}</option>
-                                    @endforeach
-                                </select>
                             </div>
 
                             <div class="col-span-6 sm:col-span-3 mt-2">

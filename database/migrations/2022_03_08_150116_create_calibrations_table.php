@@ -20,8 +20,8 @@ class CreateCalibrationsTable extends Migration
             $table->string('calibration_type', 64);
             $table->string('metric');
             $table->string('method');
-            $table->string('default_input_units',64);
-            $table->string('default_output_units', 64);
+            $table->string('default_input_units',64)->default('');
+            $table->string('default_output_units', 64)->default('');
             $table->float('slope_m')->default(0);   // y = mx + b
             $table->float('offset_b')->default(0);   // y = mx + b
             $table->boolean('effective')->default(1);   // mark as effective by default

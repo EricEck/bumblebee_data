@@ -1,7 +1,10 @@
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
+
+            <!-- Top Horizontal Menu Items -->
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -12,46 +15,39 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-nav-link :href="route('dashboard')"  :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
-                @permission('profile-read')
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('profile')" :active="request()->routeIs('profile')">
-                        {{ __('Profile') }}
-                    </x-nav-link>
-                </div>
-                @endpermission
 
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('users_table')" :active="request()->routeIs('users_table')">
-                        {{ __('Users') }}
-                    </x-nav-link>
+                <div class="hidden space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
+                    <x-dropdown width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link  :active="request()->routeIs('bumblebees_table')|request()->routeIs('measurements_table')">
+                                {{ __('Elliptic Products') }}
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </x-nav-link>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
+                                {{ __('Bumblebees') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
+                                {{ __('Measurements') }}
+                            </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+
                 </div>
 
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
-                        {{ __('Bumblebees') }}
-                    </x-nav-link>
-                </div>
-
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
-                        {{ __('Measurements') }}
-                    </x-nav-link>
-                </div>
-
-                @permission('laratrust_panel-read')
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link href="/laratrust" >
-                        {{ __('Laratrust') }}
-                    </x-nav-link>
-                </div>
-                @endpermission
             </div>
 
-            <!-- Settings Dropdown -->
+            <!-- Right Side Top Settings Dropdown -->
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
@@ -67,6 +63,19 @@
                     </x-slot>
 
                     <x-slot name="content">
+                        <x-dropdown-link :href="route('users_table')" :active="request()->routeIs('users_table')">
+                            {{ __('Users') }}
+                        </x-dropdown-link>
+                        @permission('laratrust_panel-read')
+                        <x-dropdown-link href="/laratrust" >
+                                Laratrust
+                        </x-dropdown-link>
+                        @endpermission
+                        @permission('profile-read')
+                        <x-dropdown-link :href="route('profile')" :active="request()->routeIs('profile')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
+                        @endpermission
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -122,4 +131,5 @@
             </div>
         </div>
     </div>
+
 </nav>

@@ -5,6 +5,9 @@ namespace App\Http\Livewire;
 use App\Models\Bumblebee;
 use App\Models\Calibration;
 use App\Models\Measurement;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Livewire\Component;
 
 
@@ -16,8 +19,11 @@ class CalibrationForm extends Component
     public Measurement $measurement;
     public $calibration_datetime;
 
+    public bool $saved;
+
     protected $rules = [
-        'calibration.bumblebee_id' => 'required|exists:bumblebees',
+        'calibration.bumblebee_id' => 'required|exists:bumblebees,id',
+        'calibration.calibrator_id' => 'required|exists:users,id',
         'calibration.metric' => 'required|string',
         'calibration.method' => 'required|string',
         'calibration.calibration_type' => 'required|string',
@@ -27,23 +33,46 @@ class CalibrationForm extends Component
         'calibration.default_output_units' => 'required|string',
     ];
 
+    public function mount(){
+
+        debugbar()->info('CalibrationForm.php::mount()');
+        $this->saved = false;
+        if($this->calibration->id == 0) {
+            $this->calibration->bumblebee_id = 0;
+            $this->calibration->calibrator_id = Auth::user()->id;
+            $this->calibration->effective = 1;
+            $this->calibration->effective_timestamp = Carbon::now()->toDateTimeLocalString('minute');
+
+    //        $this->calibration->slope_m = 1;
+    //        $this->calibration->offset_b = 0;
+        }
+
+        // update from reference measurement
+        if(Session::get("measurement")){
+            $this->measurement =  Session::get("measurement");
+            debugbar()->info("Measurement Received");
+            $this->calibration->bumblebee_id = $this->measurement->bumblebee_id;
+            $this->calibration->metric = $this->measurement->metric;
+            $this->calibration->method = $this->measurement->method;
+            $this->calibration->calibration_type = $this->calibration->calibrationTypesForMethod($this->measurement->method)[0];
+            $this->calibration->default_output_units = $this->measurement->validOutputUnitsForMetric()[0];
+            $this->calibration->effective_timestamp = $this->measurement->measurement_timestamp;
+        }
+
+        // short the string to remove seconds from the effective timestamp both for HTML and to assist in this calibration always being BEFORE the measurement
+        $this->calibration_datetime = substr(str_replace(' ', 'T', $this->calibration->effective_timestamp), 0, 16);
+    }
 
     public function render()
     {
         debugbar()->info('CalibrationForm.php::render()');
+        debugbar()->info($this->calibration->attributesToArray());
 
-        if(!isset($this->calibration)) $this->calibration = new Calibration();
-        if(!isset($this->measurement)) $this->measurement = new Measurement();
-
-        if (isset($this->calibration) && $this->create_new){
-            $this->calibration_datetime = str_replace(' ','T',$this->calibration->effective_timestamp);
-        }
-
-//        debugbar()->info('Cal');
-//        debugbar()->info($this->calibration->attributesToArray());
-//
-//        debugbar()->info('Meas');
-//        debugbar()->info($this->measurement->attributesToArray());
+        // ONLY copy into the variable the first time through when $this->>measurement_datetime is NOT SET
+        // ALSO do not include seconds into the timestamp!   HTML does not properly check for this!
+//        if (!isset($this->calibration_datetime) && $this->create_new){
+//            $this->calibration_datetime = substr(str_replace(' ','T',$this->calibration->effective_timestamp),0,16);
+//        }
 
         return view('livewire.calibration-form',[
             "calibration" => $this->calibration,
@@ -57,16 +86,18 @@ class CalibrationForm extends Component
     public function save(){
         debugbar()->info('Saving New Calibration');
 
-        $this->effective_timestamp = str_replace('T',' ',$this->calibration_datetime); // swap from the local datatime format for html
+        $this->calibration->effective_timestamp = str_replace('T',' ',$this->calibration_datetime); // swap from the local datatime format for html
 
 //        $this->effective_timestamp = str_replace(' ','T',$this->effective_timestamp); // swap back to the local datatime format for html
 
         $validatedData = $this->validate();
 
-        dd($this);
+//        debugbar()->info($this->calibration->attributesToArray());
+
         try {
             $this->calibration->saveOrFail();
             debugbar()->info('saved!');
+            $this->saved = true;
         } catch (\Exception $e){
             debugbar()->info('Error...');
             debugbar()->error($e);

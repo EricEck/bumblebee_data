@@ -35,21 +35,27 @@ class MeasurementForm extends Component
         'measurement.calibration_value' => 'numeric',
     ];
 
+    /**
+     * Render the form
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function render()
     {
         debugbar()->info('Rendering: '.$this->render_count++);
 
-//        $this->measurement_datetime = Carbon::now()->toDateTimeLocalString();
-
-        if (isset($this->measurement) && !$this->create_new){
-            $this->measurement_datetime = str_replace(' ','T',$this->measurement->measurement_timestamp);
+        // ONLY copy into the variable the first time through when $this->>measurement_datetime is NOT SET
+        // ALSO do not include seconds into the timestamp!   HTML does not properly check for this!
+        if (!isset($this->measurement_datetime) && $this->create_new){
+            $this->measurement_datetime =
+                substr(str_replace(' ','T',$this->measurement->measurement_timestamp), 0, 16);
         }
 
-        if(strlen($this->measurement->value) > 0 && $this->create_new){
+        if(strlen($this->measurement->value) > 0 && !$this->create_new){
             debugbar()->info($this->measurement->value);
             debugbar()->info(json_decode($this->measurement->value));
             debugbar()->info(json_decode($this->measurement->value)->value);
-//            $this->measurement->value = json_decode($this->measurement->value)->value;
+            $this->measurement->value = json_decode($this->measurement->value)->value;
         }
 
         $this->calibration_value = $this->measurement->calibration_value === 1;
@@ -65,14 +71,11 @@ class MeasurementForm extends Component
     public function save(){
         debugbar()->info('Saving New Measurement');
 
+        debugbar()->info($this->measurement_datetime);
+
         // Update variables
         $this->measurement->measurement_timestamp = str_replace('T', ' ', $this->measurement_datetime);
 
-//        $prevMeasurement = Measurement::where('bumblebee_id', $this->measurement->bumblebee_id)
-//            ->where('metric', $this->measurement->metric)
-//            ->where('method', $this->measurement->method)
-//            ->orderBy('measurement_timestamp', 'desc')
-//            ->first();
 
         $this->measurement->metric_sequence = 1;
         $prevMeasurement = $this->measurement->previousManualMeasurement();
@@ -93,5 +96,8 @@ class MeasurementForm extends Component
             debugbar()->info('Error...');
             debugbar()->error($e);
         }
+
+        // revert the value back to a non-JSON view
+        $this->measurement->value = json_decode($this->measurement->value)->value;
     }
 }

@@ -19,6 +19,7 @@
 {{--        @powerGridStyles--}}
 
         <!-- Scripts -->
+        <script src="//unpkg.com/alpinejs" defer></script>  <!--Alpine JS-->
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">
@@ -45,6 +46,7 @@
                     </div>
                 </main>
         </div>
+
         @livewireScripts
 {{--        @powerGridScripts--}}
     </body>

@@ -110,14 +110,15 @@ class MeasurementController extends Controller
         $measurement = new Measurement([
             'calibration_value' => 1,
             'bumblebee_id' => 0,
-            'metric' => 'ph',
-            'unit' => 'none',
-            'method' => 'manual_teststrip',
+            'metric' => '',
+            'unit' => '',
+            'method' => '',
             'process' => '',
             'details' => '',
             'measurement_timestamp' => Carbon::now()->toDateTimeLocalString(),
-
         ]);
+
+        debugbar()->info($measurement->attributesToArray());
 
         return view('measurements.measurement_form',[
             'allow_edit' => true,
