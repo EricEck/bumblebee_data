@@ -24,7 +24,6 @@
                 @php($measurement->bumblebee_id == 0 ? $no_changes = false : $no_changes = true )
 {{--                @php(debugbar()->info($no_changes))--}}
 
-
                 <div class="col-span-6 sm:col-span-3 mt-2">
                     <label for="bumblebee_id" class="block text-sm font-medium text-gray-700">Bumblebee</label>
                     <select name="bumblebee_id" id="bumblebee_id"
@@ -135,8 +134,8 @@
                     </select>
                 </div>
 
-
-                <div class="col-span-6 sm:col-span-3 mt-4 ml-4 mr-4 border border-4 border-r border-black py-4 px-4 bg-gray-50 shadow-lg shadow-black">
+                <!-- Calibration Calculation Feedback -->
+                <div class="col-span-6 sm:col-span-3 mt-4 ml-12 mr-4 border border-2 border-black py-4 px-4 bg-gray-50 shadow-lg shadow-black">
                     @if($calibration->calibration_type == "linear")
                         <!-- Linear Calibration Type -->
 
@@ -169,7 +168,6 @@
                     @endif
                 </div>
 
-
                 <div class="col-span-6 sm:col-span-3 mt-2">
                     <label for="calibration_datetime" class="text-sm font-medium text-gray-700">Calibration Effective Timestamp</label>
                     <input type="datetime-local" name="calibration_datetime" id="calibration_datetime"
@@ -180,29 +178,43 @@
 
             </div>
 
+            <!-- Errors Display Markup -->
+            @if ($errors->any())
+                <div class="col-span-3 bg-gray-400 mt-4 py-8 px-8 border border-4 border-r border-black py-4 px-4 shadow-lg shadow-black">
+                    <h1 class="text-xl text-white">Entry Errors(s)</h1>
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li class="px-10 text-white">==> {{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <!-- Process Buttons -->
-            <div style="display: grid; grid-template-columns: 30% 30% 30%;" class="mt-8 mb-3">
-                <div><a href="javascript:history.back()"><x-buttons.back></x-buttons.back></a></div>
-                <div style="justify-self: center">
-{{--                    <x-buttons.reset>Reset</x-buttons.reset>--}}
+            <div class="flex justify-between mt-8 py-2 px-4 mr-4 border border-4 border-r border-black py-4 px-4 bg-gray-50 shadow-lg shadow-black">
+                <div >
+                    <a href="javascript:history.back()">
+                        <x-buttons.back></x-buttons.back>
+                    </a>
+                </div>
+                <div class="font-extrabold text-xl text-green-700"
+                     x-data="{show: false}"
+                     x-show="show"
+                     x-transition.opacity.out.duration.1500ms
+                     x-init="@this.on('saved',() => { show = true; setTimeout(() => { show = false; },2000);  })"
+                     style="display: none">
+                    Calibration Data Saved.
                 </div>
                 @if($allow_edit ?? '')
-                    <div style="justify-self: right"><x-buttons.save></x-buttons.save></div>
+                    <div >
+                        <x-buttons.save ></x-buttons.save>
+                    </div>
                 @endif
             </div>
+
         </form>
 
-        <!-- Errors Display Markup -->
-        @if ($errors->any())
-            <div class="bg-gray-100 py-8 px-8">
-                <h1 class="text-7xl py-4">ERROR(s)</h1>
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li class="px-10">==> {{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
+
 
     </div>
 

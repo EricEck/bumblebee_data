@@ -394,38 +394,44 @@
                     @endif
 
 
-                    <!-- Process Buttons -->
-                    <div class="flow-root mt-6 items-center">
+                    <!-- Errors Display Markup -->
+                    @if ($errors->any())
+                        <div class="col-span-3 bg-gray-400 mt-4 py-8 px-8 border border-4 border-r border-black py-4 px-4 shadow-lg shadow-black">
+                            <h1 class="text-xl text-white">Entry Errors(s)</h1>
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li class="px-10 text-white">==> {{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
+
+                    <!-- Process Buttons -->
+                    <div class="flex justify-between mt-8 py-2 px-4 mr-4 border border-4 border-r border-black py-4 px-4 bg-gray-50 shadow-lg shadow-black">
+                        <div >
+                            <a href="javascript:history.back()">
+                                <x-buttons.back></x-buttons.back>
+                            </a>
+                        </div>
+                        <div class="font-extrabold text-xl text-green-700"
+                             x-data="{show: false}"
+                             x-show="show"
+                             x-transition.opacity.out.duration.1500ms
+                             x-init="@this.on('saved',() => { show = true; setTimeout(() => { show = false; },2000);  })"
+                             style="display: none">
+                            Calibration Data Saved.
+                        </div>
                         @if($allow_edit ?? '')
-                            <div class="float-right">
-                                <x-buttons.save></x-buttons.save>
-                            </div>
-                            <div class="float-right">
-                                <x-buttons.reset>Reset</x-buttons.reset>
+                            <div >
+                                <x-buttons.save ></x-buttons.save>
                             </div>
                         @endif
-                        <div class="float-left">
-                            <a href="javascript:history.back()"><x-buttons.back></x-buttons.back></a>
-                        </div>
                     </div>
 
                 </div>
 
             </form>
-
-
-            <!-- Errors Display Markup -->
-            @if ($errors->any())
-                <div class="bg-gray-100 py-8 px-8">
-                    <h1 class="text-7xl py-4">ERROR(s)</h1>
-                    <ul>
-                        @foreach ($errors->all() as $error)
-                            <li class="px-10">==> {{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            @endif
 
         </div>
 

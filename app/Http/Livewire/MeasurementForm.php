@@ -23,7 +23,7 @@ class MeasurementForm extends Component
 
     protected $rules = [
 
-        'measurement.bumblebee_id' => 'string',
+        'measurement.bumblebee_id' => 'required|exists:bumblebees,id',
         'measurement_datetime' => 'string',
         'measurement.metric_sequence' => 'integer',
         'measurement.metric' => 'string|required',
@@ -34,6 +34,11 @@ class MeasurementForm extends Component
         'measurement.details' => 'string',
         'measurement.calibration_value' => 'numeric',
     ];
+
+
+    public function mount(){
+        debugbar()->info('Mounting');
+    }
 
     /**
      * Render the form
@@ -51,11 +56,23 @@ class MeasurementForm extends Component
                 substr(str_replace(' ','T',$this->measurement->measurement_timestamp), 0, 16);
         }
 
+        //  never send a mech engineer to really do data software...  sheeshh...   :-)
         if(strlen($this->measurement->value) > 0 && !$this->create_new){
+            debugbar()->info('$this->measurement->value');
             debugbar()->info($this->measurement->value);
-            debugbar()->info(json_decode($this->measurement->value));
-            debugbar()->info(json_decode($this->measurement->value)->value);
-            $this->measurement->value = json_decode($this->measurement->value)->value;
+
+
+            if($this->measurement->isManualMethod()){
+                // manual probe data
+                $this->measurement->value = json_decode($this->measurement->forceDoubleQuotedJSON())->value;
+            } elseif($this->measurement->colorimetricMethod()){
+                // automatic colorimetric data
+                debugbar()->info('color auto');
+                // don't return shit
+            } else {
+                // automatic probe data
+                $this->measurement->value = json_decode($this->measurement->forceDoubleQuotedJSON())->value->value;
+            }
         }
 
         $this->calibration_value = $this->measurement->calibration_value === 1;
@@ -87,11 +104,15 @@ class MeasurementForm extends Component
             'value' => strval($this->measurement->value),
             ]);
 
+        // run validation rule
         $validatedData = $this->validate();
 
         try {
             $this->measurement->saveOrFail();
             debugbar()->info('saved!');
+
+            $this->emit('saved');   // alpine JS $this.on('saved',() => {}) event
+
         } catch (\Exception $e){
             debugbar()->info('Error...');
             debugbar()->error($e);

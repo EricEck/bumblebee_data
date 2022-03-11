@@ -19,8 +19,6 @@ class CalibrationForm extends Component
     public Measurement $measurement;
     public $calibration_datetime;
 
-    public bool $saved;
-
     protected $rules = [
         'calibration.bumblebee_id' => 'required|exists:bumblebees,id',
         'calibration.calibrator_id' => 'required|exists:users,id',
@@ -36,7 +34,7 @@ class CalibrationForm extends Component
     public function mount(){
 
         debugbar()->info('CalibrationForm.php::mount()');
-        $this->saved = false;
+
         if($this->calibration->id == 0) {
             $this->calibration->bumblebee_id = 0;
             $this->calibration->calibrator_id = Auth::user()->id;
@@ -88,16 +86,15 @@ class CalibrationForm extends Component
 
         $this->calibration->effective_timestamp = str_replace('T',' ',$this->calibration_datetime); // swap from the local datatime format for html
 
-//        $this->effective_timestamp = str_replace(' ','T',$this->effective_timestamp); // swap back to the local datatime format for html
-
+        // run validation rule
         $validatedData = $this->validate();
-
-//        debugbar()->info($this->calibration->attributesToArray());
 
         try {
             $this->calibration->saveOrFail();
             debugbar()->info('saved!');
-            $this->saved = true;
+
+            $this->emit('saved');   // alpine JS $this.on('saved',() => {}) event
+
         } catch (\Exception $e){
             debugbar()->info('Error...');
             debugbar()->error($e);

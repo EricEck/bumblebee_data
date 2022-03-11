@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout xmlns:x-slot="http://www.w3.org/1999/xlink">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             @if(isset($calibration) && $calibration->bumblebee_id > 0)
@@ -21,12 +21,14 @@
                     ])
         </div>
 
+    </div>
+
         @if(isset($measurement) && $measurement->id > 0)
-            <div class="bg-blue-100 px-4 mt-4 shadow-lg shadow-black">
+            <div class="bg-blue-100 px-4 mt-4 shadow-lg shadow-black ">
 
                 <div class="py-6 bg-blend-lighten overflow-hidden shadow-sm sm:rounded-lg">
                     <div class="md:grid md:grid-cols-3 md:gap-6">
-                        <div class="md:col-span-1">
+                        <div class="col-span-12">
                             <div class="px-4 sm:px-0">
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">{{ __('Reference Measurement')}}</h3>
                             </div>
@@ -66,9 +68,8 @@
                         </div>
                     </div>
                 @endif
+
             </div>
         @endif
-
-    </div>
 
 </x-app-layout>
