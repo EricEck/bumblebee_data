@@ -8,7 +8,7 @@
             <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
         @endif
         @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
-            <th class="border bg-blue-100">Probe</th>
+            <th colspan="2" class="border bg-blue-100">Probe</th>
         @endif
         <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>
 
@@ -38,9 +38,11 @@
         @endif
         @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
             <th class=" bg-blue-100">VOLT</th>
+            <th class=" bg-blue-100">Unit</th>
         @endif
         <th class=" bg-gray-200">Actual</th>
         <th class=" bg-gray-200">Unit</th>
+
 
         @if($showActions)
             <th class="">Actions</th>

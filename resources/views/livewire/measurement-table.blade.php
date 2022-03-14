@@ -2,7 +2,7 @@
     {{-- Because she competes with no one, no one can compete with her. --}}
 
 
-    <!-- Search Headings -->
+    <!-- Search Headings Row 1-->
     <div class="w-full flex pb-10">
 
         <div class="w-1/6 relative mx-1">
@@ -75,7 +75,7 @@
             <a wire:click="measurementFormNew()"><x-buttons.new></x-buttons.new></a>
         </div>
     </div>
-
+    <!-- Search Headings Row 2-->
     <div class="w-full flex pb-10">
 
         <div class="w-2/6 relative mx-1 flex">
@@ -132,7 +132,7 @@
 
     </div>
 
-    <!-- Return Table Data -->
+    <!-- Returned Table Data -->
     @if(count($measurements))
 
         <table class="table-auto w-full mb-6 bg-gray-50">

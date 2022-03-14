@@ -32,11 +32,17 @@
 @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
     <!-- Probe Value -->
         <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? round($measurement->valueDecodeNumber(),3) : '' }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? $measurement->unit : ''}}</td>
 @endif
 <!-- Calibrated or Manual Number -->
-    <td class="border px-1 py-2 text-xs">{{ $measurement->manualMethod() ? $measurement->valueDecodeNumber() : '' }}</td>
+    @if($measurement->isManualMethod())
+        <td class="border px-1 py-2 text-xs">{{ $measurement->valueDecodeNumber() }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
+    @else
+        <td class="border px-1 py-2 text-xs"></td>
+        <td class="border px-1 py-2 text-xs"></td>
+    @endif
 
-    <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
     @if($showActions)
         <td class="border px-1 py-2 flex-auto">
             <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view ></x-buttons.view></a>
