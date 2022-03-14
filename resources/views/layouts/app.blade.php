@@ -19,7 +19,7 @@
 {{--        @powerGridStyles--}}
 
         <!-- Scripts -->
-        <script src="//unpkg.com/alpinejs" defer></script>  <!--Alpine JS-->
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  <!--Alpine JS v3 from official CDN-->
         <script src="{{ asset('js/app.js') }}" defer></script>
     </head>
     <body class="font-sans antialiased">

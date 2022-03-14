@@ -8,16 +8,12 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                Welcome
-{{--                <div class="p-6 bg-white border-b border-gray-200">--}}
-{{--                    You're logged in!--}}
-{{--                    <livewire:counter />--}}
-{{--                </div>--}}
-{{--                <div class="p-6 bg-white border-b border-gray-200">--}}
-{{--                    You're logged in!--}}
-{{--                    <livewire:counter />--}}
-{{--                </div>--}}
-
+                <h2 class="text-xl">Welcome {{ Auth::user()->name }} to Elliptic Works'  Elliptic Einstein Cloud System</h2>
+                <div style="color: #6b7280" class="mt-8 ml-12 mb-4">
+                    <p>Version: {{config('app.name').' '.config('app.app_version')}}</p>
+                    <p>✉ <a href="mailto:eeckstein@ellpticworks.com">click here to email Eric with any questions/issues</a></p>
+                    <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
+                </div>
             </div>
         </div>
     </div>
