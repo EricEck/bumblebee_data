@@ -68,11 +68,36 @@
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
-        <div class="w-1/12 relative mx-1">
+        <!-- Table Actions -->
+        <div class="w-1/12 relative">
             <a wire:click="excel"><x-buttons.excel></x-buttons.excel></a>
         </div>
-        <div class="w-1/12 relative px-6">
+        <div class="w-1/12 relative px-4">
             <a wire:click="measurementFormNew()"><x-buttons.new></x-buttons.new></a>
+        </div>
+        <div class="w-1/12 relative">
+            <a wire:click="calibrateMeasurements"
+               x-data="{showCalibrationButton: true}"
+               x-show="showCalibrationButton"
+               x-init="@this.on('hideCalibrationButton',() => { showCalibrationButton = false; setTimeout(() => { showCalibrationButton = true; },5000);  })">
+                <x-buttons.calculate><span class="text-xs">Run Calibration</span></x-buttons.calculate>
+            </a>
+            <div class="font-bold text-xs text-blue-700 text-center bg-gray-200 py-4"
+                 x-data="{showCalibrating: false}"
+                 x-show="showCalibrating"
+                 x-transition.opacity.out.duration.250ms
+                 x-init="@this.on('calibrating',() => { showCalibrating = true; setTimeout(() => { showCalibrating = false; },1000);  })"
+                 style="display: none">
+                Updating Calibrations...
+            </div>
+            <div class="font-bold text-xs text-green-700 text-center bg-gray-200 py-4"
+                 x-data="{doneCalibrating: false}"
+                 x-show="doneCalibrating"
+                 x-transition.opacity.out.duration.750ms
+                 x-init="@this.on('calibrationComplete',() => { doneCalibrating = true; setTimeout(() => { doneCalibrating = false; },3000);  })"
+                 style="display: none">
+                Calibrations Complete!
+            </div>
         </div>
     </div>
     <!-- Search Headings Row 2-->
@@ -138,13 +163,13 @@
         <table class="table-auto w-full mb-6 bg-gray-50">
 
             <x-measurement-table-header :show-actions="1" :method="$method"></x-measurement-table-header>
-
             <tbody>
-            @foreach($measurements as $measurement)
-                <x-measurement-table-row :measurement="$measurement" :method="$method" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
-            @endforeach
+                @foreach($measurements as $measurement)
+                    <x-measurement-table-row :measurement="$measurement" :method="$method" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
+                @endforeach
             </tbody>
         </table>
+
         {!! $measurements->links() !!}
 
     @else

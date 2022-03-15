@@ -65,6 +65,10 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/measurements_form/new',
         [MeasurementController::class, 'measurementFormNew']);
 
+//    Route::get('/measurements/calibrate',
+//        [MeasurementController::class, 'calibrateAllMeasurements'])
+//        ->name('calibrateMeasurements');
+
     Route::get('/calibrations/new',
         [CalibrationController::class, 'calibrationFormNew'])
         ->name('calibrationFormNew');

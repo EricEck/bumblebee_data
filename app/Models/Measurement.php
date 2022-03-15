@@ -13,7 +13,7 @@ use function Livewire\str;
  *
  * @property int $id
  * @property int $bumblebee_id
- * @property string $measurement_timestamp
+ * @property \Illuminate\Support\Carbon|null $measurement_timestamp
  * @property int $metric_sequence
  * @property string $metric
  * @property string $method
@@ -49,6 +49,7 @@ class Measurement extends Model
 
     // everything except what is here is fillable
 //    protected $guarded = ['id'];
+
     //  these are the fields that are mass fillable
     protected $fillable = [
         'bumblebee_id',
@@ -60,8 +61,74 @@ class Measurement extends Model
         'value',
         'unit',
         'details',
-        'calibration_value'
+        'calibration_value',
+        'calibrated_value',
+        'calibrated_unit',
+        'calibration_id',
     ];
+
+    // eager load the bumblebee
+    protected $with = ['bumblebee'];
+
+    /**
+     * Eloquent belongs to relationship Bumblebee Model
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bumblebee(){
+        return $this->belongsTo(Bumblebee::class);
+    }
+
+    /**
+     * Calibrate THIS measurement
+     *
+     * @return bool true if calibrated and saved, false otherwise
+     */
+    public function calibrate(){
+        if(!$this->calibration_value){
+            // not a calibration value for internal colorimetry
+            if($calibration = $this->getEffectiveCalibration()){
+                // calibration exists for this measurement
+                if($calibration->id != $this->calibration_id){
+                    // new calibration
+                    switch ($calibration->calibration_type){
+                        case 'linear':
+                            $this->calibrated_value = $calibration->slope_m * $this->valueDecodeNumber() + $calibration->offset_b;
+                            break;
+                        case 'color absorption':
+                        case 'color shift':
+                        default:
+                            return false;
+                    }
+                    $this->calibrated_unit = $calibration->default_output_units;
+                    $this->calibration_id = $calibration->id;
+
+                    return $this->updateOrFail(); // catch any error on the calling function to this!
+                }
+                return true;
+            } else {
+                //no calibration exists => empty the calibrated data
+                $this->calibrated_value = 0.0;
+                $this->calibrated_unit = "";
+                $this->calibration_id = 0;
+            }
+        }
+        return false;
+    }
+
+//    /**
+//     * Eloquent hasOne calibration
+//     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+//     */
+//    public function calibration(){
+//        return $this->hasOne(Calibration::class,'bumblebee_id','bumblebee_id')
+//            ->where('metric', $this->metric)
+//            ->where('method', $this->method)
+//            ->where('effective', 1)
+//            ->where('effective_timestamp', '<=', 'measurement_timestamp')
+//            ->orderBy('effective_timestamp', 'desc');
+////            ->withDefault(Calibration::class);
+//    }
 
     /**
      * Find the Effective Calibration for this Measurement
@@ -74,6 +141,22 @@ class Measurement extends Model
             ->where('method', $this->method)
             ->where('effective', 1)
             ->where('effective_timestamp', '<=', $this->measurement_timestamp)
+            ->orderBy('effective_timestamp', 'desc')
+            ->first();
+    }
+
+    /**
+     * Find the relevant calibration
+     * @return Calibration|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function calibration_find(){
+        return Calibration::query()
+            ->where('bumblebee_id', $this->bumblebee_id)
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('effective', 1)
+            ->where('effective_timestamp', '<=', $this->measurement_timestamp)
+            ->orderBy('effective_timestamp', 'desc')
             ->first();
     }
 
@@ -294,7 +377,6 @@ class Measurement extends Model
         return str_replace("'", '"', $this->value);
     }
 
-
     /**
      * Return the value of the measurement decoding the JSON send based upon the method
      */
@@ -438,13 +520,6 @@ class Measurement extends Model
             ->orderBy($sort_by, $orderAscending );
     }
 
-    /**
-     * Eloquent belongs to relationship Bumblebee Model
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function bumblebee(){
-        return $this->belongsTo(Bumblebee::class);
-    }
+
 
 }

@@ -11,8 +11,11 @@ use Illuminate\Support\Facades\Session;
 
 class CalibrationController extends Controller
 {
-    //
 
+    /**
+     * Open a new Larawire Calibration Form
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function calibrationFormNew(){
 
         debugbar()->info('CalibrationController::calibrationFormNew()');

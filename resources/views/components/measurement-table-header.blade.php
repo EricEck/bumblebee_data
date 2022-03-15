@@ -10,7 +10,7 @@
         @if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
             <th colspan="2" class="border bg-blue-100">Probe</th>
         @endif
-        <th colspan="2" class="border bg-gray-200 text-xs">MEASUREMENT</th>
+        <th colspan="3" class="border bg-blue-200 text-xs">ACTUAL</th>
 
         @if($showActions)
             <th></th>
@@ -40,8 +40,11 @@
             <th class=" bg-blue-100">VOLT</th>
             <th class=" bg-blue-100">Unit</th>
         @endif
-        <th class=" bg-gray-200">Actual</th>
-        <th class=" bg-gray-200">Unit</th>
+        <!-- Calibrated or Manual Methods -->
+
+        <th class=" bg-gray-100 text-xs">Mfg<br>Cal?</th>
+        <th class=" bg-gray-100 text-xs">Value</th>
+        <th class=" bg-gray-100 text-xs">Unit</th>
 
 
         @if($showActions)

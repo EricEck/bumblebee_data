@@ -16,7 +16,7 @@ class CreateMeasurementsTable extends Migration
         Schema::create('measurements', function (Blueprint $table) {
             $table->id()->autoIncrement()->index()->unique();
             $table->foreignId('bumblebee_id');  // bumblebee model link
-            $table->timestamp('measurement_timestamp');
+            $table->timestamp('measurement_timestamp')->default(null);
             $table->integer('metric_sequence');
 
             $table->enum('metric', [

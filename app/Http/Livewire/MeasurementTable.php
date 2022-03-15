@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Http\Controllers\CalibrationController;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
 use Carbon\Carbon;
@@ -33,6 +34,12 @@ class MeasurementTable extends Component
     public $sort_by = "time";
 
     public  $renders =0;
+
+    public function mount(){
+        debugbar()->info('mount: MeasurementTable');
+    }
+
+
     /**
      * All Measurements Index/Search
      *
@@ -40,6 +47,7 @@ class MeasurementTable extends Component
      */
     public function render()
     {
+        debugbar()->info('render: MeasurementTable');
 
         if(isset($this->bumblebee_select)){
             debugbar()->info($this->bumblebee_select);
@@ -47,23 +55,23 @@ class MeasurementTable extends Component
 
         if($this->method == null) $this->method = "all";
         if ($this->start_datetime == null){
-            $this->start_datetime = Carbon::now()->sub("7 days")->format('Y-m-d\Th:i');
+            $this->start_datetime = Carbon::now()->sub("21 days")->format('Y-m-d\Th:i');
         }
 
         if ($this->end_datetime == null){
             $this->end_datetime = Carbon::tomorrow()->format('Y-m-d\Th:i');
         }
 
-        debugbar()->info('MeasurementTable.php');
-        debugbar()->info('Renders: '.$this->renders++);
-        debugbar()->info('Per Page: '.$this->measurementsPerPage);
-        debugbar()->info('BB ID: '.$this->bumblebeeID);
-        debugbar()->info('Metrics: '.$this->metric);
-        debugbar()->info('Methods: '.$this->method);
-        debugbar()->info('$this->start_datetime: '.$this->start_datetime);
-        debugbar()->info('$this->end_datetim: '.$this->end_datetime);
-        debugbar()->info('Sort by: '.$this->sort_by);
-        debugbar()->info('Order in: '.$this->orderAscending );
+//        debugbar()->info('MeasurementTable.php');
+//        debugbar()->info('Renders: '.$this->renders++);
+//        debugbar()->info('Per Page: '.$this->measurementsPerPage);
+//        debugbar()->info('BB ID: '.$this->bumblebeeID);
+//        debugbar()->info('Metrics: '.$this->metric);
+//        debugbar()->info('Methods: '.$this->method);
+//        debugbar()->info('$this->start_datetime: '.$this->start_datetime);
+//        debugbar()->info('$this->end_datetim: '.$this->end_datetime);
+//        debugbar()->info('Sort by: '.$this->sort_by);
+//        debugbar()->info('Order in: '.$this->orderAscending );
 
 
         return view('livewire.measurement-table',[
@@ -134,5 +142,40 @@ class MeasurementTable extends Component
             ]);
         }
         return redirect()->to('/calibrations/new/');
+    }
+
+    /**
+     * Calibrate only the search table measurements
+     * ignores pagination
+     *
+     * @return void
+     */
+    public function calibrateMeasurements(){
+        debugbar()->info('calibrateMeasurements');
+
+        $this->emit('hideCalibrationButton');
+        $this->emit('calibrating');   // alpine JS $this.on('saved',() => {}) event
+
+        // get all the measurements, not just the paginated ones.
+        // must sort by timestamp ascending to get proper order
+        $allMeasurements = Measurement::searchView(
+            $this->bumblebeeID,
+            $this->metric,
+            $this->method,
+            $this->types,
+            $this->start_datetime,
+            $this->end_datetime,
+            "time",
+            "asc")->get();
+
+        foreach ($allMeasurements as $measurement) {
+            try {
+                $measurement->calibrate();
+            } catch (\Exception $e){
+                debugbar()->error('MeasurementTable::calibrateMeasurements => Error...');
+                debugbar()->error($e);
+            }
+        }
+        $this->emit('calibrationComplete');   // alpine JS $this.on('calibrationComplete',() => {}) event
     }
 }

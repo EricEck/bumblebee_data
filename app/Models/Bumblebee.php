@@ -70,6 +70,9 @@ class Bumblebee extends Authenticatable
         'api_password'
     ];
 
+    // eager load
+    protected $with = ['owner'];
+
     /**
      * Eloquent has many relationship to Measurement Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany

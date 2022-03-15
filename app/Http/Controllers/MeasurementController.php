@@ -127,8 +127,6 @@ class MeasurementController extends Controller
             ]);
     }
 
-
-
     /**
      * Display a listing of all non calibration measurements
      *
@@ -206,7 +204,6 @@ class MeasurementController extends Controller
 
         return response(Measurement::create($request->all()));
     }
-
 
     /**
      * Display the specified resource.
@@ -350,6 +347,5 @@ class MeasurementController extends Controller
             ->get();
         return response($measurements, 200);
     }
-
 
 }

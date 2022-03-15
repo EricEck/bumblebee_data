@@ -89,6 +89,7 @@ class CalibrationForm extends Component
         // run validation rule
         $validatedData = $this->validate();
 
+
         try {
             $this->calibration->saveOrFail();
             debugbar()->info('saved!');

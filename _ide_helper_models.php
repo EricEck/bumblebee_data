@@ -73,7 +73,7 @@ namespace App\Models{
  * @property float $slope_m
  * @property float $offset_b
  * @property boolean $effective
- * @property string $effective_timestamp
+ * @property \Illuminate\Support\Carbon $effective_timestamp
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Bumblebee|null $bumblebee
@@ -105,7 +105,7 @@ namespace App\Models{
  *
  * @property int $id
  * @property int $bumblebee_id
- * @property string $measurement_timestamp
+ * @property \Illuminate\Support\Carbon|null $measurement_timestamp
  * @property int $metric_sequence
  * @property string $metric
  * @property string $method
@@ -134,7 +134,14 @@ namespace App\Models{
  * @method static \Database\Factories\MeasurementFactory factory(...$parameters)
  * @property int $calibration_value
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationValue($value)
+ * @property float $calibrated_value
+ * @property string $calibrated_unit
+ * @property int $calibration_id
  * @property-read \App\Models\Bumblebee|null $bumblebee
+ * @property-read \App\Models\Calibration|null $calibration
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationId($value)
  */
 	class Measurement extends \Eloquent {}
 }

@@ -18,7 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property float $slope_m
  * @property float $offset_b
  * @property boolean $effective
- * @property string $effective_timestamp
+ * @property \Illuminate\Support\Carbon $effective_timestamp
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  */
@@ -82,6 +82,28 @@ class Calibration extends Model
         "mS/cmuS/cm" => 0.001,
     ];
 
+    // eager load
+//    protected $with=['calibrator']';
+
+    /**
+     * Eloquent belongs to relationships
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function bumblebee(){
+        return $this->belongsTo(Bumblebee::class);
+    }
+    public function calibrator(){
+        return $this->belongsTo(User::class);
+    }
+    public function measurements(){
+        return $this->hasMany(Measurement::class,'bumblebee_id', 'bumblebee_id')
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('measurement_timestamp', ">=", $this->effective_timestamp)
+            ->latest();
+    }
+
     /**
      * Conversion Multiplier for Units
      *
@@ -96,17 +118,7 @@ class Calibration extends Model
         return $multiplier;
     }
 
-    /**
-     * Eloquent belongs to relationships
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function bumblebee(){
-        return $this->belongsTo(Bumblebee::class);
-    }
-    public function calibrator(){
-        return $this->belongsTo(User::class);
-    }
+
 
     public function outputValue(Measurement $measurement){
         switch ($this->calibration_type) {

@@ -63,18 +63,22 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        <x-dropdown-link :href="route('users_table')" :active="request()->routeIs('users_table')">
+                        <x-dropdown-link
+                            :href="route('users_table')"
+                            :active="request()->routeIs('users_table')">
                             {{ __('Users') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link><br>
                         @permission('laratrust_panel-read')
                         <x-dropdown-link href="/laratrust" >
                                 Laratrust
-                        </x-dropdown-link>
+                        </x-dropdown-link><br>
                         @endpermission
                         @permission('profile-read')
-                        <x-dropdown-link :href="route('profile')" :active="request()->routeIs('profile')">
+                        <x-dropdown-link
+                            :href="route('profile')"
+                            :active="request()->routeIs('profile')">
                             {{ __('Profile') }}
-                        </x-dropdown-link>
+                        </x-dropdown-link><br>
                         @endpermission
                         <!-- Authentication -->
                         <form method="POST" action="{{ route('logout') }}">

@@ -35,12 +35,17 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? $measurement->unit : ''}}</td>
 @endif
 <!-- Calibrated or Manual Number -->
+
     @if($measurement->isManualMethod())
+        <!-- Manual Value -->
+        <td class="border px-1 py-2 text-xs"></td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->valueDecodeNumber() }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
     @else
-        <td class="border px-1 py-2 text-xs"></td>
-        <td class="border px-1 py-2 text-xs"></td>
+        <!-- Calibration Value -->
+        <td class="border px-1 py-2 text-xs text-center border-r-green-100"></td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_value : ''  }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_unit : '' }}</td>
     @endif
 
     @if($showActions)
