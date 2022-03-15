@@ -1,4 +1,4 @@
-@props(['measurement', 'showActions' => 0, 'method' => 'all', 'scaledColorimetric' => 0])
+@props(['measurement', 'showActions' => 0, 'method' => 'all', 'scaledColorimetric' => 0, 'types' => 0])
 
 @php($bumblebee = $measurement->bumblebee)
 @php($owner = $measurement->bumblebee->owner)
@@ -15,8 +15,9 @@
     <td class="border px-1 py-2 text-xs">{{ $measurement->method }}</td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->metric_sequence }}</td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->metric }}</td>
+
 @php( $colorValue = $measurement->valueDecodeColor($scaledColorimetric) )
-@if($method == "all" | $method == "auto" | $method == "colorimetric" )
+@if(($method == "all" | $method == "auto" | $method == "colorimetric")  && $types < 3 )
     <!-- Color Spectrum -->
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->violet : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->indigo : ''  }}</td>
@@ -29,7 +30,7 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
 @endif
-@if($method == "all" | $method == "auto" | $method == "probe" | $method == "")
+@if(($method == "all" | $method == "auto" | $method == "probe" | $method == "") && $types < 3)
     <!-- Probe Value -->
         <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? round($measurement->valueDecodeNumber(),3) : '' }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->probeMethod() ? $measurement->unit : ''}}</td>
@@ -43,16 +44,16 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
     @else
         <!-- Calibration Value -->
-        <td class="border px-1 py-2 text-xs text-center border-r-green-100"></td>
+        <td class="border px-1 py-2 text-xs text-center border-r-green-100">{{ $measurement->calibration_id ? $measurement->calibration_id : ''   }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_value : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_unit : '' }}</td>
     @endif
 
     @if($showActions)
         <td class="border px-1 py-2 flex-auto">
-            <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view ></x-buttons.view></a>
+            <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view>View</x-buttons.view></a>
             @if(!($measurement->isManualMethod() || $measurement->calibration_value))
-                <a wire:click="calibrationFormNew({{ $measurement->id }})"><x-buttons.calibration></x-buttons.calibration></a>
+                <a wire:click="calibrationFormNew({{ $measurement->id }})"><x-buttons.calibration>{{ $measurement->calibration_id == 0 ? 'Cal' : 'Re-Cal' }}</x-buttons.calibration></a>
             @endif
         </td>
     @endif

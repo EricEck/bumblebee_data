@@ -510,6 +510,24 @@ class Measurement extends Model
                 $sort_by = "metric_sequence";
         }
 
+        // this is for actual measurements
+        $calibrated_search_operator = ">";
+        if($type == "3"){
+            debugbar()->info('Actual');
+
+            return static::query()
+                ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
+                ->where('metric', $metric_search_operator, $metric)
+                ->where('calibration_value', '=', 0)
+                ->where('measurement_timestamp', '>', $start_datetime)
+                ->where('measurement_timestamp', '<', $end_datetime)
+                ->where('calibration_id' ,'>' , 0)
+                ->orWhere('method', 'like', '%manual%')
+                ->orderBy($sort_by, $orderAscending );
+        }
+
+
+
         return static::query()
             ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
             ->where('metric', $metric_search_operator, $metric)

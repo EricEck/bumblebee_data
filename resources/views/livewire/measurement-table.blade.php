@@ -49,9 +49,11 @@
         </div>
         <div class="w-1/6 relative mx-1">
             <select wire:model="types" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="0" selected>Measurements</option>
-                <option value="1">Calibrations</option>
-                <option value="2">Both Meas & Cal</option>
+                <option disabled>Types of Measurements to view---</option>
+                <option value="0" selected>Raw Measurements</option>
+                <option value="1">Raw Calibrations</option>
+                <option value="2">Both Raw Meas & Cal</option>
+                <option value="3">Only Actual Values</option>
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
@@ -154,7 +156,6 @@
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
-
     </div>
 
     <!-- Returned Table Data -->
@@ -162,10 +163,10 @@
 
         <table class="table-auto w-full mb-6 bg-gray-50">
 
-            <x-measurement-table-header :show-actions="1" :method="$method"></x-measurement-table-header>
+            <x-measurement-table-header :show-actions="1" :method="$method" :types="$types"></x-measurement-table-header>
             <tbody>
                 @foreach($measurements as $measurement)
-                    <x-measurement-table-row :measurement="$measurement" :method="$method" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
+                    <x-measurement-table-row :measurement="$measurement" :method="$method" :types="$types" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
                 @endforeach
             </tbody>
         </table>
