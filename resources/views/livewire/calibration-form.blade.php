@@ -82,11 +82,11 @@
                     <select name="meas_method" id="meas_method"
                             wire:model.lazy="calibration.method"
                             @if($no_changes)
-                            disabled
-                            class="mt-1 px-3 text-black focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        @else
-                            class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                        @endif
+                                disabled
+                                class="mt-1 px-3 text-black focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            @else
+                                class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                            @endif
                         <option selected disabled>-- Which Measurement Method to Calibrate</option>
                         @php($meas_methods = $calibration->calibrationMethodEnums())
                         @foreach($meas_methods as $meas_method)
@@ -139,30 +139,78 @@
                     @if($calibration->calibration_type == "linear")
                         <!-- Linear Calibration Type -->
 
-                                <h3 class="text-lg font-medium leading-6 text-gray-900">Linear Calibration...</h3>
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Linear Calibration...</h3>
 
-                                <div class="py-4 px-10 bg-gray-100 mt-6 mb-6">
-                                    <h2 class="text-lg">Calibrated Output({{ ( $calibration->slope_m == null || $calibration->offset_b == null) ? '' : round($measurement->valueDecodeNumber() * $calibration->slope_m + $calibration->offset_b,3) }}{{" ".$calibration->default_output_units." "}}) = Slope( {{ $calibration->slope_m == null ? '' : $calibration->slope_m }}{{" ".$calibration->default_output_units." "." / "." ".$measurement->unit." "}}) * Measurement( {{ $measurement->id == 0 ? '' : round($measurement->valueDecodeNumber(), 3).' '.$measurement->unit }} ) + Offset( {{ $calibration->offset_b == null ? '' : $calibration->offset_b }}{{" ".$calibration->default_output_units." "}})</h2>
-                                </div>
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="slope_m" class="text-sm font-medium text-gray-700">Slope of Equation</label>
-                                    <input type="text" name="slope_m" id="slope_m"
-                                           wire:model.lazy="calibration.slope_m"
-                                           class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="offset_b" class="text-sm font-medium text-gray-700">Offset of Equation</label>
-                                    <input type="text" name="offset_b" id="offset_b"
-                                           wire:model.lazy="calibration.offset_b"
-                                           class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <div class="py-4 px-10 bg-gray-100 mt-6 mb-6">
+                            <h2 class="text-lg">Calibrated Output({{ ( $calibration->slope_m == null || $calibration->offset_b == null) ? '' : round($measurement->valueDecodeNumber() * $calibration->slope_m + $calibration->offset_b,3) }}{{" ".$calibration->default_output_units." "}}) = Slope( {{ $calibration->slope_m == null ? '' : $calibration->slope_m }}{{" ".$calibration->default_output_units." "." / "." ".$measurement->unit." "}}) * Measurement( {{ $measurement->id == 0 ? '' : round($measurement->valueDecodeNumber(), 3).' '.$measurement->unit }} ) + Offset( {{ $calibration->offset_b == null ? '' : $calibration->offset_b }}{{" ".$calibration->default_output_units." "}})</h2>
+                        </div>
+                        <div class="col-span-6 sm:col-span-3 mt-2">
+                            <label for="slope_m" class="text-sm font-medium text-gray-700">Slope of Equation</label>
+                            <input type="text" name="slope_m" id="slope_m"
+                                   wire:model.lazy="calibration.slope_m"
+                                   class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3 mt-2">
+                            <label for="offset_b" class="text-sm font-medium text-gray-700">Offset of Equation</label>
+                            <input type="text" name="offset_b" id="offset_b"
+      `                             wire:model.lazy="calibration.offset_b"
+                                   class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
 
 
                     @elseif($calibration->calibration_type == "color absorption")
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Color Absorption Not Ready Yet...</h3>
-                    @elseif($calibration->calibration_type == "color shift")
-                            <h3 class="text-lg font-medium leading-6 text-gray-900">Color Shift Not Ready Yet...</h3>
-                                        }
+                        <!-- Color Absorption Type -->
+                        <h3 class="text-lg font-medium leading-6 text-gray-900">Color Absorption for {{ ucwords($calibration->metric) }}</h3>
+
+                        <div class="py-4 px-10 bg-gray-100 mt-6 mb-6">
+                            <h2 class="text-lg">Calibrated Output({{ ( $calibration->slope_m == null || $calibration->offset_b == null) ? '' : round($measurement->colorimetricValue() * $calibration->slope_m + $calibration->offset_b,3) }}{{" ".$calibration->default_output_units." "}}) = Slope( {{ $calibration->slope_m == null ? '' : $calibration->slope_m }}{{" ".$calibration->default_output_units." "." / "." ".$measurement->unit." "}}) * Measurement( {{ $measurement->id == 0 ? '' : round($measurement->colorimetricValue(), 3).' '.$measurement->unit }} ) + Offset( {{ $calibration->offset_b == null ? '' : $calibration->offset_b }}{{" ".$calibration->default_output_units." "}})</h2>
+                        </div>
+                        <div class="col-span-6 sm:col-span-3 mt-2">
+                            <label for="slope_m" class="text-sm font-medium text-gray-700">Slope of Equation</label>
+                            <input type="text" name="slope_m" id="slope_m"
+                                   wire:model.lazy="calibration.slope_m"
+                                   class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <div class="col-span-6 sm:col-span-3 mt-2">
+                            <label for="offset_b" class="text-sm font-medium text-gray-700">Offset of Equation</label>
+                            <input type="text" name="offset_b" id="offset_b"
+                                   `                             wire:model.lazy="calibration.offset_b"
+                                   class="mt-1 px-3 text-black bg-indigo-50 focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
+                        </div>
+                        <!-- Solution Assistant Calculator -->
+{{--                        <div class="py-2 px-6 bg-indigo-50">--}}
+{{--                            <h2 class="text-lg font-medium">Solution Assistant - <span class="text-sm">(enter two sets of Color Values & Manual Values)</span></h2>--}}
+
+{{--                            <p class="py-4 text-blue-700">Suggested:  Slope = {{$slope_m}}, Offest = {{$offset_b}}</p>--}}
+
+{{--                            <div class="col-span-2 sm:col-span-2 mt-2">--}}
+{{--                                <label for="colorval_1" class="text-sm font-medium text-gray-700">First ColorValue</label>--}}
+{{--                                <input type="text" name="colorval_1" id="colorval_1"--}}
+{{--                                       wire:model="x1"--}}
+{{--                                       class="mt-1 px-3 text-black bg-white focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">--}}
+{{--                            </div>--}}
+{{--                            <div class="col-span-2 sm:col-span-2 mt-2">--}}
+{{--                                <label for="manval_1" class="text-sm font-medium text-gray-700">First ManualValue</label>--}}
+{{--                                <input type="text" name="manval_1" id="manval_1"--}}
+{{--                                       wire:model="y1"--}}
+{{--                                       class="mt-1 px-3 text-black bg-white focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">--}}
+{{--                            </div>--}}
+{{--                            <div class="col-span-2 sm:col-span-2 mt-2">--}}
+{{--                                <label for="colorval_2" class="text-sm font-medium text-gray-700">Second ColorValue</label>--}}
+{{--                                <input type="text" name="colorval_2" id="colorval_2"--}}
+{{--                                       wire:model="x2"--}}
+{{--                                       class="mt-1 px-3 text-black bg-white focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">--}}
+{{--                            </div>--}}
+{{--                            <div class="col-span-2 sm:col-span-2 mt-2">--}}
+{{--                                <label for="manval_2" class="text-sm font-medium text-gray-700">Second ManualValue</label>--}}
+{{--                                <input type="text" name="manval_2" id="manval_2"--}}
+{{--                                       wire:model="y2"--}}
+{{--                                       class="mt-1 px-3 text-black bg-white focus:ring-indigo-500 focus:bg-white focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">--}}
+{{--                            </div>--}}
+
+
+{{--                        </div>--}}
+
                     @else
                             <h3 class="text-lg font-medium leading-6 text-gray-900">Select a calibration type above...</h3>
                     @endif

@@ -5,7 +5,7 @@
         <th colspan="7"></th>
 
         @if(($method == "all" | $method == "auto" | $method == "colorimetric") && $types < 3 )
-            <th colspan="10" class="border bg-indigo-50">COLORIMETRIC DATA</th>
+            <th colspan="12" class="border bg-indigo-50">COLORIMETRIC DATA</th>
         @endif
         @if(($method == "all" | $method == "auto" | $method == "probe" | $method == "") && $types < 3)
             <th colspan="2" class="border bg-blue-100">Probe</th>
@@ -35,6 +35,8 @@
             <th class=" bg-indigo-50">RED</th>
             <th class=" bg-indigo-50">IRD</th>
             <th class=" bg-indigo-50">CLEAR</th>
+            <th class=" bg-indigo-50 text-blue-700 border border-l-4 text-xs">SPECT<br>SUM</th>
+            <th class=" bg-indigo-50 text-blue-700 border border-r-4 text-xs">COLOR<br>VAL</th>
         @endif
         @if(($method == "all" | $method == "auto" | $method == "probe" | $method == "") && $types < 3)
             <th class=" bg-blue-100">VOLT</th>

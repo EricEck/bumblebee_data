@@ -30,7 +30,7 @@
                     <div class="md:grid md:grid-cols-3 md:gap-6">
                         <div class="col-span-12">
                             <div class="px-4 sm:px-0">
-                                <h3 class="text-lg font-medium leading-6 text-gray-900">{{ __('Reference Measurement')}}</h3>
+                                <h3 class="text-lg font-medium leading-6 text-gray-900">{{ __('This Measurement')}}</h3>
                             </div>
                             <div class="my-4">
                                 <x-measurement-table-single :measurement="$measurement" :show-actions="0"></x-measurement-table-single>
@@ -38,6 +38,24 @@
                         </div>
                     </div>
                 </div>
+
+                @if($measurement->colorimetricMethod() && !$measurement->calibration_value)
+                    @php($calibrationMeasurement = $measurement->previousCalibrationMeasurement())
+                    @if($calibrationMeasurement)
+                        <div class="py-6 bg-blend-lighten overflow-hidden shadow-sm sm:rounded-lg">
+                            <div class="md:grid md:grid-cols-3 md:gap-6">
+                                <div class="col-span-12">
+                                    <div class="px-4 sm:px-0">
+                                        <h3 class="text-lg font-medium leading-6 text-gray-900">{{ __('Colorimetric Calibration Measurement')}}</h3>
+                                    </div>
+                                    <div class="my-4">
+                                        <x-measurement-table-single :measurement="$calibrationMeasurement" :show-actions="0"></x-measurement-table-single>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                @endif
 
                 @if($prev_meas = $measurement->previousManualMeasurement())
                     <div class="py-6 bg-blend-lighten overflow-hidden shadow-sm sm:rounded-lg">

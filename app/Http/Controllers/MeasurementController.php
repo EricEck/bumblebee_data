@@ -18,8 +18,13 @@ class MeasurementController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function indexView(){
-        debugbar()->info('New Index');
+        debugbar()->info('Measurement Index');
         return view('measurements.index');
+    }
+
+    public function actualView(){
+        debugbar()->info('Actual Measurement Index');
+        return view('measurements.actual');
     }
 
     /**

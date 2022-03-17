@@ -96,10 +96,12 @@ class Measurement extends Model
                             $this->calibrated_value = $calibration->slope_m * $this->valueDecodeNumber() + $calibration->offset_b;
                             break;
                         case 'color absorption':
-                        case 'color shift':
+                            $this->calibrated_value = $calibration->slope_m * $this->colorimetricValue() + $calibration->offset_b;
+                            break;
                         default:
                             return false;
                     }
+                    if ($this->calibrated_value < 0) $this->calibrated_value = 0;   // floor any calculations, metrics are negative
                     $this->calibrated_unit = $calibration->default_output_units;
                     $this->calibration_id = $calibration->id;
 
@@ -160,8 +162,94 @@ class Measurement extends Model
             ->first();
     }
 
+
+
     /**
-     * Find the previous Calibration value
+     * Calculation for Colorimetric Value UNCALIBRATED
+     *
+     * @return float|null
+     */
+    public function colorimetricValue(){
+        if ($this->colorimetricMethod() && $this->calibration_value != 1) {
+            if($calibrationMeasurement = $this->previousCalibrationMeasurement()){
+                return $this->spectralSummation() / $calibrationMeasurement->spectralSummation();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Calculation for Colorimetric Spectrum for a given Metric
+     *
+     * @return float|null
+     */
+    public function spectralSummation(){
+        if ($this->colorimetricMethod()) {
+            $spectrum = $this->valueDecodeColor();
+            $sum = 0;
+            switch ($this->metric){
+                case 'alkalinity':
+//                     $sum += $spectrum->violet;
+//                     $sum += $spectrum->indigo;
+                     $sum += $spectrum->blue;
+                     $sum += $spectrum->cyan;
+                     $sum += $spectrum->green;
+                     $sum += $spectrum->yellow;
+                     $sum += $spectrum->orange;
+                     $sum += $spectrum->red;
+                    break;
+                case 'free chlorine':
+                    $sum += $spectrum->violet;
+                    $sum += $spectrum->indigo;
+//                    $sum += $spectrum->blue;
+//                    $sum += $spectrum->cyan;
+//                    $sum += $spectrum->green;
+//                    $sum += $spectrum->yellow;
+//                    $sum += $spectrum->orange;
+//                    $sum += $spectrum->red;
+                    break;
+                case 'total chlorine':
+                    $sum += $spectrum->violet;
+                    $sum += $spectrum->indigo;
+                    $sum += $spectrum->blue;
+                    $sum += $spectrum->cyan;
+                    $sum += $spectrum->green;
+//                    $sum += $spectrum->yellow;
+//                    $sum += $spectrum->orange;
+//                    $sum += $spectrum->red;
+                    break;
+                case 'calcium':
+//                    $sum += $spectrum->violet;
+//                    $sum += $spectrum->indigo;
+//                    $sum += $spectrum->blue;
+//                    $sum += $spectrum->cyan;
+                    $sum += $spectrum->green;
+//                    $sum += $spectrum->yellow;
+//                    $sum += $spectrum->orange;
+//                    $sum += $spectrum->red;
+                    break;
+                case 'ph':
+//                    $sum += $spectrum->violet;
+//                    $sum += $spectrum->indigo;
+//                    $sum += $spectrum->blue;
+                    $sum += $spectrum->cyan;
+                    $sum += $spectrum->green;
+                    $sum += $spectrum->yellow;
+//                    $sum += $spectrum->orange;
+//                    $sum += $spectrum->red;
+                    break;
+                default:
+                    break;
+            }
+            return $sum;
+        }
+        return null;
+    }
+
+
+
+    /**
+     * Find the previous Calibration value - Used for Colorimetric Only
      * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
      */
     public function previousCalibrationMeasurement(){
@@ -235,6 +323,7 @@ class Measurement extends Model
             'temperature' => ['F', 'C'],
             'pressure' => ['bar', 'psi', 'atm', 'Pa'],
             'flow' => ['gpm', 'cfs'],
+            'orp' => ['V', 'mV'],
             default => ['none'],
         };
     }
@@ -384,7 +473,7 @@ class Measurement extends Model
 
         if ($this->manualMethod()){
 //            debugbar()->info('manualMethod: '.$this->value);
-            debugbar()->info('ID: '.$this->id.' value: '.$this->value);
+//            debugbar()->info('ID: '.$this->id.' value: '.$this->value);
             return floatval(json_decode($this->forceDoubleQuotedJSON())->value);
         }
         if ($this->probeMethod()){
@@ -400,8 +489,8 @@ class Measurement extends Model
     }
 
     /**
-     * Return Just the Colorimetry Data Scaled or Not zScalled
-     * @param int $scaled
+     * Return Just the Colorimetric Data Scaled or Not zScalled
+     * @param int $scaled 1 = clear ref, 2 = maximumm reference
      * @return null|JSON
      */
     public function valueDecodeColor($scaled = 0){
@@ -411,15 +500,15 @@ class Measurement extends Model
             if ($scaled > 0){
                 $reference = $c->clear;
                 if ($scaled == 2) $reference = $this->maximumColorValue();
-                $c->violet = round($c->violet / $reference, 3);
-                $c->indigo = round($c->indigo / $reference, 3);
-                $c->blue = round($c->blue / $reference, 3);
-                $c->cyan = round($c->cyan / $reference, 3);
-                $c->green = round($c->green / $reference, 3);
-                $c->yellow = round($c->yellow / $reference, 3);
-                $c->orange = round($c->orange / $reference, 3);
-                $c->red = round($c->red / $reference, 3);
-                $c->nearIR = round($c->nearIR / $reference, 3);
+                $c->violet = round($c->violet / $reference, 4);
+                $c->indigo = round($c->indigo / $reference, 4);
+                $c->blue = round($c->blue / $reference, 4);
+                $c->cyan = round($c->cyan / $reference, 4);
+                $c->green = round($c->green / $reference, 4);
+                $c->yellow = round($c->yellow / $reference, 4);
+                $c->orange = round($c->orange / $reference, 4);
+                $c->red = round($c->red / $reference, 4);
+                $c->nearIR = round($c->nearIR / $reference, 4);
             }
             return $c;
         }
@@ -513,7 +602,7 @@ class Measurement extends Model
         // this is for actual measurements
         $calibrated_search_operator = ">";
         if($type == "3"){
-            debugbar()->info('Actual');
+            debugbar()->info('Actual Measurement Query');
 
             return static::query()
                 ->where('bumblebee_id', $bumblebee_search_operator, $bumblebeeID)
@@ -522,7 +611,8 @@ class Measurement extends Model
                 ->where('measurement_timestamp', '>', $start_datetime)
                 ->where('measurement_timestamp', '<', $end_datetime)
                 ->where('calibration_id' ,'>' , 0)
-                ->orWhere('method', 'like', '%manual%')
+                ->where('method', $method_search_operator, $method)
+//                ->orWhere('method', 'like', '%manual%')
                 ->orderBy($sort_by, $orderAscending );
         }
 

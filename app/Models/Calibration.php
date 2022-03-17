@@ -119,6 +119,39 @@ class Calibration extends Model
     }
 
 
+    /**
+     * Solve the linear equation slope and offset
+     *
+     * @param float $x1
+     * @param float $y1
+     * @param float $x2
+     * @param float $y2
+     * @return float[]
+     */
+    public function solveLinearSlopeAndOffset(float $x1, float $y1, float $x2, float $y2){
+
+        $slope_m = 0;
+        $offset_b = 0;
+
+        if (($x2 - $x1) != 0) {
+
+            $offset_b = ($x2 * $y1 - $x1 * $y2) / ($x2 - $x1);
+
+            if ($x2 != 0) {
+                $slope_m = ($y2 - $offset_b) / $x2;
+            } elseif ($x1 != 0) {
+                $slope_m = ($y1 - $offset_b) / $x1;
+            }
+        }
+
+        return [
+            "offset_b" => $offset_b,
+            "slope_m" => $slope_m,
+        ];
+    }
+
+
+
 
     public function outputValue(Measurement $measurement){
         switch ($this->calibration_type) {
@@ -141,8 +174,8 @@ class Calibration extends Model
         if ($method == '') $method = $this->method;
         return match ($method) {
             'probe' => array('linear'),
-            'colorimetric' => array('color absorption', 'color shift'),
-            default => array('linear', 'color absorption', 'color shift'),
+            'colorimetric' => array('color absorption'),
+            default => array('linear', 'color absorption'),
         };
     }
     public static function calibrationTypeEnums(){

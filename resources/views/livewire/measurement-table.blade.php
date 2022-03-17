@@ -39,26 +39,30 @@
                 <option value="all" >All Methods</option>
                 <option value="auto">All Auto</option>
                 <option value="man">All Manual</option>
-                @foreach(\App\Models\Measurement::methodEnums() as $methods)
-                    <option value="{{ $methods }}"> {{ $methods }} </option>
-                @endforeach
+                @if(!$actualOnly)
+                    @foreach(\App\Models\Measurement::methodEnums() as $methods)
+                        <option value="{{ $methods }}"> {{ $methods }} </option>
+                    @endforeach
+                @endif
             </select>
             <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
-        <div class="w-1/6 relative mx-1">
-            <select wire:model="types" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option disabled>Types of Measurements to view---</option>
-                <option value="0" selected>Raw Measurements</option>
-                <option value="1">Raw Calibrations</option>
-                <option value="2">Both Raw Meas & Cal</option>
-                <option value="3">Only Actual Values</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+        @if(!$actualOnly)
+            <div class="w-1/6 relative mx-1">
+                <select wire:model="types" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                    <option disabled>Types of Measurements to view---</option>
+                    <option value="0" selected>Raw Measurements</option>
+                    <option value="1">Raw Calibrations</option>
+                    <option value="2">Both Raw Meas & Cal</option>
+                    <option value="3">Only Actual Values</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
             </div>
-        </div>
+
         <div class="w-1/6 relative mx-1 ">
             <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 <option disabled>Colorimetric Data Scaling</option>
@@ -70,6 +74,8 @@
                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
             </div>
         </div>
+    @endif
+
         <!-- Table Actions -->
         <div class="w-1/12 relative">
             <a wire:click="excel"><x-buttons.excel></x-buttons.excel></a>

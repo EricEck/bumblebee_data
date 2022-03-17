@@ -29,6 +29,9 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
+        <td class="text-blue-700 border border-l-4 border-r-4 px-1 py-2 text-xs">{{ $measurement->spectralSummation() }}</td>
+    @php($colorimetricValue = round($measurement->colorimetricValue(),4))
+        <td class="text-blue-700 border border-r-4 border-r-4 px-1 py-2 text-xs">{{ $colorimetricValue == 0 ? '' : $colorimetricValue}}</td>
 @endif
 @if(($method == "all" | $method == "auto" | $method == "probe" | $method == "") && $types < 3)
     <!-- Probe Value -->

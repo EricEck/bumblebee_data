@@ -19,6 +19,9 @@ class CalibrationForm extends Component
     public Measurement $measurement;
     public $calibration_datetime;
 
+    // Helper function variables
+    public float $x1 = 0,$y1 = 0,$x2 = 0,$y2 = 0, $slope_m = 0,$offset_b = 0;
+
     protected $rules = [
         'calibration.bumblebee_id' => 'required|exists:bumblebees,id',
         'calibration.calibrator_id' => 'required|exists:users,id',
@@ -71,6 +74,14 @@ class CalibrationForm extends Component
 //        if (!isset($this->calibration_datetime) && $this->create_new){
 //            $this->calibration_datetime = substr(str_replace(' ','T',$this->calibration->effective_timestamp),0,16);
 //        }
+        debugbar()->info('cal meas:');
+        debugbar()->info($this->measurement->attributesToArray());
+
+        // Calculation Assistant
+//        $temp = $this->calibration->solveLinearSlopeAndOffset($this->x1, $this->y1, $this->x2, $this->y2);
+//        debugbar()->info($temp);
+//        $this->slope_m = $temp["slope_m"];
+//        $this->offset_b = $temp["offset_b"];
 
         return view('livewire.calibration-form',[
             "calibration" => $this->calibration,

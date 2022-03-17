@@ -35,10 +35,34 @@ class MeasurementTable extends Component
 
     public  $renders =0;
 
+    public $actualOnly = 0;
+
+
+
     public function mount(){
         debugbar()->info('mount: MeasurementTable');
-    }
+        if($this->actualOnly){
+            debugbar()->info('Actual Only Measurements');
+            $this->types = 3;
+        } else {
+            debugbar()->info('Open Measurements');
+        }
 
+        if($this->method == null) $this->method = "all";
+
+        if ($this->start_datetime == null){
+            $this->start_datetime = Carbon::now()->sub("21 days")->format('Y-m-d\Th:i');
+        }
+
+        if ($this->end_datetime == null){
+            $this->end_datetime = Carbon::tomorrow()->format('Y-m-d\Th:i');
+        }
+
+        if(isset($this->bumblebee_select)){
+            debugbar()->info('Use only this bumblebee: '.$this->bumblebee_select);
+        }
+
+    }
 
     /**
      * All Measurements Index/Search
@@ -48,19 +72,6 @@ class MeasurementTable extends Component
     public function render()
     {
         debugbar()->info('render: MeasurementTable');
-
-        if(isset($this->bumblebee_select)){
-            debugbar()->info($this->bumblebee_select);
-        }
-
-        if($this->method == null) $this->method = "all";
-        if ($this->start_datetime == null){
-            $this->start_datetime = Carbon::now()->sub("21 days")->format('Y-m-d\Th:i');
-        }
-
-        if ($this->end_datetime == null){
-            $this->end_datetime = Carbon::tomorrow()->format('Y-m-d\Th:i');
-        }
 
 //        debugbar()->info('MeasurementTable.php');
 //        debugbar()->info('Renders: '.$this->renders++);

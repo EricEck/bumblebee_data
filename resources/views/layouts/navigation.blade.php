@@ -23,7 +23,7 @@
                 <div class="hidden space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
-                            <x-nav-link  :active="request()->routeIs('bumblebees_table')|request()->routeIs('measurements_table')">
+                            <x-nav-link  :active="request()->routeIs('bumblebees_table')|request()->routeIs('measurements_table')|request()->routeIs('measurements_table_actual')">
                                 {{ __('Elliptic Products') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -35,10 +35,13 @@
 
                         <x-slot name="content">
                             <x-dropdown-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
-                                {{ __('Bumblebees') }}
+                                {{ __('All Bumblebees') }}
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
-                                {{ __('Measurements') }}
+                                {{ __('All Measurements') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('measurements_table_actual')" :active="request()->routeIs('measurements_table_actual')">
+                                {{ __('Actual Measurements') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
