@@ -356,9 +356,8 @@ class Measurement extends Model
     public static function metricEnums(){
         return array(
             'ph','orp', 'conductivity', 'free chlorine', 'total chlorine', 'alkalinity', 'calcium',
-                'temperature', 'pressure', 'flow', 'other');
+                'temperature', 'pressure', 'flow', 'LSI', 'other');
     }
-
 
     /**
      * All Possible units for measurements

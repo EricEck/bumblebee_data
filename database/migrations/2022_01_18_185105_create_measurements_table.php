@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Measurement;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,6 +14,8 @@ class CreateMeasurementsTable extends Migration
      */
     public function up()
     {
+
+
         Schema::create('measurements', function (Blueprint $table) {
             $table->id()->autoIncrement()->index()->unique();
             $table->foreignId('bumblebee_id');  // bumblebee model link
