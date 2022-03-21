@@ -15,6 +15,20 @@
                     <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
                 </div>
             </div>
+{{--            <div>--}}
+{{--                <button x-data="{}"--}}
+{{--                    x-on:click="window.livewire.emitTo('contact-modal','show')"--}}
+{{--                    class="text-indigo-500">--}}
+{{--                    Show Contact Modal--}}
+{{--                </button>--}}
+{{--            </div>--}}
+{{--            <div>--}}
+{{--                <button x-data="{}"--}}
+{{--                        x-on:click="window.livewire.emitTo('some-other-modal','show')"--}}
+{{--                        class="text-indigo-500">--}}
+{{--                    Show Some Other Modal--}}
+{{--                </button>--}}
+{{--            </div>--}}
         </div>
     </div>
 </x-app-layout>

@@ -19,8 +19,9 @@
 {{--        @powerGridStyles--}}
 
         <!-- Scripts -->
-        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  <!--Alpine JS v3 from official CDN-->
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>  <!--Alpine JS v3 from official CDN-->
+
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-indigo-50">
@@ -64,6 +65,8 @@
         </div>
 
         @livewireScripts
-{{--        @powerGridScripts--}}
+
+        <livewire:contact-modal />
+        <livewire:some-other-modal />
     </body>
 </html>
