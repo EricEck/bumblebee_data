@@ -15,7 +15,6 @@ class CreateMeasurementsTable extends Migration
     public function up()
     {
 
-
         Schema::create('measurements', function (Blueprint $table) {
             $table->id()->autoIncrement()->index()->unique();
             $table->foreignId('bumblebee_id');  // bumblebee model link
@@ -33,8 +32,6 @@ class CreateMeasurementsTable extends Migration
             $table->string('process', 2048)->nullable();    // added 01-19-22 by eae
 
             $table->string('value', 1024)->nullable();
-
-
 
             $table->enum('unit', [
                 'uV', 'mV', 'V', 'uA', 'mA', 'A',

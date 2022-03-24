@@ -12,6 +12,43 @@
 
 namespace App\Models{
 /**
+ * App\Models\Address
+ *
+ * @property int $id
+ * @property string $street_1
+ * @property string $street_2
+ * @property string $street_3
+ * @property string $city_name
+ * @property string $postal_code
+ * @property int $state_id
+ * @property int $country_id
+ * @property string $latitude
+ * @property string $longitude
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\State|null $country
+ * @property-read \App\Models\State|null $state
+ * @method static \Illuminate\Database\Eloquent\Builder|Address newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Address newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Address query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereCityName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address wherePostalCode($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereStateId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereStreet1($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereStreet2($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereStreet3($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Address whereUpdatedAt($value)
+ */
+	class Address extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Bumblebee
  *
  * @property int $id
@@ -101,6 +138,31 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\Country
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $short_name
+ * @property string $latitude
+ * @property string $longitude
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereShortName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereUpdatedAt($value)
+ */
+	class Country extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Measurement
  *
  * @property int $id
@@ -136,9 +198,8 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationValue($value)
  * @property float $calibrated_value
  * @property string $calibrated_unit
- * @property int $calibration_id
+ * @property int|null $calibration_id
  * @property-read \App\Models\Bumblebee|null $bumblebee
- * @property-read \App\Models\Calibration|null $calibration
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationId($value)
@@ -173,6 +234,35 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PoolMetrics
+ *
+ * @property int $id
+ * @property int $bumblebee_id
+ * @property int $measurement_id
+ * @property string $pool_metric_timestamp
+ * @property string $metric
+ * @property float $metric_float_value
+ * @property string $unit
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereBumblebeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereMeasurementId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereMetric($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereMetricFloatValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics wherePoolMetricTimestamp($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereUnit($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolMetrics whereUpdatedAt($value)
+ */
+	class PoolMetrics extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Role
  *
  * @property int $id
@@ -194,6 +284,34 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
  */
 	class Role extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\State
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $short_name
+ * @property int $country_id
+ * @property string $latitude
+ * @property string $longitude
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Country|null $country
+ * @method static \Illuminate\Database\Eloquent\Builder|State newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|State newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|State query()
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereCountryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereShortName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|State whereUpdatedAt($value)
+ */
+	class State extends \Eloquent {}
 }
 
 namespace App\Models{
