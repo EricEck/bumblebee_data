@@ -156,6 +156,22 @@ class MeasurementTable extends Component
     }
 
     /**
+     * Redirect to the Existing Calibration form URL
+     * @param $measurmentID
+     * @return \Illuminate\Http\RedirectResponse|null
+     */
+    public function calibrationFormExisting($measurmentID){
+        $m = Measurement::find($measurmentID);
+        if($m && $m->calibration_id > 0){
+            return redirect()->to('/calibrations/existing/')->with([
+                "measurement" => $m,
+            ]);
+        }
+        debugbar()->error('Bad call to existing measurement ID '.$measurmentID.' existing calibration');
+        return null;
+    }
+
+    /**
      * Calibrate only the search table measurements
      * ignores pagination
      *

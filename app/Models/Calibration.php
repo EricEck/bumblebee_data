@@ -96,12 +96,72 @@ class Calibration extends Model
     public function calibrator(){
         return $this->belongsTo(User::class);
     }
-    public function measurements(){
-        return $this->hasMany(Measurement::class,'bumblebee_id', 'bumblebee_id')
-            ->where('metric', $this->metric)
-            ->where('method', $this->method)
-            ->where('measurement_timestamp', ">=", $this->effective_timestamp)
-            ->latest();
+    /**
+     * Measurements that have been calibrated by this
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function calibratedMeasurements(){
+        return $this->hasMany(Measurement::class);
+//        ,'calibration_id', 'id');
+    }
+
+
+
+    /**
+     * All Measurements that are effected by this calibration
+     * NOT an eloquent relationship
+     * @return Calibration[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function effectedMeasurements(){
+        return Measurement::query()
+            ->where('bumblebee_id', $this->bumblebee_id )
+                ->where('metric', $this->metric)
+                ->where('method', $this->method)
+                ->where('measurement_timestamp', ">=", $this->effective_timestamp)
+                ->get();
+    }
+
+
+    /**
+     * Run this Calibration on its Measurements
+     * @return int number of measurements calibrated
+     */
+    public function runCalibration(){
+        $numberCalibrated = 0;
+        if (count($measurements = $this->calibratedMeasurements)){
+            foreach ($measurements as $measurement) {
+                if($measurement->calibrate()) $numberCalibrated++;
+            }
+            return $numberCalibrated;
+        }
+        // not eloquent
+        if (count($measurements = $this->effectedMeasurements())){
+            foreach ($measurements as $measurement) {
+                $measurement->calibration_id = $this->id;   // must set the calibration id prior
+                if($measurement->calibrate()) $numberCalibrated++;
+            }
+            return $numberCalibrated;
+        }
+        return $numberCalibrated;
+    }
+
+    /**
+     * Is the Calibration Complete
+     * @return bool calibration is complete
+     */
+    public function filled():bool {
+        return (
+            $this->bumblebee_id > 0
+            && $this->calibrator_id > 0
+            && strlen($this->calibration_type) > 0
+            && strlen($this->metric) > 0
+            && strlen($this->method) > 0
+            && strlen($this->default_output_units) > 0
+            && strlen($this->effective_timestamp) > 10
+            && is_numeric($this->slope_m)
+            && is_numeric($this->offset_b)
+            && ($this->effective == 0 || $this->effective ==1)
+        );
     }
 
     /**
@@ -117,7 +177,6 @@ class Calibration extends Model
         if ($multiplier == null) return 0.0;
         return $multiplier;
     }
-
 
     /**
      * Solve the linear equation slope and offset
@@ -150,9 +209,10 @@ class Calibration extends Model
         ];
     }
 
-
-
-
+    /**
+     * @param Measurement $measurement
+     * @return float|int
+     */
     public function outputValue(Measurement $measurement){
         switch ($this->calibration_type) {
             case 'linear':
@@ -178,6 +238,7 @@ class Calibration extends Model
             default => array('linear', 'color absorption'),
         };
     }
+
     public static function calibrationTypeEnums(){
         return array('linear', 'color absorption', 'color shift');
     }

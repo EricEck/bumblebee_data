@@ -78,59 +78,67 @@ class Measurement extends Model
     public function bumblebee(){
         return $this->belongsTo(Bumblebee::class);
     }
-
     /**
-     * Calibrate THIS measurement
-     *
-     * @return bool true if calibrated and saved, false otherwise
+     * Eloquent belongs to relationship Calibration Model
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function calibrate(){
-        if(!$this->calibration_value){
-            // not a calibration value for internal colorimetry
-            if($calibration = $this->getEffectiveCalibration()){
-                // calibration exists for this measurement
-                if($calibration->id != $this->calibration_id){
-                    // new calibration
-                    switch ($calibration->calibration_type){
-                        case 'linear':
-                            $this->calibrated_value = $calibration->slope_m * $this->valueDecodeNumber() + $calibration->offset_b;
-                            break;
-                        case 'color absorption':
-                            $this->calibrated_value = $calibration->slope_m * $this->colorimetricValue() + $calibration->offset_b;
-                            break;
-                        default:
-                            return false;
-                    }
-                    if ($this->calibrated_value < 0) $this->calibrated_value = 0;   // floor any calculations, metrics are negative
-                    $this->calibrated_unit = $calibration->default_output_units;
-                    $this->calibration_id = $calibration->id;
-
-                    return $this->updateOrFail(); // catch any error on the calling function to this!
-                }
-                return true;
-            } else {
-                //no calibration exists => empty the calibrated data
-                $this->calibrated_value = 0.0;
-                $this->calibrated_unit = "";
-                $this->calibration_id = 0;
-            }
-        }
-        return false;
+    public function calibration(){
+        return $this->belongsTo(Calibration::class);
     }
 
-//    /**
-//     * Eloquent hasOne calibration
-//     * @return \Illuminate\Database\Eloquent\Relations\HasOne
-//     */
-//    public function calibration(){
-//        return $this->hasOne(Calibration::class,'bumblebee_id','bumblebee_id')
-//            ->where('metric', $this->metric)
-//            ->where('method', $this->method)
-//            ->where('effective', 1)
-//            ->where('effective_timestamp', '<=', 'measurement_timestamp')
-//            ->orderBy('effective_timestamp', 'desc');
-////            ->withDefault(Calibration::class);
-//    }
+    /**
+     * Calibrate THIS Measurement and Save
+     * @return bool true if calibrated successful and saved (even if calibration is removed)
+     * @throws \Throwable
+     */
+    public function calibrate():bool {
+
+        if ($this->calibration_id) {
+            if ($this->calibration->effective) {
+                if ($this->doTheCalibrationMath())
+                    return $this->updateOrFail(); // catch any error on the calling function to this!
+                return false;
+            }
+        } elseif ($calibration_id = $this->getEffectiveCalibration()->id) {
+            $this->calibration_id = $calibration_id;
+            if ($this->doTheCalibrationMath())
+                return $this->updateOrFail(); // catch any error on the calling function to this!
+            return false;
+        }
+
+        $this->clearTheCalibration();
+        return $this->updateOrFail();
+    }
+
+    /**
+     * Perform the Calibration Mathematics
+     * @return bool success
+     */
+    private function doTheCalibrationMath(){
+        switch ($this->calibration->calibration_type){
+            case 'linear':
+                $this->calibrated_value = $this->calibration->slope_m * $this->valueDecodeNumber() + $this->calibration->offset_b;
+                break;
+            case 'color absorption':
+                $this->calibrated_value = $this->calibration->slope_m * $this->colorimetricValue() + $this->calibration->offset_b;
+                break;
+            default:
+                return false;
+        }
+        $this->calibrated_unit = $this->calibration->default_output_units;
+        return true;
+    }
+
+    /**
+     * Clear the Calibration Value and Link
+     * @return void
+     */
+    private function clearTheCalibration(){
+        $this->calibrated_unit = "";
+        $this->calibrated_value = 0.0;
+        $this->calibration_value = 0;
+        $this->calibration_id = 0;
+    }
 
     /**
      * Find the Effective Calibration for this Measurement
@@ -161,8 +169,6 @@ class Measurement extends Model
             ->orderBy('effective_timestamp', 'desc')
             ->first();
     }
-
-
 
     /**
      * Calculation for Colorimetric Value UNCALIBRATED
@@ -245,8 +251,6 @@ class Measurement extends Model
         }
         return null;
     }
-
-
 
     /**
      * Find the previous Calibration value - Used for Colorimetric Only

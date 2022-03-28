@@ -10,18 +10,18 @@
     </x-slot>
 
 
-    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">
+{{--    <div class="py-12 max-w-7xl mx-auto sm:px-6 lg:px-8">--}}
 
-        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+{{--        <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">--}}
             @livewire('calibration-form', [
                     'allow_edit' => $allow_edit,
                     'create_new' => $create_new,
                     'measurement' => $measurement,
                     'calibration' => $calibration,
                     ])
-        </div>
+{{--        </div>--}}
 
-    </div>
+{{--    </div>--}}
 
         @if(isset($measurement) && $measurement->id > 0)
             <div class="bg-blue-100 px-4 mt-4 shadow-lg shadow-black ">

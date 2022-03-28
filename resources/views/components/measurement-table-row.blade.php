@@ -56,7 +56,11 @@
         <td class="border px-1 py-2 flex-auto">
             <a wire:click="measurementFormShow({{ $measurement->id }})"><x-buttons.view>View</x-buttons.view></a>
             @if(!($measurement->isManualMethod() || $measurement->calibration_value))
-                <a wire:click="calibrationFormNew({{ $measurement->id }})"><x-buttons.calibration>{{ $measurement->calibration_id == 0 ? 'Cal' : 'Re-Cal' }}</x-buttons.calibration></a>
+                @if($measurement->calibration_id == 0)
+                    <a wire:click="calibrationFormNew({{ $measurement->id }})"><x-buttons.calibration>Cal</x-buttons.calibration></a>
+                @else
+                    <a wire:click="calibrationFormExisting({{ $measurement->id }})"><x-buttons.calibration>Re-Cal</x-buttons.calibration></a>
+                @endif
             @endif
         </td>
     @endif

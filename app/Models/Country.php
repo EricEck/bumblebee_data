@@ -13,6 +13,7 @@ class Country extends Model
     protected $fillable = [
         'name',
         'short_name',
+        'country_code',
         'latitude',
         'longitude',
     ];

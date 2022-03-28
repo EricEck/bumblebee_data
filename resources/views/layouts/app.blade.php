@@ -66,7 +66,7 @@
 
         @livewireScripts
 
-        <livewire:contact-modal />
-        <livewire:some-other-modal />
+{{--        <livewire:contact-modal />--}}
+{{--        <livewire:some-other-modal />--}}
     </body>
 </html>

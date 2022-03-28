@@ -63,42 +63,48 @@
                 </div>
             </div>
 
-        <div class="w-1/6 relative mx-1 ">
-            <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option disabled>Colorimetric Data Scaling</option>
-                <option value="0" selected>Raw Colorimetric</option>
-                <option value="1">Scaled to Clear</option>
-                <option value="2">Scaled to Peak</option>
-            </select>
-            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+            <div class="w-1/6 relative mx-1 ">
+                <select wire:model="scaledColorimetric" class="block appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
+                    <option disabled>Colorimetric Data Scaling</option>
+                    <option value="0" selected>Raw Colorimetric</option>
+                    <option value="1">Scaled to Clear</option>
+                    <option value="2">Scaled to Peak</option>
+                </select>
+                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                </div>
             </div>
-        </div>
-    @endif
+        @endif
 
         <!-- Table Actions -->
-        <div class="w-1/12 relative">
-            <a wire:click="excel"><x-buttons.excel></x-buttons.excel></a>
-        </div>
-        <div class="w-1/12 relative px-4">
-            <a wire:click="measurementFormNew()"><x-buttons.new></x-buttons.new></a>
-        </div>
-        <div class="w-1/12 relative">
-            <a wire:click="calibrateMeasurements"
-               x-data="{showCalibrationButton: true}"
-               x-show="showCalibrationButton"
-               x-init="@this.on('hideCalibrationButton',() => { showCalibrationButton = false; setTimeout(() => { showCalibrationButton = true; },5000);  })">
-                <x-buttons.calculate><span class="text-xs">Run Calibration</span></x-buttons.calculate>
-            </a>
-            <div class="font-bold text-xs text-blue-700 text-center bg-gray-200 py-4"
-                 x-data="{showCalibrating: false}"
-                 x-show="showCalibrating"
-                 x-transition.opacity.out.duration.250ms
-                 x-init="@this.on('calibrating',() => { showCalibrating = true; setTimeout(() => { showCalibrating = false; },1000);  })"
-                 style="display: none">
-                Updating Calibrations...
+        <div class="w-1/6 pt-0.5 pl-1 flex bg-blue-300 border border-1 border-blue-500 shadow-gray-500 shadow-md">
+            <div class="w-1/3 relative">
+                <a wire:click="excel">
+                    <x-buttons.excel>CSV</x-buttons.excel>
+                </a>
             </div>
-            <div class="font-bold text-xs text-green-700 text-center bg-gray-200 py-4"
+            <div class="w-1/3 relative ">
+                <a wire:click="measurementFormNew()">
+                    <x-buttons.new>New</x-buttons.new>
+                </a>
+            </div>
+            <div class="w-1/3 relative">
+                <a wire:click="calibrateMeasurements"
+                   x-data="{showCalibrationButton: true}"
+                   x-show="showCalibrationButton"
+                   x-init="@this.on('hideCalibrationButton',() => { showCalibrationButton = false; setTimeout(() => { showCalibrationButton = true; },5000);  })">
+                    <x-buttons.calculate>Cal</x-buttons.calculate>
+                </a>
+                <div class="font-bold text-xs text-blue-700 text-center bg-gray-200 py-4"
+                     x-data="{showCalibrating: false}"
+                     x-show="showCalibrating"
+                     x-transition.opacity.out.duration.250ms
+                     x-init="@this.on('calibrating',() => { showCalibrating = true; setTimeout(() => { showCalibrating = false; },1000);  })"
+                     style="display: none">
+                    Updating Calibrations...
+            </div>
+
+            <div class="font-bold w-full text-xs text-green-700 text-center bg-gray-200 py-4"
                  x-data="{doneCalibrating: false}"
                  x-show="doneCalibrating"
                  x-transition.opacity.out.duration.750ms
@@ -107,27 +113,28 @@
                 Calibrations Complete!
             </div>
         </div>
+        </div>
+
     </div>
+
     <!-- Search Headings Row 2-->
     <div class="w-full flex pb-10">
-
         <div class="w-2/6 relative mx-1 flex">
             <label for="start_datetime"
-                   class="appearance-none block w-0.5 text-gray-700 py-3 px-2 leading-tight"
-            >Starting</label>
+                   class="appearance-none block w-1/4 text-gray-700 py-3 px-2 leading-tight"
+            >Starting Date</label>
             <input wire:model="start_datetime" type="datetime-local" id="start_datetime"
-                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                   class="appearance-none block w-3/4 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             >
         </div>
         <div class="w-2/6 relative mx-1 flex">
             <label for="end_datetime"
-                   class="appearance-none block w-0.5 text-gray-700 py-3 px-2 leading-tight"
-            >Ending</label>
+                   class="appearance-none block w-1/4 text-gray-700 py-3 px-2 leading-tight"
+            >Ending Date</label>
             <input wire:model="end_datetime" type="datetime-local" id="end_datetime"
-                   class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                   class="appearance-none block w-3/4 bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
             >
         </div>
-
         <div class="w-1/6 relative mx-1">
             <select wire:model="sort_by" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                 <option disabled>Sort by</option>

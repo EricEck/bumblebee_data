@@ -66,13 +66,12 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/measurements_form/new',
         [MeasurementController::class, 'measurementFormNew']);
 
-//    Route::get('/measurements/calibrate',
-//        [MeasurementController::class, 'calibrateAllMeasurements'])
-//        ->name('calibrateMeasurements');
-
     Route::get('/calibrations/new',
         [CalibrationController::class, 'calibrationFormNew'])
         ->name('calibrationFormNew');
+    Route::get('/calibrations/existing',
+        [CalibrationController::class, 'calibrationFromExisting'])
+        ->name('calibrationFormExisting');
 
     // Data Table Downloads
 //    Route::get('/export/users/excel', [UserController::class, 'exportExcel']);

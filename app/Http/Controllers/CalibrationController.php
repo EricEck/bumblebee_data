@@ -13,7 +13,7 @@ class CalibrationController extends Controller
 {
 
     /**
-     * Open a new Larawire Calibration Form
+     * Open a new Larawire Calibration Form Page
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function calibrationFormNew(){
@@ -31,5 +31,26 @@ class CalibrationController extends Controller
             'calibration' =>$calibration,
             'measurement' =>$measurement,
         ]);
+    }
+
+    /**
+     * Open an existing Larawire Calibration Form Page
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|never
+     */
+    public function calibrationFromExisting(){
+
+        debugbar()->info('CalibrationController::calibrationFormExisting()');
+
+        $measurement =  Session::get("measurement");
+        if($measurement){
+            $calibration = Calibration::find($measurement->calibration_id);
+            return view('calibrations.calibration_form', [
+                'allow_edit' => true,
+                'create_new' => false,
+                'calibration' =>$calibration,
+                'measurement' =>$measurement,
+            ]);
+        }
+        return abort(404);
     }
 }

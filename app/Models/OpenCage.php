@@ -48,8 +48,6 @@ class OpenCage extends Model
      * Forward GeoCode
      *
      * @param string $street1
-     * @param string $street2
-     * @param string $street3
      * @param string $city
      * @param string $state_province
      * @param string $postal_code
@@ -58,8 +56,6 @@ class OpenCage extends Model
      * @return bool
      */
     public function forwardGeoCodeAddressSearch( string $street1 = "",
-                                                 string $street2 = "",
-                                                 string $street3 = "",
                                                  string $city = "",
                                                  string $state_province = "",
                                                  string $postal_code = "",

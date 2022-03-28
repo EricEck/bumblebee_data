@@ -42,6 +42,33 @@ class Address extends Model
     }
 
     /**
+     * Is the Address Complete
+     * @return bool address is complete
+     */
+    public function filled():bool {
+        return ($this->country_id > 0
+            && $this->state_id > 0
+            && strlen($this->city_name) > 3
+            && strlen($this->street_1) > 3
+            && strlen($this->postal_code) > 3
+        );
+    }
+
+    /**
+     * Forward Geo Code the Address
+     * @return bool
+     */
+    public function findForwardGeoCode(){
+        $g = new OpenCage();
+        if ($g->forwardGeoCodeAddressSearch($this->street_1, $this->city_name, $this->state->name, $this->postal_code)){
+            $this->latitude = $g->latitude;
+            $this->longitude = $g->longitude;
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Make a new Address and Save it to the DB
      *
      * @param string $s1
