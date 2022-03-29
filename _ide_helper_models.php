@@ -49,6 +49,159 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\BodiesOfWater
+ *
+ * @property int $id
+ * @property int $pool_owner_id
+ * @property string $name
+ * @property string $description_pool
+ * @property int $address_id
+ * @property int $location_type_id
+ * @property string $description_access
+ * @property string $latitude
+ * @property string $longitude
+ * @property int $filtration_type_id
+ * @property int $filteration_share_with_bow_id
+ * @property int $construction_type_id
+ * @property string $description_construction
+ * @property string $construction_date
+ * @property int $commercial
+ * @property int $indoor
+ * @property int $gallons
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Address|null $address
+ * @property-read \App\Models\ConstructionType|null $bowConstructionType
+ * @property-read \App\Models\FiltrationType|null $bowFiltrationType
+ * @property-read \App\Models\BowLocationType|null $bowLocationType
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
+ * @property-read int|null $components_count
+ * @property-read \App\Models\PoolOwner|null $owner
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater query()
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereCommercial($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereConstructionDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereConstructionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereDescriptionAccess($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereDescriptionConstruction($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereDescriptionPool($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereFilterationShareWithBowId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereFiltrationTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereGallons($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereIndoor($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereLatitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereLocationTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereLongitude($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater wherePoolOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater whereUpdatedAt($value)
+ */
+	class BodiesOfWater extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\BowComponent
+ *
+ * @property int $id
+ * @property int $bodies_of_water_id
+ * @property string $name
+ * @property string $description
+ * @property int $elliptic_product_id
+ * @property int $manufacturer_id
+ * @property int $installation_service_company_id
+ * @property int $installation_service_ticket_id
+ * @property string $installation_date
+ * @property int $installation_location_id
+ * @property int $installed_now
+ * @property int $warranty
+ * @property string $warranty_end_date
+ * @property string $model_number
+ * @property string $serial_number
+ * @property string $removed_from_service_date
+ * @property int $removed_from_service_ticket_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\BodiesOfWater|null $bodyOfWater
+ * @property-read \App\Models\BowComponentLocation|null $componentLocation
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent query()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereBodiesOfWaterId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereEllipticProductId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereInstallationDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereInstallationLocationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereInstallationServiceCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereInstallationServiceTicketId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereInstalledNow($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereManufacturerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereModelNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereRemovedFromServiceDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereRemovedFromServiceTicketId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereSerialNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereWarranty($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponent whereWarrantyEndDate($value)
+ */
+	class BowComponent extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\BowComponentLocation
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
+ * @property-read int|null $components_count
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereUpdatedAt($value)
+ */
+	class BowComponentLocation extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\BowLocationType
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|BowLocationType whereUpdatedAt($value)
+ */
+	class BowLocationType extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Bumblebee
  *
  * @property int $id
@@ -114,6 +267,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Bumblebee|null $bumblebee
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Measurement[] $calibratedMeasurements
+ * @property-read int|null $calibrated_measurements_count
  * @property-read \App\Models\User|null $calibrator
  * @method static \Illuminate\Database\Eloquent\Builder|Calibration newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Calibration newQuery()
@@ -138,18 +293,45 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ConstructionType
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ConstructionType whereUpdatedAt($value)
+ */
+	class ConstructionType extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Country
  *
  * @property int $id
  * @property string $name
  * @property string $short_name
+ * @property string $country_code
  * @property string $latitude
  * @property string $longitude
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\State[] $states
+ * @property-read int|null $states_count
  * @method static \Illuminate\Database\Eloquent\Builder|Country newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Country newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Country query()
+ * @method static \Illuminate\Database\Eloquent\Builder|Country whereCountryCode($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereLatitude($value)
@@ -159,6 +341,51 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Country whereUpdatedAt($value)
  */
 	class Country extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EllipticMember
+ *
+ * @property int $id
+ * @property int $App\Models\User
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereApp\Models\User($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereUpdatedAt($value)
+ */
+	class EllipticMember extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\FiltrationType
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $order
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|FiltrationType whereUpdatedAt($value)
+ */
+	class FiltrationType extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -200,11 +427,23 @@ namespace App\Models{
  * @property string $calibrated_unit
  * @property int|null $calibration_id
  * @property-read \App\Models\Bumblebee|null $bumblebee
+ * @property-read \App\Models\Calibration|null $calibration
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationId($value)
  */
 	class Measurement extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\OpenCage
+ *
+ * @method static \Illuminate\Database\Eloquent\Builder|OpenCage newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|OpenCage newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|OpenCage query()
+ */
+	class OpenCage extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -263,6 +502,38 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\PoolOwner
+ *
+ * @property int $id
+ * @property int $user_id
+ * @property int $billing_same_as_address
+ * @property int $billing_address_id
+ * @property int $is_primary_owner
+ * @property int $primary_owner_id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Address|null $billingAddress
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BodiesOfWater[] $bodiesOfWater
+ * @property-read int|null $bodies_of_water_count
+ * @property-read \App\Models\User|null $primaryOwner
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner query()
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereBillingAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereBillingSameAsAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereIsPrimaryOwner($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner wherePrimaryOwnerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner whereUserId($value)
+ */
+	class PoolOwner extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\Role
  *
  * @property int $id
@@ -284,6 +555,107 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Role whereUpdatedAt($value)
  */
 	class Role extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ServiceCompany
+ *
+ * @property int $id
+ * @property string $name
+ * @property int $address_primary_id
+ * @property int $billing_same_as_address
+ * @property int $address_billing_id
+ * @property int $contact_primary_id
+ * @property int $contact_billing_id
+ * @property int $contact_technical_id
+ * @property int $contact_service_id
+ * @property string $phone_office
+ * @property string $phone_fax
+ * @property string $email_primary
+ * @property string $website_url
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Address|null $addressBilling
+ * @property-read \App\Models\Address|null $addressPrimary
+ * @property-read \App\Models\User|null $contactBilling
+ * @property-read \App\Models\User|null $contactPrimary
+ * @property-read \App\Models\User|null $contactService
+ * @property-read \App\Models\User|null $contactTechnical
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $members
+ * @property-read int|null $members_count
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereAddressBillingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereAddressPrimaryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereBillingSameAsAddress($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereContactBillingId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereContactPrimaryId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereContactServiceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereContactTechnicalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereEmailPrimary($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany wherePhoneFax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany wherePhoneOffice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany whereWebsiteUrl($value)
+ */
+	class ServiceCompany extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ServiceCompanyEmployee
+ *
+ * @property int $id
+ * @property int $service_company_id
+ * @property int $user_id
+ * @property int $active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\ServiceCompany|null $serviceCompany
+ * @property-read \App\Models\User|null $user
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereServiceCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyEmployee whereUserId($value)
+ */
+	class ServiceCompanyEmployee extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\ServiceCompanyLocation
+ *
+ * @property int $id
+ * @property int $service_company_id
+ * @property int $address_id
+ * @property int $active
+ * @property string $name
+ * @property string $description
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereServiceCompanyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation whereUpdatedAt($value)
+ */
+	class ServiceCompanyLocation extends \Eloquent {}
 }
 
 namespace App\Models{
@@ -326,14 +698,24 @@ namespace App\Models{
  * @property string|null $remember_token
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $phone_mobile
+ * @property string $phone_home
+ * @property string $phone_office
+ * @property int $address_home_id
+ * @property int $pool_owner_id
+ * @property int $service_employee_id
+ * @property int $elliptic_member_id
+ * @property-read \App\Models\Address|null $addressHome
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bumblebee[] $bumblebees
  * @property-read int|null $bumblebees_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Calibration[] $calibrations
  * @property-read int|null $calibrations_count
+ * @property-read \App\Models\EllipticMember|null $ellipticMember
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions
  * @property-read int|null $permissions_count
+ * @property-read \App\Models\PoolOwner|null $poolOwner
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Role[] $roles
  * @property-read int|null $roles_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Sanctum\PersonalAccessToken[] $tokens
@@ -347,17 +729,24 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|User orWhereRoleIs($role = '', $team = null)
  * @method static \Illuminate\Database\Eloquent\Builder|User query()
  * @method static \Illuminate\Database\Eloquent\Builder|User someUsers()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAddressHomeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDoesntHavePermission()
  * @method static \Illuminate\Database\Eloquent\Builder|User whereDoesntHaveRole()
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereEllipticMemberId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmail($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereEmailVerifiedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereName($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePassword($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User wherePermissionIs($permission = '', $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneHome($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneMobile($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePhoneOffice($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User wherePoolOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRoleIs($role = '', $team = null, $boolean = 'and')
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereServiceEmployeeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  */
 	class User extends \Eloquent {}

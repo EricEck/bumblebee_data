@@ -26,6 +26,13 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone_mobile',
+        'phone_office',
+        'phone_home',
+        'address_home_id',
+        'pool_owner_id',
+        'service_employee_id',
+        'elliptic_member_id'
     ];
 
     /**
@@ -47,6 +54,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // Eloquent Relationships
     /**
      * All Bumblebees that an user currently owns
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -54,7 +62,12 @@ class User extends Authenticatable
     public function bumblebees(){
         return $this->hasMany(Bumblebee::class, 'owner_id', 'id');
     }
-
+    public function addressHome(){
+        return $this->hasOne(Address::class, 'id', 'pool_owner_id');
+    }
+    public function poolOwner(){
+        return $this->hasOne(PoolOwner::class, 'id', 'pool_owner_id');
+    }
     /**
      * Eloquent has many relationship Calibration Model
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
@@ -62,6 +75,11 @@ class User extends Authenticatable
     public function calibrations(){
         return $this->hasMany(Calibration::class);
     }
+    public function ellipticMember(){
+        return $this->hasOne(EllipticMember::class, 'id', 'elliptic_member_id');
+    }
+
+
 
 
     public function roleNames(){
