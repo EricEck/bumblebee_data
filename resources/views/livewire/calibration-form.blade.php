@@ -10,6 +10,7 @@
                 <h3 class="text-lg font-medium leading-6 text-gray-500 border border-b-2  border-gray-50">{{ $create_new ? 'New Calibration Data' : 'Edit Calibration Data' }}</h3>
             </div>
 
+            <!-- Form Container -->
             <div class="overflow-hidden shadow-sm sm:rounded-lg">
 
                 <!--Message Event Handler -->
@@ -53,9 +54,9 @@
                 </div>
 
                 <!--  Form Markup -->
-                <form  >
+                <form>
 
-                    <!-- Fields -->
+                    <!-- Fields Markup -->
                     <div class="shadow overflow-hidden sm:rounded-md">
 
                         @if($calibration->id > 0)
@@ -213,8 +214,8 @@
 
                         <!-- Helper Calculation -->
                         <div class="col-span-6 sm:col-span-3 mt-4 mb-4 ml-12 mr-12 py-4 px-4 border border-1 border-gray-100 bg-gray-50 shadow-md shadow-gray-600">
-                            @if($calibration->calibration_type == "linear")
-                                <!-- Linear Calibration Type -->
+                        @if($calibration->calibration_type == "linear")
+                            <!-- Linear Calibration Type -->
 
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Linear Calibration...</h3>
 
@@ -246,8 +247,8 @@
 
 
 
-                            @elseif($calibration->calibration_type == "color absorption")
-                                <!-- Color Absorption Type -->
+                        @elseif($calibration->calibration_type == "color absorption")
+                            <!-- Color Absorption Type -->
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Color Absorption for {{ ucwords($calibration->metric) }}</h3>
 
                                 <div class="py-4 px-10 bg-gray-100 mt-6 mb-6">
@@ -277,7 +278,7 @@
                                 </div>
 
                             @else
-                                    <h3 class="text-lg font-medium leading-6 text-red-800">Select a calibration type above...</h3>
+                                <h3 class="text-lg font-medium leading-6 text-red-800">Select a calibration type above...</h3>
                             @endif
                         </div>
 
@@ -295,7 +296,7 @@
                             @endforeach
                         </ul>
                     </div>
-            @endif
+                @endif
 
                 <!-- Process Buttons -->
                 <div class="flex flex-row items-center m-4 py-2 px-4 mr-4 ">
@@ -306,7 +307,7 @@
                             </a>
                         @endif
                     </div>
-                    <div class="basis-2/3">
+                    <div class="basis-1/3">
                         @if($changed)
                             <a wire:click.debounce.500ms="discard">
                                 <x-buttons.close>Discard Changes</x-buttons.close>
@@ -325,6 +326,7 @@
                             </a>
                         @endif
                     </div>
+
                 </div>
 
             </div>

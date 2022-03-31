@@ -15,9 +15,13 @@
                     <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
                 </div>
             </div>
-            @livewire('address-form', [
+
+
+
+            @livewire('user-form',[
                     'allow_edit' => true,
-                    'address' => new \App\Models\Address(["street_1" => "Wynnewood"])
+                    'create_new' => false,
+                    'user' => Auth::user(),
                     ])
 
 {{--            <div>--}}

@@ -64,7 +64,9 @@ class UserController extends Controller
 
         return view('users.user_form', [
             'allow_edit' => true,
+            'showBack' => true,
             'user' => $user,
+
         ]);
     }
 
@@ -79,6 +81,7 @@ class UserController extends Controller
 
         return view('users.user_form', [
             'allow_edit' => false,
+            'showBack' => true,
             'user' => $user,
         ]);
     }

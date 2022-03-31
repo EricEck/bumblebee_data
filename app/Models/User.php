@@ -54,6 +54,11 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // eager load
+    protected $with = [
+        'addressHome',
+    ];
+
     // Eloquent Relationships
     /**
      * All Bumblebees that an user currently owns
@@ -63,7 +68,7 @@ class User extends Authenticatable
         return $this->hasMany(Bumblebee::class, 'owner_id', 'id');
     }
     public function addressHome(){
-        return $this->hasOne(Address::class, 'id', 'pool_owner_id');
+        return $this->hasOne(Address::class, 'id', 'address_home_id');
     }
     public function poolOwner(){
         return $this->hasOne(PoolOwner::class, 'id', 'pool_owner_id');
@@ -79,8 +84,16 @@ class User extends Authenticatable
         return $this->hasOne(EllipticMember::class, 'id', 'elliptic_member_id');
     }
 
-
-
+    /**
+     * Minimum Required Validation for a User
+     * @return bool
+     */
+    public function filled():bool {
+        return (
+            strlen($this->name) >= 4
+            && strlen($this->email) > 8
+        );
+    }
 
     public function roleNames(){
         return $this->getRoles();

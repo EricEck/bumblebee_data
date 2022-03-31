@@ -21,12 +21,22 @@ class Address extends Model
         'longitude',
         ];
 
+    // Default attribute values
+    protected $attributes = [
+        'street_1' => '',
+        'street_2' => '',
+        'street_3' => '',
+        'city_name' => '',
+        'postal_code' => '',
+        'state_id' => 0,
+        'country_id' => 0,
+    ];
+
     protected $casts = [
         ];
 
     // eager load
     protected $with = [
-        'city',
         'state',
         'country'
     ];
@@ -38,7 +48,7 @@ class Address extends Model
         return $this->belongsTo(State::class);
     }
     public function country(){
-        return $this->belongsTo(State::class);
+        return $this->belongsTo(Country::class);
     }
 
     /**

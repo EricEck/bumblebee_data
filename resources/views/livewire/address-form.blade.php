@@ -1,11 +1,15 @@
 <div>
     {{-- Be like water. --}}
-    <div class="w-3/4 mx-auto my-2 py-4 bg-yellow-50 rounded-lg border-gray-100 border shadow-lg">
+    <div class="mx-auto my-2 py-4  {{$childForm ? 'bg-amber-100 w-full' : 'bg-yellow-50 w-3/4'}} rounded-lg border-gray-100 border shadow-lg">
+        <!-- Sub Container -->
         <div class="mx-auto sm:px-6 lg:px-8">
+            <!-- sub container design -->
             <div class="overflow-hidden shadow-sm sm:rounded-lg">
 
-                <form wire:submit.prevent="save" onkeydown="return event.key !== 'Enter';">
-
+                @if(isset($addressName))
+                    <h2 class="text-md font-semibold">{{ $addressName }}</h2>
+                @endif
+                <!-- Address Information -->
                     <!--Message Event Handler -->
                     <div class="font-extrabold text-xl text-green-700"
                          x-data="{show: false}"
@@ -17,104 +21,117 @@
                     </div>
 
                     <!-- Fields Markup -->
-                    <div>
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Country"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <select wire:model.lazy="address.country_id"
-                                        wire:change="changed"
-                                        {{ $allow_edit ?  '' : 'disabled'}}
-                                        class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                                    <option value="0" disabled>Select Country (required)</option>
 
-                                    @foreach($countries as $cntry)
-                                        <option value="{{ $cntry->id }}">{{ $cntry->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
+                    @if($address->id)
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="State"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <select wire:model.lazy="address.state_id"
-                                        wire:change="changed"
-                                        {{ $allow_edit ?  '' : 'disabled'}}
-                                        class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                                    <option value="0" disabled>Select State (required)</option>
-                                    @php($country = \App\Models\Country::find($address->country_id))
-                                    @foreach($country->states as $state)
-                                        <option value="{{ $state->id }}">{{ $state->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="City"/>
+                            <x-label value="Address ID"/>
                             <div class="mt-0.5 sm:mt-0 sm:col-span-4">
                                 <x-input type="text"
-                                         :disabled="!$allow_edit"
-                                         wire:model.lazy="address.city_name"
-                                         wire:change="changed"
-                                         placeholder="name of city (required)"/>
+                                         :disabled="true"
+                                         value="{{ $address->id }}"/>
                             </div>
                         </div>
+                    @endif
 
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Street Address 1"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <x-input type="text"
-                                         :disabled="!$allow_edit"
-                                         wire:model.lazy="address.street_1"
-                                         wire:change="changed"
-                                         placeholder="first street line (required)"/>
-                            </div>
-                        </div>
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label value="Country"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <select wire:model.lazy="address.country_id"
+                                    wire:change="changed"
+                                    {{ $allow_edit ?  '' : 'disabled'}}
+                                    class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                                <option value="0" disabled>Select Country (required)</option>
 
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Street Address 2"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <x-input type="text"
-                                         :disabled="!$allow_edit"
-                                         wire:change="changed"
-                                         wire:model.lazy="address.street_2"
-                                         placeholder="second street line (optional)"/>
-                            </div>
+                                @foreach($countries as $cntry)
+                                    <option value="{{ $cntry->id }}">{{ $cntry->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Street Address 3"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <x-input type="text"
-                                         :disabled="!$allow_edit"
-                                         wire:model.lazy="address.street_3"
-                                         wire:change="changed"
-                                         placeholder="third street line (optional)"/>
-                            </div>
-                        </div>
+                    @php($country = \App\Models\Country::find($address->country_id))
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label value="State"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <select wire:model.lazy="address.state_id"
+                                    wire:change="changed"
+                                    {{ $allow_edit ?  '' : 'disabled'}}
+                                    class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                                <option value="0" disabled>Select State (required)</option>
 
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Postal Code"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <x-input type="text"
-                                         :disabled="!$allow_edit"
-                                         wire:model.lazy="address.postal_code"
-                                         wire:change="changed"
-                                         placeholder="postal code/ZIP (required)"/>
-                            </div>
+                                @foreach($country->states as $state)
+                                    <option value="{{ $state->id }}">{{ $state->name }}</option>
+                                @endforeach
+                            </select>
                         </div>
+                    </div>
 
-                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                            <x-label value="Latitude"/>
-                            <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                <x-input type="text" pattern="-[0-9]*\.[0-9]+"
-                                         :disabled="!$allow_edit"
-                                         wire:model.lazy="address.latitude"
-                                         wire:change="changed"
-                                         placeholder="latitude (optional)"/>
-                            </div>
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label value="City"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text"
+                                     :disabled="!$allow_edit"
+                                     wire:model.lazy="address.city_name"
+                                     wire:change="changed"
+                                     placeholder="name of city (required)"/>
                         </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label class="text-xs" value="Street Address 1"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text"
+                                     :disabled="!$allow_edit"
+                                     wire:model.lazy="address.street_1"
+                                     wire:change="changed"
+                                     placeholder="first street line (required)"/>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label class="text-xs" value="Street Address 2"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text"
+                                     :disabled="!$allow_edit"
+                                     wire:change="changed"
+                                     wire:model.lazy="address.street_2"
+                                     placeholder="second street line (optional)"/>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label class="text-xs" value="Street Address 3"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text"
+                                     :disabled="!$allow_edit"
+                                     wire:model.lazy="address.street_3"
+                                     wire:change="changed"
+                                     placeholder="third street line (optional)"/>
+                        </div>
+                    </div>
+
+                    <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label value="Postal Code"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text"
+                                     :disabled="!$allow_edit"
+                                     wire:model.lazy="address.postal_code"
+                                     wire:change="changed"
+                                     placeholder="postal code/ZIP (required)"/>
+                        </div>
+                    </div>
+
+                    @if($address->filled() || $address->id)
+                        <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                        <x-label value="Latitude"/>
+                        <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                            <x-input type="text" pattern="-[0-9]*\.[0-9]+"
+                                     :disabled="!$allow_edit"
+                                     wire:model.lazy="address.latitude"
+                                     wire:change="changed"
+                                     placeholder="latitude (optional)"/>
+                        </div>
+                    </div>
 
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                         <x-label value="Longitude"/>
@@ -126,7 +143,7 @@
                                      placeholder="longitude (optional)"/>
                         </div>
                     </div>
-                    </div>
+                    @endif
 
                     <!-- Errors Display Markup -->
                     @if ($errors->any())
@@ -141,22 +158,20 @@
                     @endif
 
                     @if($allow_edit && $changed ?? '')
-                    <!-- Process Buttons -->
+                        <!-- Process Buttons -->
                         <div class="flex flex-row items-end mt-4 mb-1">
                             <div class="basis-1/6">
-{{--                                <p wire:click.prevent="discard">Discard</p>--}}
                                 <a wire:click.prevent="discard"><x-buttons.close>Discard</x-buttons.close></a>
                             </div>
                             <div class="basis-2/3">
                             </div>
                             <div class="basis-1/6">
-                                <x-buttons.save ></x-buttons.save>
+                                @if(!$childForm)
+                                    <x-buttons.save ></x-buttons.save>
+                                @endif
                             </div>
                         </div>
                     @endif
-
-
-                </form>
 
             </div>
         </div>

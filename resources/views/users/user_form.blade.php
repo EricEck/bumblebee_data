@@ -11,6 +11,7 @@
                 @livewire('user-form', [
                         'user' => $user,
                         'allow_edit' => $allow_edit,
+                        'showBack' => $showBack,
                         ])
             </div>
         </div>

@@ -184,9 +184,9 @@ class CalibrationForm extends Component
             $this->readyToSave = false;
 
         } catch (\Exception $e){
-            $this->message = "Error Saving...";
+            $this->message = "Error Saving Calibration...";
             $this->emit('message');   // alpine JS $this.on('message',() => {}) event
-            debugbar()->info('Error...');
+            debugbar()->info('Error Saving Calibration...');
             debugbar()->error($e);
         }
 
