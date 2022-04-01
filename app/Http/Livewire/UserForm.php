@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Address;
+use App\Models\Role;
 use App\Models\User;
 use Livewire\Component;
 
@@ -25,6 +26,8 @@ class UserForm extends Component
     public array $addressToSave;
     public bool $addressChanged;
 
+    public $roles;
+
 
     protected $rules =[
         'user.name' => 'required|min:5|max:100',
@@ -32,6 +35,11 @@ class UserForm extends Component
         'user.phone_mobile' => 'string|max:45',
         'user.phone_home' => 'string|max:45',
         'user.phone_office' => 'string|max:45',
+        'roles.*.is' => 'required',
+    ];
+
+    protected $casts = [
+        'roles' => 'array',
     ];
 
     // Event Listeners - Livewire
@@ -41,6 +49,7 @@ class UserForm extends Component
     ];
 
     public function mount(){
+
         debugbar()->info('Mounting User Form');
         if($this->showBack) {
             debugbar()->info('with back');
@@ -51,8 +60,11 @@ class UserForm extends Component
         $this->addressChanged = false;
         $this->readyToSave = false;
         $this->saved = false;
+
         $this->getResetAddress();
         $this->addressToSave = [];
+
+        $this->getResetRoles();
     }
     /**
      * Render the View from the Model
@@ -61,6 +73,7 @@ class UserForm extends Component
     public function render()
     {
         debugbar()->info('Rendering User Form');
+        debugbar()->info($this->roles);
 //        debugbar()->info($this->addressChanged ? 'Address Changed' : ' Address Not Changed');
 //        debugbar()->info($this->addressToSave);
         return view('livewire.user-form');
@@ -89,6 +102,17 @@ class UserForm extends Component
         $this->addressHome = Address::find($this->user->address_home_id) ?? new Address();
     }
 
+    public function getResetRoles(){
+        $this->roles = Role::all();
+
+        foreach ($this->roles as $role){
+            $role->is = 0;
+            if($this->user->hasRole($role->name)){
+                $role->is = 1;
+            }
+        }
+    }
+
     public function discard(){
         debugbar()->info('Discard');
         $this->emit('discardChanges');
@@ -100,6 +124,7 @@ class UserForm extends Component
         }
 
         $this->getResetAddress();
+        $this->getResetRoles();
 
         $this->message = "Changes Discarded";
         $this->emit('message');
@@ -113,9 +138,10 @@ class UserForm extends Component
     public function save()
     {
         debugbar()->info('Saving User');
-//        debugbar()->info($this->user->attributesToArray());
-        $this->addressHome = new Address($this->addressToSave);
 
+
+        // Update/Create the Address
+        $this->addressHome = new Address($this->addressToSave);
         if($this->addressHome->filled()){
             try {
                 $this->addressHome->saveOrFail();
@@ -129,9 +155,10 @@ class UserForm extends Component
             }
         }
 
-        // run validation rule
+        // run User validation rule
         $validatedData = $this->validate();
 
+        // Save/Create the User
         try {
             $this->user->save();
             debugbar()->info('user saved!');
@@ -145,5 +172,18 @@ class UserForm extends Component
             debugbar()->info('Error Saving User...');
             debugbar()->error($e);
         }
+
+        // Save/Update the User's Roles
+        debugbar()->info('Save Roles...');
+        foreach ($this->roles as $role){
+            debugbar()->info($role->name);
+            debugbar()->info($role->is);
+            $this->user->detachRole($role->name);   // detach the role first to keep integrity
+            if($role->is){
+                $this->user->attachRole($role->name);
+            }
+        }
+
+
     }
 }
