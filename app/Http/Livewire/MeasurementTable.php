@@ -73,18 +73,6 @@ class MeasurementTable extends Component
     {
         debugbar()->info('render: MeasurementTable');
 
-//        debugbar()->info('MeasurementTable.php');
-//        debugbar()->info('Renders: '.$this->renders++);
-//        debugbar()->info('Per Page: '.$this->measurementsPerPage);
-//        debugbar()->info('BB ID: '.$this->bumblebeeID);
-//        debugbar()->info('Metrics: '.$this->metric);
-//        debugbar()->info('Methods: '.$this->method);
-//        debugbar()->info('$this->start_datetime: '.$this->start_datetime);
-//        debugbar()->info('$this->end_datetim: '.$this->end_datetime);
-//        debugbar()->info('Sort by: '.$this->sort_by);
-//        debugbar()->info('Order in: '.$this->orderAscending );
-
-
         return view('livewire.measurement-table',[
 
             'measurements' => Measurement::searchView(

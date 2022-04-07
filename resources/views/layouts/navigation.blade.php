@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav x-data="{ open: false }" class="sticky top-0 z-40 bg-white border-b border-gray-100">
 
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,13 +14,13 @@
                 </div>
 
                 <!-- Navigation Links -->
-                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                <div class="hidden z-50 space-x-8 sm:-my-px sm:ml-10 sm:flex">
                     <x-nav-link :href="route('dashboard')"  :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
                 </div>
 
-                <div class="hidden space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
+                <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
                             <x-nav-link  :active="request()->routeIs('bumblebees_table')|request()->routeIs('measurements_table')|request()->routeIs('measurements_table_actual')">
@@ -47,10 +47,18 @@
                     </x-dropdown>
                 </div>
 
-                <div class="hidden space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
+                <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
-                            <x-nav-link  :active="request()->routeIs('users_table')|request()->routeIs('users_table')|request()->routeIs('user_form_edit')|request()->routeIs('user_form_show')">
+                            <x-nav-link
+                                :active="request()->routeIs('users_table')
+                                    |request()->routeIs('users_table')
+                                    |request()->routeIs('body_of_water_edit')
+                                    |request()->routeIs('body_of_water_new')
+                                    |request()->routeIs('bodies_of_water')
+                                    |request()->routeIs('user_form_edit')
+                                    |request()->routeIs('user_form_new')
+                                    |request()->routeIs('user_form_show')">
                                 {{ __('People, Places & Parts') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -63,6 +71,15 @@
                         <x-slot name="content">
                             <x-dropdown-link :href="route('users_table')" :active="request()->routeIs('users_table')">
                                 {{ __('All Users') }}
+                            </x-dropdown-link><br>
+                            <x-dropdown-link :href="route('user_form_new')" :active="request()->routeIs('user_form_new')">
+                                {{ __('New User') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('bodies_of_water')" :active="request()->routeIs('bodies_of_water')">
+                                {{ __('All Bodies of Water') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('body_of_water_new')" :active="request()->routeIs('body_of_water_new')">
+                                {{ __('New Body of Water') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>

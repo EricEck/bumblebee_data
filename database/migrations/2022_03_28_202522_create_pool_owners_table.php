@@ -16,7 +16,7 @@ class CreatePoolOwnersTable extends Migration
         Schema::create('pool_owners', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignIdFor(\App\Models\User::class);
+            $table->foreignIdFor('user_id');
 
             $table->boolean('billing_same_as_address')->default(true);
             $table->foreignId('billing_address_id');

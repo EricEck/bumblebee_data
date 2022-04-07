@@ -15,29 +15,6 @@
                     <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
                 </div>
             </div>
-
-
-
-            @livewire('user-form',[
-                    'allow_edit' => true,
-                    'create_new' => false,
-                    'user' => Auth::user(),
-                    ])
-
-{{--            <div>--}}
-{{--                <button x-data="{}"--}}
-{{--                    x-on:click="window.livewire.emitTo('contact-modal','show')"--}}
-{{--                    class="text-indigo-500">--}}
-{{--                    Show Contact Modal--}}
-{{--                </button>--}}
-{{--            </div>--}}
-{{--            <div>--}}
-{{--                <button x-data="{}"--}}
-{{--                        x-on:click="window.livewire.emitTo('some-other-modal','show')"--}}
-{{--                        class="text-indigo-500">--}}
-{{--                    Show Some Other Modal--}}
-{{--                </button>--}}
-{{--            </div>--}}
         </div>
     </div>
 </x-app-layout>

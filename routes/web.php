@@ -52,17 +52,37 @@ Route::group(['middleware' => ['auth']], function (){
         ->name('user_form_edit');
     Route::get('/user_form/show/{user_id}', [UserController::class, 'userFormShow'])
         ->name('user_form_show');
+    Route::get('/user_form/new', [UserController::class, 'userFormNew'])
+        ->name('user_form_new');
 
-    Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])->name('bumblebees_table');
+    Route::get('bodies_of_water', [\App\Http\Controllers\BodiesOfWaterController::class, 'indexView'])
+        ->name('bodies_of_water');
+    Route::get('bodies_of_water/new', [\App\Http\Controllers\BodiesOfWaterController::class, 'bodyOfWaterFormNew'])
+        ->name('body_of_water_new');
+    Route::get('bodies_of_water/edit/{bow_id}', [\App\Http\Controllers\BodiesOfWaterController::class, 'bodyOfWaterFormEdit'])
+        ->name('body_of_water_edit');
+    Route::get('bodies_of_water/show/{bow_id}', [\App\Http\Controllers\BodiesOfWaterController::class, 'bodyOfWaterFormShow'])
+        ->name('body_of_water_show');
+
+    Route::get('bow_components/{bow_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentsList'])
+        ->name('bow_components_list');
+    Route::get('bow_components/new/{bow_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentNew'])
+        ->name('bow_component_new');
+
+    Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])
+        ->name('bumblebees_table');
     Route::get('/bumblebee_form/edit/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormEdit']);
     Route::get('/bumblebee_form/show/{bumblebee_id}',
         [BumblebeeController::class, 'bumblebeeFormShow'])
         ->name('bumblebeeFormShow');
     Route::get('/bumblebee_form/new', [BumblebeeController::class, 'bumblebeeFormNew']);
 
-    Route::get('/measurements_table', [MeasurementController::class, 'indexView'])->name('measurements_table');
-    Route::get('/measurements_table/actual', [MeasurementController::class, 'actualView'])->name('measurements_table_actual');
-    Route::get('/measurements_table/{bumblebee_id}', [MeasurementController::class, 'indexViewOneBB'])->name('measurements_bumblebee');
+    Route::get('/measurements_table', [MeasurementController::class, 'indexView'])
+        ->name('measurements_table');
+    Route::get('/measurements_table/actual', [MeasurementController::class, 'actualView'])
+        ->name('measurements_table_actual');
+    Route::get('/measurements_table/{bumblebee_id}', [MeasurementController::class, 'indexViewOneBB'])
+        ->name('measurements_bumblebee');
     Route::get('/measurements_form/show/{measurement_id}',
         [MeasurementController::class, 'measurementFormShow'])
         ->name('measurementFormShow');

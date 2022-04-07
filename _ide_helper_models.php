@@ -26,7 +26,7 @@ namespace App\Models{
  * @property string $longitude
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property-read \App\Models\State|null $country
+ * @property-read \App\Models\Country|null $country
  * @property-read \App\Models\State|null $state
  * @method static \Illuminate\Database\Eloquent\Builder|Address newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|Address newQuery()
@@ -582,6 +582,8 @@ namespace App\Models{
  * @property-read \App\Models\User|null $contactPrimary
  * @property-read \App\Models\User|null $contactService
  * @property-read \App\Models\User|null $contactTechnical
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Address[] $locations
+ * @property-read int|null $locations_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\User[] $members
  * @property-read int|null $members_count
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompany newModelQuery()
@@ -643,6 +645,8 @@ namespace App\Models{
  * @property string $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Address|null $address
+ * @property-read \App\Models\ServiceCompany|null $serviceCompany
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|ServiceCompanyLocation query()

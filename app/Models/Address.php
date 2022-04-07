@@ -65,6 +65,19 @@ class Address extends Model
     }
 
     /**
+     * Single line address (no country)
+     * @return string
+     */
+    public function oneLineAddress(){
+        return $this->street_1.', '.
+            ((strlen($this->street_2) > 0) ? $this->street_2.', ' : '').
+            ((strlen($this->street_3) > 0) ? $this->street_3.', ' : '').
+            $this->city_name.', '.
+            $this->state->short_name.' '.
+            $this->postal_code;
+    }
+
+    /**
      * Forward Geo Code the Address
      * @return bool
      */

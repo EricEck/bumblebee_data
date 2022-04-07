@@ -46,4 +46,15 @@ class EllipticMember extends Model
         $this->active = false;
         return $this->saveOrFail();
     }
+
+    /**
+     * Find and Return the Member by User ID
+     * @param $user_id
+     * @return EllipticMember|\Illuminate\Database\Eloquent\Builder|Model|object
+     */
+    public static function findMember($user_id){
+        return EllipticMember::query()
+            ->where('user_id', $user_id)
+            ->first();
+    }
 }

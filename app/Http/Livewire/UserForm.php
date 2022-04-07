@@ -3,6 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Models\Address;
+use App\Models\EllipticMember;
+use App\Models\PoolOwner;
 use App\Models\Role;
 use App\Models\User;
 use Livewire\Component;
@@ -22,11 +24,16 @@ class UserForm extends Component
 
     public string $message;
 
-    public Address $addressHome;
+    public Address $addressHome, $addressBilling;
     public array $addressToSave;
     public bool $addressChanged;
 
     public $roles;
+
+    public PoolOwner $poolOwner;
+    public $ownersList;
+
+    public EllipticMember $ellipticMember;
 
 
     protected $rules =[
@@ -36,6 +43,13 @@ class UserForm extends Component
         'user.phone_home' => 'string|max:45',
         'user.phone_office' => 'string|max:45',
         'roles.*.is' => 'required',
+        'poolOwner.user_id' => 'numeric',
+        'poolOwner.billing_same_as_address' => 'numeric',
+        'poolOwner.billing_address_id' => 'numeric',
+        'poolOwner.is_primary_owner' => 'numeric',
+        'poolOwner.primary_owner_id' => 'numeric',
+        'ellipticMember.user_id' => 'numeric',
+        'ellipticMember.active' => 'numeric',
     ];
 
     protected $casts = [
@@ -51,11 +65,50 @@ class UserForm extends Component
     public function mount(){
 
         debugbar()->info('Mounting User Form');
-        if($this->showBack) {
-            debugbar()->info('with back');
-        } else {
-            debugbar()->info('NO back');
+
+        $this->addressBilling = new Address();
+
+        $this->ownersList = PoolOwner::all();
+
+        $this->poolOwner = new PoolOwner([
+            'user_id' => $this->user->id,
+            'billing_same_as_address' => 1,
+            'billing_address_id' => $this->user->address_home_id,
+            'is_primary_owner' => 1,
+            'primary_owner_id' => $this->user->id,
+        ]);
+        if($this->user->hasRole('pool-owner')){
+            $this->poolOwner = PoolOwner::findOwner($this->user->id);
+            if(!$this->poolOwner){
+                $this->poolOwner = new PoolOwner([
+                    'user_id' => $this->user->id,
+                    'billing_same_as_address' => 1,
+                    'billing_address_id' => $this->user->address_home_id,
+                    'is_primary_owner' => 1,
+                    'primary_owner_id' => $this->user->id,
+                ]);
+                $this->poolOwner->saveOrFail();
+            }
+            if($this->poolOwner->is_primary_owner){
+                $this->addressBilling = Address::find($this->poolOwner->billing_address_id);
+            }
         }
+
+        $this->ellipticMember = new EllipticMember([
+            'user_id' => $this->user->id,
+            'active' => 0,
+        ]);
+        if($this->user->hasRole('elliptic_member')){
+            $this->ellipticMember = EllipticMember::findMember($this->user->id);
+            if($this->ellipticMember === null){
+                $this->ellipticMember = new EllipticMember([
+                    'user_id' => $this->user->id,
+                    'active' => 1,
+                ]);
+                $this->ellipticMember->saveOrFail();
+            }
+        }
+
         $this->changed = false;
         $this->addressChanged = false;
         $this->readyToSave = false;
@@ -73,9 +126,6 @@ class UserForm extends Component
     public function render()
     {
         debugbar()->info('Rendering User Form');
-        debugbar()->info($this->roles);
-//        debugbar()->info($this->addressChanged ? 'Address Changed' : ' Address Not Changed');
-//        debugbar()->info($this->addressToSave);
         return view('livewire.user-form');
     }
 
@@ -122,6 +172,10 @@ class UserForm extends Component
         } else {
             $this->user = new User();
         }
+        if($this->user->hasRole('pool-owner')){
+            $this->poolOwner = PoolOwner::findOwner($this->user->id);
+        } else
+            $this->poolOwner = new PoolOwner();
 
         $this->getResetAddress();
         $this->getResetRoles();
@@ -138,8 +192,6 @@ class UserForm extends Component
     public function save()
     {
         debugbar()->info('Saving User');
-
-
         // Update/Create the Address
         $this->addressHome = new Address($this->addressToSave);
         if($this->addressHome->filled()){
@@ -155,12 +207,13 @@ class UserForm extends Component
             }
         }
 
+
         // run User validation rule
         $validatedData = $this->validate();
 
         // Save/Create the User
         try {
-            $this->user->save();
+            $this->user->saveOrFail();
             debugbar()->info('user saved!');
             $this->saved = true;
             $this->changed = false;
@@ -184,6 +237,31 @@ class UserForm extends Component
             }
         }
 
+        // link pool owner table if needed
+        if ($this->user->hasRole('pool-owner')){
+            if(!PoolOwner::findOwner($this->user->id)){
+                $this->poolOwner = new PoolOwner([
+                    'user_id' => $this->user->id,
+                    'is_primary_owner' => 1,
+                    'primary_owner_id' => $this->user->id,
+                    'billing_address_id' => $this->user->address_home_id,
+                ]);
+                try {
+                    $this->poolOwner->saveOrFail();
+                    $this->message = "Pool Owner Created";
+                    $this->emit('message');
+                } catch (\Exception $e){
+                    $this->message = "Error Making User Pool Owner... ".$e->getMessage();
+                    $this->emit('message');   // alpine JS $this.on('message',() => {}) event
+                    $this->user->detachRole('pool-owner');
+                }
+            }
 
+            if($this->poolOwner->billing_same_as_address){
+                $this->poolOwner->billing_address_id = $this->user->address_home_id;
+                $this->poolOwner->saveOrFail();
+            }
+        }
     }
+
 }

@@ -26,5 +26,9 @@ class ConstructionTypes extends Seeder
             'description' => $description,
             'order' => $order,
         ]);
+
+        $ct->save();
+
+        return $ct;
     }
 }

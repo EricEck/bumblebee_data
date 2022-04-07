@@ -65,6 +65,7 @@ class UserController extends Controller
         return view('users.user_form', [
             'allow_edit' => true,
             'showBack' => true,
+            'create_new' => false,
             'user' => $user,
 
         ]);
@@ -82,6 +83,23 @@ class UserController extends Controller
         return view('users.user_form', [
             'allow_edit' => false,
             'showBack' => true,
+            'create_new' => false,
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Render the User Info Form New
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function userFormNew(){
+
+        $user = new User();
+
+        return view('users.user_form', [
+            'allow_edit' => true,
+            'showBack' => false,
+            'create_new' => true,
             'user' => $user,
         ]);
     }

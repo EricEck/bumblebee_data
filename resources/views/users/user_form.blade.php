@@ -12,6 +12,7 @@
                         'user' => $user,
                         'allow_edit' => $allow_edit,
                         'showBack' => $showBack,
+                        'create_new' => $create_new,
                         ])
             </div>
         </div>

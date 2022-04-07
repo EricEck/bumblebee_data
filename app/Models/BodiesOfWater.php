@@ -11,7 +11,9 @@ class BodiesOfWater extends Model
 
     protected $fillable = [
         'pool_owner_id',
+        'name',
         'description_pool',
+        'address_id',
         'location_type_id',
         'description_access',
         'latitude',
@@ -26,9 +28,27 @@ class BodiesOfWater extends Model
         'gallons',
     ];
 
+    // Default attribute values when created
+    protected $attributes = [
+        'pool_owner_id' => 0,
+        'name' => '',
+        'description_pool' => '',
+        'location_type_id' => 0,
+        'filtration_type_id' => 0,
+        'filteration_share_with_bow_id' => 0,
+        'construction_type_id' => 0,
+        'description_construction' => '',
+        'latitude' => 0.0,
+        'longitude' => 0.0,
+        'gallons' => 0,
+        'commercial' => 0,
+        'indoor' => 0,
+
+    ];
+
     // Eloquent Relationships
     public function owner(){
-        return $this->hasOne(PoolOwner::class, 'id', 'pool_owner_id');
+        return $this->hasOne(User::class, 'id', 'pool_owner_id');
     }
     public function address(){
         return $this->hasOne(Address::class, 'id', 'address_id');
@@ -45,5 +65,17 @@ class BodiesOfWater extends Model
     public function components(){
         return $this->hasMany(BowComponent::class, 'bodies_of_water_id', 'id');
     }
+
+    public function filled(){
+        return (
+            $this->pool_owner_id > 0
+            && strlen($this->name) > 5
+            && $this->address_id > 0
+            && $this->location_type_id > 0
+            && $this->filtration_type_id > 0
+            && $this->construction_type_id > 0
+        );
+    }
+
 
 }

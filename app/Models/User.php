@@ -35,6 +35,11 @@ class User extends Authenticatable
         'elliptic_member_id'
     ];
 
+    // defaults
+    protected $attributes = [
+        'location_type_id' => 0,
+    ];
+
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -82,6 +87,13 @@ class User extends Authenticatable
     }
     public function ellipticMember(){
         return $this->hasOne(EllipticMember::class, 'id', 'elliptic_member_id');
+    }
+
+    public function makeEllipticMember(){
+
+    }
+    public function removeEllipticMember(){
+
     }
 
     /**
