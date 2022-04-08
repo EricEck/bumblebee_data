@@ -38,7 +38,7 @@ class BowComponent extends Model
         'installation_service_company_id' => null,
         'installation_service_ticket_id' => null,
         'installation_date' => null,
-        'installation_location_id' => null,
+        'installation_location_id' => -1,
         'installed_now' => 0,
         'warranty' => 0,
         'warranty_end_date'=> null,
@@ -54,7 +54,7 @@ class BowComponent extends Model
         return $this->hasOne(BodiesOfWater::class, 'id', 'bodies_of_water_id');
     }
     public function componentLocation(){
-        return $this->hasOne(BowComponentLocation::class);
+        return $this->hasOne(BowComponentLocation::class, 'id', 'installation_location_id');
     }
 
 

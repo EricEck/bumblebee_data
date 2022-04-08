@@ -17,6 +17,7 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @livewire('component-form', [
                         'bowComponent' => $bowComponent,
+                        'bow_id' => $bow_id,
                         'allow_edit' => $allow_edit,
                         'create_new' => $create_new,
                         'showBack' => $showBack,

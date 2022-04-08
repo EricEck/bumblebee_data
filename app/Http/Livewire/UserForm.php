@@ -30,10 +30,10 @@ class UserForm extends Component
 
     public $roles;
 
-    public PoolOwner $poolOwner;
+    public ?PoolOwner $poolOwner;
     public $ownersList;
 
-    public EllipticMember $ellipticMember;
+    public ?EllipticMember $ellipticMember;     // php 7.1+ allows for null return
 
 
     protected $rules =[

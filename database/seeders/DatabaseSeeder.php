@@ -15,24 +15,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $this->call(LaratrustSeeder::class);
-        $this->call(UserSeeder::class);
 
-        // \App\Models\User::factory(10)->create();
-        $tomSowers = User::where('name','Tom Sowers')->firstOrFail();
+        // don't accidentally run this!
 
-        if (!$tomSowers){
-            $this->command->info('User Tom Sowers not found');
-        } else {
-            $this->command->info('User Tom found');
-        }
 
-        $bumblebee = $this->makeBumblebee(
-            $tomSowers,
-            'bb_1',
-            '0de3cd6c-611c-4898-a149-a9288fe677c5');
-
-        $this->call(MeasurementSeeder::class);
+//        $this->call(LaratrustSeeder::class);
+//        $this->call(UserSeeder::class);
+//
+//        // \App\Models\User::factory(10)->create();
+//        $tomSowers = User::where('name','Tom Sowers')->firstOrFail();
+//
+//        if (!$tomSowers){
+//            $this->command->info('User Tom Sowers not found');
+//        } else {
+//            $this->command->info('User Tom found');
+//        }
+//
+//        $bumblebee = $this->makeBumblebee(
+//            $tomSowers,
+//            'bb_1',
+//            '0de3cd6c-611c-4898-a149-a9288fe677c5');
+//
+//        $this->call(MeasurementSeeder::class);
     }
 
     /**

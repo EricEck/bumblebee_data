@@ -25,6 +25,7 @@ class BowComponentController extends Controller
 
         return view('bow_components.bow_component_form',[
             'bowComponent' => $bowComponent,
+            'bow_id' => $bow_id,
             'showBack' => true,
             'allow_edit' => true,
             'create_new' => true,

@@ -65,6 +65,9 @@ class BodiesOfWater extends Model
     public function components(){
         return $this->hasMany(BowComponent::class, 'bodies_of_water_id', 'id');
     }
+    public function bowComponentLocations(){
+        return $this->hasMany(BowComponentLocation::class, 'bodies_of_water_id', 'id');
+    }
 
     public function filled(){
         return (

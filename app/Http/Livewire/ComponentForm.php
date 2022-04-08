@@ -3,13 +3,25 @@
 namespace App\Http\Livewire;
 
 use App\Models\BowComponent;
+use App\Models\BowComponentLocation;
+use App\Models\ComponentManufacturer;
 use Livewire\Component;
 use function Symfony\Component\String\b;
 
 class ComponentForm extends Component
 {
+
+    public int $bow_id;
     public BowComponent $bowComponent;
     public bool $showBack, $allow_edit, $create_new;
+
+    public $componentManufacturers;
+    public ?ComponentManufacturer $newComponentManufacturer;
+    public $showAddComponentManufacturer;
+
+    public $componentLocations;
+    public ?BowComponentLocation $newComponentLocation;
+    public $showAddComponentLocation;
 
     public bool $saved;
     public bool $readyToSave;
@@ -39,16 +51,48 @@ class ComponentForm extends Component
     protected $casts = [];
 
     // Event Listeners - Livewire
-    protected $listeners = [];
+    protected $listeners = [
+        'closeComponentManufacturerForm' => 'closeAddComponentManufacturer',
+        'closeComponentLocationForm' => 'closeAddComponentLocation',
+    ];
 
     public function mount(){
         debugbar()->info('mount:ComponentForm');
-//        debugbar()->info($this->bowComponent->attributesToArray());
+        $this->componentManufacturers = ComponentManufacturer::allEllipticFirst();
+        $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);
+        $this->showAddComponentManufacturer = false;
+        $this->showAddComponentLocation = false;
     }
 
     public function render(){
         debugbar()->info('render:ComponentForm');
         return view('livewire.component-form');
+    }
+
+    public function addComponentLocation(){
+        debugbar()->info('addComponentLocation: ');
+        $this->newComponentLocation = new BowComponentLocation([
+            'bodies_of_water_id' => $this->bowComponent->bodies_of_water_id,
+            ]);
+        $this->showAddComponentLocation = true;
+    }
+    public function closeAddComponentLocation(){
+        $this->showAddComponentLocation = false;
+        // default to the newly added
+        $this->bowComponent->installation_location_id = -1;
+        $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);  // reload the locations
+    }
+
+    public function addComponentManufacturer(){
+        debugbar()->info('addComponentManufacturer: ');
+        $this->newComponentManufacturer = new ComponentManufacturer();
+        $this->showAddComponentManufacturer = true;
+    }
+    public function closeAddComponentManufacturer(){
+        $this->showAddComponentManufacturer = false;
+        // default to the newly added
+        $this->bowComponent->manufacturer_id = $this->newComponentManufacturer->id;
+        $this->componentManufacturers = ComponentManufacturer::allEllipticFirst();  // reload the equipement mfg
     }
 
     public function changed(){
@@ -64,6 +108,19 @@ class ComponentForm extends Component
         debugbar()->info('ComponentForm Discard');
         $this->emit('discardChanges');
 
+        if($this->bowComponent->id)
+            $this->bowComponent->refresh();
+        else
+            $this->bowComponent = new BowComponent([
+                'bodies_of_water_id' => $this->bow_id,
+            ]);
+
+        $this->newComponentManufacturer = new ComponentManufacturer();
+        $this->newComponentLocation = new BowComponentLocation([
+            'bodies_of_water_id' => $this->bowComponent->bodies_of_water_id,
+        ]);
+
+        $this->showAddComponentManufacturer = false;
         $this->readyToSave = false;
         $this->message = "Changes Discarded";
         $this->emit('message');

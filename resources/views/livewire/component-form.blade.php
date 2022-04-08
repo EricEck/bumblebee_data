@@ -124,6 +124,7 @@
                             </div>
                         </div>
 
+                        <!-- Component Locations -->
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                             <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
                                      value="Installation Location"/>
@@ -133,16 +134,39 @@
                                         {{ $allow_edit ?  '' : 'disabled'}}
                                         class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
                                     <option disabled selected value="-1">-- Select Installation Location</option>
-                                    {{--                                    @foreach($ellipticProducts as $ellipticProduct)--}}
-                                    {{--                                        <option value="{{$ellipticProduct->id}}">{{$ellipticProduct->name}} SN: {{$ellipticProduct->serial_number}}</option>--}}
-                                    {{--                                    @endforeach--}}
+                                    @foreach($componentLocations as $componentLocation)
+                                        <option value="{{$componentLocation->id}}">{{ $componentLocation->name }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                             <div class="mt-0.5 sm:mt-0 sm:col-span-1">
-                                <x-buttons.new>Add Location</x-buttons.new>
+
+                                @if(!$showAddComponentLocation)
+                                    <a href="" wire:click.prevent="addComponentLocation">
+                                        <x-buttons.new >Add Location</x-buttons.new>
+                                    </a>
+                                @else
+                                    <a href="" wire:click.prevent="closeAddComponentLocation">
+                                        <x-buttons.close>Close</x-buttons.close>
+                                    </a>
+                                @endif
                             </div>
                         </div>
+                        <!-- New Component Location -->
+                        @if($showAddComponentLocation)
+                            <div class="md:w-3/4 sm:w-full mx-auto md:my-5 sm:my-2 md:p-5 sm:p-2  bg-gray-50 shadow sm:shadow-sm md:shadow-md border border-gray-200 border-2">
+                                @livewire('component-location-form', [
+                                     'create_new' => true,
+                                     'allow_edit' => true,
+                                     'closeAfterSaved' => true,
+                                     'showBack' => false,
+                                     'showClose' => true,
+                                     'bow_id' => $bowComponent->bodies_of_water_id,
+                                     'componentLocation' => $newComponentLocation])
+                            </div>
+                        @endif
 
+                        <!--Component Manufacturer -->
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                             <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
                                      value="Product Manufacturer"/>
@@ -152,18 +176,38 @@
                                         {{ $allow_edit ?  '' : 'disabled'}}
                                         class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
                                     <option disabled selected value="-1">-- Select Product Manufacturer (required)</option>
-                                    <option value="1">Elliptic Works, LLC</option>
-                                    {{--                                    @foreach($ellipticProducts as $ellipticProduct)--}}
-                                    {{--                                        <option value="{{$ellipticProduct->id}}">{{$ellipticProduct->name}} SN: {{$ellipticProduct->serial_number}}</option>--}}
-                                    {{--                                    @endforeach--}}
+                                    @foreach($componentManufacturers as $componentManufacturer)
+                                        <option value="{{$componentManufacturer->id}}">{{ $componentManufacturer->name }}</option>
+                                    @endforeach
           `                      </select>
                             </div>
                             <div class="mt-0.5 sm:mt-0 sm:col-span-1">
-                                <x-buttons.new>Add Manufacturer</x-buttons.new>
+                                @if(!$showAddComponentManufacturer)
+                                    <a href="" wire:click.prevent="addComponentManufacturer">
+                                        <x-buttons.new >Add Manufacturer</x-buttons.new>
+                                    </a>
+                                @else
+                                    <a href="" wire:click.prevent="closeAddComponentManufacturer">
+                                        <x-buttons.close>Close</x-buttons.close>
+                                    </a>
+                                @endif
                             </div>
                         </div>
+                        <!-- New Component Manufacturer -->
+                        @if($showAddComponentManufacturer)
+                            <div class="md:w-3/4 sm:w-full mx-auto md:my-5 sm:my-2 md:p-5 sm:p-2  bg-gray-50 shadow sm:shadow-sm md:shadow-md border border-gray-200 border-2">
+                               @livewire('component-manufacturer-form', [
+                                    'create_new' => true,
+                                    'allow_edit' => true,
+                                    'closeAfterSaved' => true,
+                                    'showBack' => false,
+                                    'showClose' => true,
+                                    'componentManufacturer' => $newComponentManufacturer])
+                            </div>
+                        @endif
 
-                        @if($bowComponent->manufacturer_id == 1)
+
+                        @if($bowComponent->manufacturer_id == \App\Models\ComponentManufacturer::ellipticWorks()->id)
                            <!-- Elliptic Works -->
 
                            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -268,11 +312,6 @@
                             </div>
                         </div>
 
-
-
-
-
-
                     </div>
 
                 </form>
@@ -289,7 +328,7 @@
                     </div>
                 @endif
 
-            <!-- Process Buttons -->
+                <!-- Process Buttons -->
                 <div class="flex flex-row items-end mt-4 mb-1">
                     <div class="basis-1/3">
                         @if(!$changed && $showBack)

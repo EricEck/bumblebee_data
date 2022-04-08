@@ -37,7 +37,13 @@ class User extends Authenticatable
 
     // defaults
     protected $attributes = [
-        'location_type_id' => 0,
+        'phone_mobile' => '',
+        'phone_office' => '',
+        'phone_home' => '',
+        'address_home_id' => 0,
+        'pool_owner_id' => 0,
+        'service_employee_id' => 0,
+        'elliptic_member_id' => 0,
     ];
 
     /**

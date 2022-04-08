@@ -76,7 +76,7 @@ namespace App\Models{
  * @property-read \App\Models\BowLocationType|null $bowLocationType
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
  * @property-read int|null $components_count
- * @property-read \App\Models\PoolOwner|null $owner
+ * @property-read \App\Models\User|null $owner
  * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater query()
@@ -163,11 +163,14 @@ namespace App\Models{
  * @property string $description
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $bodies_of_water_id
+ * @property-read \App\Models\BodiesOfWater|null $body_of_water
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
  * @property-read int|null $components_count
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation query()
+ * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereBodiesOfWaterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereDescription($value)
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation whereId($value)
@@ -293,6 +296,33 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\ComponentManufacturer
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $description
+ * @property string|null $website_main_url
+ * @property string|null $website_service_url
+ * @property int $is_elliptic_works
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer query()
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereIsEllipticWorks($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereWebsiteMainUrl($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|ComponentManufacturer whereWebsiteServiceUrl($value)
+ */
+	class ComponentManufacturer extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\ConstructionType
  *
  * @property int $id
@@ -348,7 +378,7 @@ namespace App\Models{
  * App\Models\EllipticMember
  *
  * @property int $id
- * @property int $App\Models\User
+ * @property int $user_id
  * @property int $active
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
@@ -357,10 +387,10 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember query()
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereActive($value)
- * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereApp\Models\User($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereUserId($value)
  */
 	class EllipticMember extends \Eloquent {}
 }
@@ -515,6 +545,8 @@ namespace App\Models{
  * @property-read \App\Models\Address|null $billingAddress
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BodiesOfWater[] $bodiesOfWater
  * @property-read int|null $bodies_of_water_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|PoolOwner[] $commonOwners
+ * @property-read int|null $common_owners_count
  * @property-read \App\Models\User|null $primaryOwner
  * @property-read \App\Models\User|null $user
  * @method static \Illuminate\Database\Eloquent\Builder|PoolOwner newModelQuery()

@@ -49,6 +49,7 @@ class UserSeeder extends Seeder
         $user->email_verified_at = now();
         $user->password = bcrypt($password);
         $user->remember_token = Str::uuid();
+
         $user->save();
 
         $user->attachRoles($roles);
