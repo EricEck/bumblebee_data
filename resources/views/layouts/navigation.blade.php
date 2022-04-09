@@ -25,10 +25,8 @@
                     <x-dropdown width="48">
                         <x-slot name="trigger">
                             <x-nav-link  :active="request()->routeIs('bumblebees_table')
-                            |request()->routeIs('measurements_table')
                             |request()->routeIs('elliptic_product_list')
-                            |request()->routeIs('elliptic_product_new')
-                            |request()->routeIs('measurements_table_actual')">
+                            |request()->routeIs('elliptic_product_new')">
                                 {{ __('Elliptic Products') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -48,12 +46,7 @@
                             <x-dropdown-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
                                 {{ __('All Bumblebees') }}
                             </x-dropdown-link>
-                            <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
-                                {{ __('All Measurements') }}
-                            </x-dropdown-link>
-                            <x-dropdown-link :href="route('measurements_table_actual')" :active="request()->routeIs('measurements_table_actual')">
-                                {{ __('Actual Measurements') }}
-                            </x-dropdown-link>
+
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -103,7 +96,8 @@
                         <x-slot name="trigger">
                             <x-nav-link
                                 :active="request()->routeIs('measurementFormNew')
-                                   ">
+                            |request()->routeIs('measurements_table')
+                            |request()->routeIs('measurements_table_actual')">
                                 {{ __('Measurements') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -117,6 +111,12 @@
                             <x-dropdown-link :href="route('measurementFormNew')" :active="request()->routeIs('measurementFormNew')">
                                 {{ __('New Measurement') }}
                             </x-dropdown-link><br>
+                            <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
+                                {{ __('All Measurements') }}
+                            </x-dropdown-link><br>
+                            <x-dropdown-link :href="route('measurements_table_actual')" :active="request()->routeIs('measurements_table_actual')">
+                                {{ __('Actual Measurements') }}
+                            </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>
                 </div>
