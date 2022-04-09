@@ -23,7 +23,7 @@ class CreateEllipticProductsTable extends Migration
             $table->date('manufactured_on')->nullable()->default(null);
             $table->string('manufacture_construction_version',45)->default('');
             $table->string('manufacture_software_version',45)->default('');
-            $table->date('warranty_stated_on')->nullable()->default(null);
+            $table->date('warranty_started_on')->nullable()->default(null);
             $table->date('warranty_ends_on')->nullable()->default(null);
             $table->string('current_construction_version',45)->default('');
             $table->string('current_software_version',45)->default('');

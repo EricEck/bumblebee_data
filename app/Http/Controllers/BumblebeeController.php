@@ -28,6 +28,7 @@ class BumblebeeController extends Controller
         $bumblebee = Bumblebee::where('id', $bumblebee_id)->first();
 
         return view('bumblebees.bumblebee_form', [
+            'showBack'  => true,
             'allow_edit' => true,
             'create_new' => false,
             'bumblebee' => $bumblebee,
@@ -44,6 +45,7 @@ class BumblebeeController extends Controller
         $bumblebee = Bumblebee::where('id', $bumblebee_id)->first();
 
         return view('bumblebees.bumblebee_form', [
+            'showBack'  => true,
             'allow_edit' => false,
             'create_new' => false,
             'bumblebee' => $bumblebee,
@@ -64,6 +66,7 @@ class BumblebeeController extends Controller
             ]);
 
          return view('bumblebees.bumblebee_form', [
+             'showBack'  => true,
                 'allow_edit' => true,
                 'create_new' => true,
                 'bumblebee' => $bumblebee,

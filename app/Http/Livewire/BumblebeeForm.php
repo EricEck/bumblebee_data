@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bumblebee;
+use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -10,9 +11,13 @@ use Livewire\Component;
 class BumblebeeForm extends Component
 {
     public Bumblebee $bumblebee;
-    public bool $allow_edit;
-    public bool $create_new;
     public string $new_password = '';
+    public  $users;
+
+    // Form Flags & Messaging
+    public bool $showBack, $allow_edit, $create_new;
+    public bool $saved, $readyToSave, $changed;
+    public string $message;
 
     protected $rules = [
         'bumblebee.serial_number' => 'required|string|min:4',
@@ -27,20 +32,53 @@ class BumblebeeForm extends Component
         'bumblebee.remember_token' => 'uuid|nullable'
     ];
 
-    /**
-     * Render the View from the Model
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
+    protected $casts = [];
+
+    // Event Listeners - Livewire
+    protected $listeners = [];
+
+
+    public function mount(){
+        debugbar()->info('mount: BumblebeeForm');
+        $this->changed = false;
+        $this->readyToSave = false;
+        $this->saved = false;
+        $this->users = User::query()
+            ->where('id','>','0')
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
     public function render()
     {
-        debugbar()->info('Rendering');
+        debugbar()->info('render: BumblebeeForm');
         debugbar()->info($this->bumblebee->attributesToArray());
 
-        return view('livewire.bumblebee-form',[
-            'bumblebee' => $this->bumblebee,
-            'allow_edit' => $this->allow_edit,
-            'create_new' => $this->create_new,
-        ]);
+        return view('livewire.bumblebee-form');
+    }
+
+    public function changed(){
+        debugbar()->info('ComponentForm Changed');
+        $this->changed = true;
+
+        $this->readyToSave = false;
+        if($this->bumblebee->filled())
+            $this->readyToSave = true;
+    }
+
+    public function discard(){
+        debugbar()->info('BumblebeeForm Discard');
+        $this->emit('discardChanges');
+
+        if($this->bumblebee->id)
+            $this->bumblebee->refresh();
+        else
+            $this->bumblebee = new Bumblebee();
+
+        $this->readyToSave = false;
+        $this->message = "Changes Discarded";
+        $this->emit('message');
+        $this->changed = false;
     }
 
     /**
@@ -49,7 +87,7 @@ class BumblebeeForm extends Component
      */
     public function save(){
 
-        debugbar()->info('Saving New Bumblebee');
+        debugbar()->info('Saving Bumblebee');
 
         // assign token and hash the password for new bumblebees
         if ($this->create_new){
@@ -75,12 +113,16 @@ class BumblebeeForm extends Component
         $validatedData = $this->validate(); // if fail: this will perform an automatic return to the view with $this->errors set
 
         try {
-            debugbar()->info('Saving...');
+
             $this->bumblebee->saveOrFail();
-            debugbar()->info('bumblebee saved!');
+            debugbar()->info('Bumblebee Saved');
+            $this->saved = true;
+            $this->changed = false;
+            $this->message = "Bumblebee Saved";
+            $this->emit('message');
         } catch (\Exception $e){
-            debugbar()->info('Error...');
-            debugbar()->error($e);
+            $this->message = "Error Saving Bumblebee... ".$e->getMessage();
+            $this->emit('message');   // alpine JS $this.on('message',() => {}) event
         }
     }
 }

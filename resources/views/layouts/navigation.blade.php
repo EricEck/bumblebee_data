@@ -20,10 +20,15 @@
                     </x-nav-link>
                 </div>
 
+                <!-- Elliptic Products -->
                 <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
-                            <x-nav-link  :active="request()->routeIs('bumblebees_table')|request()->routeIs('measurements_table')|request()->routeIs('measurements_table_actual')">
+                            <x-nav-link  :active="request()->routeIs('bumblebees_table')
+                            |request()->routeIs('measurements_table')
+                            |request()->routeIs('elliptic_product_list')
+                            |request()->routeIs('elliptic_product_new')
+                            |request()->routeIs('measurements_table_actual')">
                                 {{ __('Elliptic Products') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -34,6 +39,12 @@
                         </x-slot>
 
                         <x-slot name="content">
+                            <x-dropdown-link :href="route('elliptic_product_list')" :active="request()->routeIs('elliptic_product_list')">
+                                {{ __('All Elliptic Products') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('elliptic_product_new')" :active="request()->routeIs('elliptic_product_new')">
+                                {{ __('New Elliptic Product') }}
+                            </x-dropdown-link>
                             <x-dropdown-link :href="route('bumblebees_table')" :active="request()->routeIs('bumblebees_table')">
                                 {{ __('All Bumblebees') }}
                             </x-dropdown-link>
@@ -47,6 +58,7 @@
                     </x-dropdown>
                 </div>
 
+                <!-- People, PLaces & Parts -->
                 <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
@@ -81,6 +93,30 @@
                             <x-dropdown-link :href="route('body_of_water_new')" :active="request()->routeIs('body_of_water_new')">
                                 {{ __('New Body of Water') }}
                             </x-dropdown-link>
+                        </x-slot>
+                    </x-dropdown>
+                </div>
+
+                <!-- Measurements -->
+                <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
+                    <x-dropdown width="48">
+                        <x-slot name="trigger">
+                            <x-nav-link
+                                :active="request()->routeIs('measurementFormNew')
+                                   ">
+                                {{ __('Measurements') }}
+                                <div class="ml-1">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+                            </x-nav-link>
+                        </x-slot>
+
+                        <x-slot name="content">
+                            <x-dropdown-link :href="route('measurementFormNew')" :active="request()->routeIs('measurementFormNew')">
+                                {{ __('New Measurement') }}
+                            </x-dropdown-link><br>
                         </x-slot>
                     </x-dropdown>
                 </div>

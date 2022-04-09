@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\BodiesOfWater;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
 use Carbon\Carbon;
@@ -11,18 +12,20 @@ use function Livewire\str;
 class MeasurementForm extends Component
 {
     public Measurement $measurement;
-    public $allow_edit;
-    public $create_new;
-    public $render_count = 0;
-
+    public $bumblebees, $metrics, $methods, $units;
+    public $bodiesOfWater, $bow_id;
     public $measurement_datetime;
     public $process = "";
     public $calibration_value;
 
     public $scaledColorimetric = 0;
 
-    protected $rules = [
+    // Form Flags & Messaging
+    public bool $showBack, $allow_edit, $create_new;
+    public bool $saved, $readyToSave, $changed;
+    public string $message;
 
+    protected $rules = [
         'measurement.bumblebee_id' => 'required|exists:bumblebees,id',
         'measurement_datetime' => 'string',
         'measurement.metric_sequence' => 'integer',
@@ -35,9 +38,29 @@ class MeasurementForm extends Component
         'measurement.calibration_value' => 'numeric',
     ];
 
+    protected $casts = [];
+
+    // Event Listeners - Livewire
+    protected $listeners = [];
+
 
     public function mount(){
-        debugbar()->info('Mounting');
+        debugbar()->info('mount: MeasurementForm');
+        $this->changed = false;
+        $this->readyToSave = false;
+        $this->saved = false;
+        $this->bumblebees = Bumblebee::all();
+        $this->bodiesOfWater = BodiesOfWater::all();
+        $this->metrics= Measurement::metricEnums();
+        $this->methods= Measurement::methodEnums();
+        $this->units = Measurement::unitEnums();
+        if ($this->create_new) {
+            $this->bow_id = "";
+            $this->measurement->bumblebee_id = "";
+            $this->measurement->unit = "";
+            $this->measurement->metric = "";
+            $this->measurement->method = "";
+        }
     }
 
     /**
@@ -47,7 +70,7 @@ class MeasurementForm extends Component
      */
     public function render()
     {
-        debugbar()->info('Rendering: '.$this->render_count++);
+        debugbar()->info('render: MeasurementForm');
 
         // ONLY copy into the variable the first time through when $this->>measurement_datetime is NOT SET
         // ALSO do not include seconds into the timestamp!   HTML does not properly check for this!
@@ -77,22 +100,61 @@ class MeasurementForm extends Component
 
         $this->calibration_value = $this->measurement->calibration_value === 1;
 
-        return view('livewire.measurement-form',[
-            'measurement' => $this->measurement,
-            'allow_edit' => $this->allow_edit,
-            'create_new' => $this->create_new,
-            'bumblebees' => Bumblebee::all(),
-        ]);
+        return view('livewire.measurement-form');
+    }
+
+    public function changed(){
+        debugbar()->info('MeasurementForm Changed');
+        $this->changed = true;
+
+        if(count($this->units) == 1){
+            $this->measurement->unit = $this->units[0];
+        }
+//
+//        debugbar()->info($this->measurement->bumblebee_id);
+//        debugbar()->info($this->measurement->metric);
+//        debugbar()->info($this->measurement->method);
+//        debugbar()->info($this->measurement->unit);
+//        debugbar()->info($this->measurement->value);
+
+
+        $this->units = $this->measurement->validOutputUnitsForMetric();
+
+        $this->readyToSave = false;
+        if($this->measurement->filled())
+            $this->readyToSave = true;
+    }
+
+    public function discard(){
+        debugbar()->info('MeasurementForm Discard');
+        $this->emit('discardChanges');
+
+        if($this->measurement->id)
+            $this->measurement->refresh();
+        else {
+            $this->measurement = new Measurement();
+            if ($this->create_new) {
+                $this->bow_id = "";
+                $this->measurement->bumblebee_id = "";
+                $this->measurement->unit = "";
+                $this->measurement->metric = "";
+                $this->measurement->method = "";
+            }
+        }
+
+        $this->readyToSave = false;
+        $this->message = "Changes Discarded";
+        $this->emit('message');
+        $this->changed = false;
     }
 
     public function save(){
-        debugbar()->info('Saving New Measurement');
+        debugbar()->info('Saving Measurement');
 
-        debugbar()->info($this->measurement_datetime);
+//        debugbar()->info($this->measurement_datetime);
 
         // Update variables
         $this->measurement->measurement_timestamp = str_replace('T', ' ', $this->measurement_datetime);
-
 
         $this->measurement->metric_sequence = 1;
         $prevMeasurement = $this->measurement->previousManualMeasurement();
@@ -109,13 +171,15 @@ class MeasurementForm extends Component
 
         try {
             $this->measurement->saveOrFail();
-            debugbar()->info('saved!');
-
-            $this->emit('saved');   // alpine JS $this.on('saved',() => {}) event
+            debugbar()->info('Measurement Saved');
+            $this->saved = true;
+            $this->changed = false;
+            $this->message = "Measurement Saved";
+            $this->emit('message');
 
         } catch (\Exception $e){
-            debugbar()->info('Error...');
-            debugbar()->error($e);
+            $this->message = "Error Saving Measurement... ".$e->getMessage();
+            $this->emit('message');   // alpine JS $this.on('message',() => {}) event
         }
 
         // revert the value back to a non-JSON view

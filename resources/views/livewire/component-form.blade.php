@@ -1,6 +1,6 @@
 <div>
-    {{-- Close your eyes. Count to one. That is how long forever feels. --}}
-    <!-- Content Markup Container -->
+{{-- Close your eyes. Count to one. That is how long forever feels. --}}
+<!-- Content Markup Container -->
     <div class="w-3/4 mx-auto my-2 py-4 bg-yellow-50 rounded-lg border-gray-100 border shadow-lg">
 
         <!-- Sub Container -->
@@ -56,16 +56,9 @@
                     <div class="shadow overflow-hidden sm:rounded-md">
 
                         @if($bowComponent->bodies_of_water_id)
-                            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                                <x-label class="md:mt-0.5 sm:mt-0 sm:col-span-1"
-                                         value="Body of Water"/>
-                                <div class="md:mt-0.5 sm:mt-0 sm:col-span-4">
-                                    <input type="text"
-                                           value="{{$bowComponent->bodyOfWater->name}} (owner:{{$bowComponent->bodyOfWater->owner->name}})"
-                                           :disabled="true"
-                                           class="bg-indigo-50 mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                                </div>
-                            </div>
+                            <x-forms.field-display-only
+                                label="Body of Water"
+                                value="{{$bowComponent->bodyOfWater->name}} (owner: {{$bowComponent->bodyOfWater->owner->name}})"/>
                         @endif
 
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
@@ -166,7 +159,7 @@
                             </div>
                         @endif
 
-                        <!--Component Manufacturer -->
+                    <!--Component Manufacturer -->
                         <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                             <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
                                      value="Product Manufacturer"/>
@@ -179,7 +172,7 @@
                                     @foreach($componentManufacturers as $componentManufacturer)
                                         <option value="{{$componentManufacturer->id}}">{{ $componentManufacturer->name }}</option>
                                     @endforeach
-          `                      </select>
+                                    `                      </select>
                             </div>
                             <div class="mt-0.5 sm:mt-0 sm:col-span-1">
                                 @if(!$showAddComponentManufacturer)
@@ -196,38 +189,38 @@
                         <!-- New Component Manufacturer -->
                         @if($showAddComponentManufacturer)
                             <div class="md:w-3/4 sm:w-full mx-auto md:my-5 sm:my-2 md:p-5 sm:p-2  bg-gray-50 shadow sm:shadow-sm md:shadow-md border border-gray-200 border-2">
-                               @livewire('component-manufacturer-form', [
-                                    'create_new' => true,
-                                    'allow_edit' => true,
-                                    'closeAfterSaved' => true,
-                                    'showBack' => false,
-                                    'showClose' => true,
-                                    'componentManufacturer' => $newComponentManufacturer])
+                                @livewire('component-manufacturer-form', [
+                                     'create_new' => true,
+                                     'allow_edit' => true,
+                                     'closeAfterSaved' => true,
+                                     'showBack' => false,
+                                     'showClose' => true,
+                                     'componentManufacturer' => $newComponentManufacturer])
                             </div>
                         @endif
 
 
                         @if($bowComponent->manufacturer_id == \App\Models\ComponentManufacturer::ellipticWorks()->id)
-                           <!-- Elliptic Works -->
+                        <!-- Elliptic Works -->
 
-                           <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                               <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                                        value="Elliptic Product"/>
-                               <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                                   <select wire:model.lazy="bowComponent.elliptic_product_id"
-                                           wire:change="changed"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                                       <option disabled selected value="-1">-- Select Specific Elliptic Product (optional)</option>
-                                       <option value="0">Not an Elliptic Product</option>
-                                       {{--                                    @foreach($ellipticProducts as $ellipticProduct)--}}
-                                       {{--                                        <option value="{{$ellipticProduct->id}}">{{$ellipticProduct->name}} SN: {{$ellipticProduct->serial_number}}</option>--}}
-                                       {{--                                    @endforeach--}}
-                                   </select>
-                               </div>
-                           </div>
+                            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
+                                         value="Elliptic Product"/>
+                                <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                                    <select wire:model.lazy="bowComponent.elliptic_product_id"
+                                            wire:change="changed"
+                                            {{ $allow_edit ?  '' : 'disabled'}}
+                                            class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                                        <option disabled selected value="-1">-- Select Specific Elliptic Product (optional)</option>
+                                        <option value="0">Not an Elliptic Product</option>
+                                        {{--                                    @foreach($ellipticProducts as $ellipticProduct)--}}
+                                        {{--                                        <option value="{{$ellipticProduct->id}}">{{$ellipticProduct->name}} SN: {{$ellipticProduct->serial_number}}</option>--}}
+                                        {{--                                    @endforeach--}}
+                                    </select>
+                                </div>
+                            </div>
                         @elseif($bowComponent->manufacturer_id > 1)
-                            <!-- Other -->
+                        <!-- Other -->
 
                             <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
@@ -318,14 +311,7 @@
 
                 <!-- Errors Display Markup -->
                 @if ($errors->any())
-                    <div class="bg-red-700 m-4 py-4 px-4 border border-1 border-red-900 shadow-md shadow-gray-500">
-                        <h1 class="text-xl text-white">Entry Errors(s)</h1>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li class="px-10 text-white">==> {{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    <x-form-error-block :errors="$errors"/>
                 @endif
 
                 <!-- Process Buttons -->

@@ -1,8 +1,5 @@
 <x-app-layout>
     <x-slot name="header">
-{{--        <h2 class="font-semibold text-xl text-gray-800 leading-tight">--}}
-{{--            {{ __('Body of Water Information') }}--}}
-{{--        </h2>--}}
         <div class="flow-root">
             <div class="float-left">
                 {{ request()->get('niblet') ?? 'Body of Water Information'}}

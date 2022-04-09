@@ -73,30 +73,25 @@ class Bumblebee extends Authenticatable
     // eager load
     protected $with = ['owner'];
 
-    /**
-     * Eloquent has many relationship to Measurement Model
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+    // Eloquent Relationships
     public function measurements(){
         return $this->hasMany(Measurement::class);
     }
-
-    /**
-     * Eloquent belongs to relationship User Model for Owner
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function owner(){
         return $this->belongsTo(User::class);
     }
-
-    /**
-     * Eloquent has many relationship Calibration Model
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function calibrations(){
         return $this->hasMany(Calibration::class);
     }
 
+    // METHODS
+
+    public function filled(){
+        return (
+            strlen($this->serial_number) > 3
+            && strlen($this->current_version) > 3
+        );
+    }
 
     /**
      * Search for specific bumblebee(s) across all visible fields

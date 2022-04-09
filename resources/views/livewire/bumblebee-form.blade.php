@@ -1,163 +1,188 @@
 <div>
-    {{-- Success is as dangerous as failure. --}}
+{{-- Success is as dangerous as failure. --}}
+<!-- Content Markup Container -->
+    <div class="w-3/4 mx-auto my-2 py-4 bg-yellow-50 rounded-lg border-gray-100 border shadow-lg">
 
-    <div class="mt-10 sm:mt-0">
-        <div class="md:grid md:grid-cols-3 md:gap-6">
-            <div class="md:col-span-1">
-                <div class="px-4 sm:px-0">
-                    <h3 class="text-lg font-medium leading-6 text-gray-900">Bumblebee {{$create_new ? 'New' : ($allow_edit ? 'Edit' : 'Information')}}</h3>
-                    {{--                    <p class="mt-1 text-sm text-gray-600">Use a permanent address where you can receive mail.</p>--}}
-                </div>
+        <!-- Sub Container -->
+        <div class="mx-auto sm:px-6 lg:px-8">
+
+            <!--  Form Title -->
+            <div class="px-4 sm:px-0">
+                <h3 class="text-lg font-medium leading-6 text-gray-500 border border-b-2  border-gray-50">{{ $create_new ? 'New' : ($allow_edit ? 'Edit' : 'Information about ') }} Bumblebee</h3>
             </div>
 
-            <div class="mt-5 md:mt-0 md:col-span-2">
+            <!-- Form Container -->
+            <div class="overflow-hidden shadow-sm sm:rounded-lg">
 
-                <form wire:submit.prevent="save" onkeydown="return event.key !== 'Enter';">
+                <!--Message Event Handler -->
+                <div class="font-extrabold text-xl text-green-700"
+                     x-data="{show: false}"
+                     x-show="show"
+                     x-transition.opacity.out.duration.1500ms
+                     x-init="@this.on('message',() => { show = true; setTimeout(() => { show = false; },2000);  })"
+                     style="display: none">
+                    {{$message}}
+                </div>
 
+                <!-- Process Buttons -->
+                <div class="flex flex-row items-end mt-4 mb-1">
+                    <div class="basis-1/3">
+                        {{--                        @if(!$changed && $showBack)--}}
+                        {{--                            <a href="javascript:window.history.back()">--}}
+                        {{--                                <x-buttons.back>Back</x-buttons.back>--}}
+                        {{--                            </a>--}}
+                        {{--                        @endif--}}
+                    </div>
+                    <div class="basis-1/3">
+                        @if($changed)
+                            <a wire:click.debounce.500ms="discard">
+                                <x-buttons.close>Discard Changes</x-buttons.close>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="basis-1/3">
+                        @if($allow_edit && $changed && $readyToSave)
+                            <a wire:click.debounce.500ms="save">
+                                <x-buttons.save>Save</x-buttons.save>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
+                <!--  Form Markup -->
+                <form onkeydown="return event.key !== 'Enter';">
+
+
+                    <!-- Fields Markup -->
                     <div class="shadow overflow-hidden sm:rounded-md">
-                        <div class="px-4 py-5 bg-white sm:p-6">
-                            <div class="grid grid-cols-6 gap-6">
 
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="id" class="text-sm font-medium text-gray-700">Bumblebee ID</label>
-                                    <input type="number" name="id" id="id"
-                                           value="{{ $bumblebee->id }}"
-                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
-                                           disabled
-                                           autocomplete=""
-                                           class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        @if($bumblebee->id > 0)
+                        <x-forms.field-display-only
+                            label="Bumblebee ID"
+                            value="{{ $bumblebee->id }}"/>
+                        @endif
 
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="serial_number" class="text-sm font-medium text-gray-700">Serial Number</label>
-                                    <input type="text" name="serial_number" id="serial_number"
-                                           wire:model.lazy="bumblebee.serial_number"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           autocomplete="serial number"
-                                           autofocus
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-text
+                            label="Serial Number"
+                            model-method="bumblebee.serial_number"
+                            change-method="changed"
+                            autofocus
+                            placeholder="enter unique serial number"
+                            explanation="Will be used as reference, must be unique"
+                            allow-edit={{$allow_edit}} />
 
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="current_version" class="text-sm font-medium text-gray-700">Current Version</label>
-                                    <input type="text" name="current_version" id="current_version"
-                                           wire:model.lazy="bumblebee.current_version"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           autocomplete="serial number"
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-text
+                            label="Current Version"
+                            model-method="bumblebee.current_version"
+                            change-method="changed"
+                            placeholder="enter current unit version"
+                            explanation="Not the built version"
+                            allow-edit={{$allow_edit}} />
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="manufactured_date" class="block text-sm font-medium text-gray-700">Manufactured on</label>
-                                    <input type="date" name="manufactured_date" id="manufactured_date"
-                                           wire:model.lazy="bumblebee.manufactured_date"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-date
+                            label="Manufacture Date"
+                            model-method="bumblebee.manufactured_date"
+                            change-method="changed"
+                            explanation="enter the date built"
+                            allow-edit={{$allow_edit}} />
 
-                                <div class="col-span-6 sm:col-span-3 mt-2">
-                                    <label for="owner_id" class="text-sm font-medium text-gray-700">Owner</label>
-                                    @php($users = \App\Models\User::query()->where('id','>','0')->orderBy('name', 'asc')->get())
-                                    <select name="owner_id" id="owner_id"
-                                        wire:model.lazy="bumblebee.owner_id"
-                                        {{ $allow_edit ?  '' : 'disabled'}}
-                                            class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                        <option value='' disabled>Select Owner---</option>
-                                        @foreach($users as $user)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="assigned_to_owner_on" class="block text-sm font-medium text-gray-700">Assigned to Owner on</label>
-                                    <input type="date" name="assigned_to_owner_on" id="assigned_to_owner_on"
-                                           wire:model.lazy="bumblebee.assigned_to_owner_on"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-select-start
+                            label="Current Owner"
+                            model-method="bumblebee.owner_id"
+                            change-method="changed"
+                            explanation="Must be a pool owner"
+                            select-heading="-- Select Owner by Name"
+                            allow-edit={{$allow_edit}} />
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="removed_from_service" class="block text-sm font-medium text-gray-700">Service status</label>
-                                    <select  name="removed_from_service" id="removed_from_service"
-                                           wire:model.lazy="bumblebee.removed_from_service"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                        <option value="0">In Service</option>
-                                        <option value="1">Out of Service</option>
-                                    </select>
-                                </div>
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="new_password" class="block text-sm font-medium text-gray-700">API Password (leave blank to not change)</label>
-                                    <input type="password"  name="new_password" id="new_password"
-                                           wire:model.lazy="new_password"
-                                           placeholder="{{ $create_new ? 'Must be at least 6 characters, record in secure place' : '' }}"
-                                           {{ $allow_edit ?  '' : 'disabled'}}
-                                           class="mt-1 px-3 text-black {{ $allow_edit ? 'bg-indigo-50' : 'bg-gray-50'  }} focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-select-end
+                            explanation="Must be a pool owner"/>
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="remember_token" class="block text-sm font-medium text-gray-700">Remember Token</label>
-                                    <input type="text" name="remember_token" id="remember_token"
-                                           value="{{ $bumblebee->remember_token }}"
-                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
-                                           disabled
-                                           class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="created_at" class="block text-sm font-medium text-gray-700">Created at</label>
-                                    <input type="text" name="created_at" id="created_at"
-                                           value="{{ $bumblebee->created_at }}"
-                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
-                                           disabled
-                                           class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-date
+                            label="Assigned to Owner Date"
+                            model-method="bumblebee.assigned_to_owner_on"
+                            change-method="changed"
+                            explanation="date the unit was assigned to this owner"
+                            allow-edit={{$allow_edit}} />
 
-                                <div class="col-span-6 sm:col-span-4 mt-2">
-                                    <label for="updated_at" class="block text-sm font-medium text-gray-700">Updated at</label>
-                                    <input type="text" name="updated_at" id="updated_at"
-                                           value="{{ $bumblebee->updated_at }}"
-                                           placeholder="{{ $create_new ? 'Will be assigned after save' : '' }}"
-                                           disabled
-                                           class="mt-1 px-3 text-black bg-gray-50 focus:ring-indigo-500 focus:border-indigo-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md">
-                                </div>
+                        <x-forms.field-input-select-start
+                            label="Service Status"
+                            model-method="bumblebee.removed_from_service"
+                            change-method="changed"
+                            explanation="is the unit still be used in field"
+                            select-heading=""
+                            allow-edit={{$allow_edit}} />
 
-                            </div>
-                        </div>
-                        <div class="flow-root mt-6 items-center">
+                        <option value="0">In Service</option>
+                        <option value="1">Out of Service</option>
 
-                            @if($allow_edit)
-                                <div class="float-right">
-                                    <x-buttons.save></x-buttons.save>
-                                </div>
-                                <div class="float-right">
-                                    <x-buttons.reset>Reset</x-buttons.reset>
-                                </div>
-                            @endif
-                            <div class="float-left">
-                                <a href="javascript:history.back()"><x-buttons.back></x-buttons.back></a>
-                            </div>
-                        </div>
+                        <x-forms.field-input-select-end
+                            explanation="is the unit still be used in field"/>
+
+
+                        <x-forms.field-input-password
+                            label="API Password"
+                            model-method="new_password"
+                            change-method="changed"
+                            placeholder=""
+                            explanation="leave blank to NOT change, at least 6 characters"
+                            allow-edit={{$allow_edit}} />
+
+
+                        <x-forms.field-display-only
+                            label="API Remember Token"
+                            value="{{ $bumblebee->remember_token }}" />
+
+                        <x-forms.field-display-only
+                            label="Created at"
+                            value="{{ $bumblebee->created_at }}" />
+
+                        <x-forms.field-display-only
+                            label="Updated at"
+                            value="{{ $bumblebee->updated_at }}" />
 
                     </div>
-
 
                 </form>
 
+                <!-- Errors Display Markup -->
                 @if ($errors->any())
-                    <div class="bg-gray-100 py-8 px-8">
-                        <h1 class="text-7xl py-4">ERROR(s)</h1>
-                        <ul>
-                            @foreach ($errors->all() as $error)
-                                <li class="px-10">==> {{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    <x-form-error-block :errors="$errors"/>
                 @endif
 
+                <!-- Process Buttons -->
+                <div class="flex flex-row items-end mt-4 mb-1">
+                    <div class="basis-1/3">
+                        @if(!$changed && $showBack)
+                            <a href="javascript:window.history.back()">
+                                <x-buttons.back>Back</x-buttons.back>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="basis-1/3">
+                        @if($changed)
+                            <a wire:click.debounce.500ms="discard">
+                                <x-buttons.close>Discard Changes</x-buttons.close>
+                            </a>
+                        @endif
+                    </div>
+                    <div class="basis-1/3">
+                        @if($allow_edit && $changed && $readyToSave)
+                            <a wire:click.debounce.500ms="save">
+                                <x-buttons.save>Save</x-buttons.save>
+                            </a>
+                        @endif
+                    </div>
+                </div>
+
             </div>
+
+
         </div>
 
     </div>

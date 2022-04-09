@@ -43,30 +43,10 @@
 
     @if(count($users) )
         <table class="table-auto w-full mb-6">
-            <thead>
-            <tr>
-                <th class="px-4 py-2">ID</th>
-                <th class="px-4 py-2">Name</th>
-                <th class="px-4 py-2">Email</th>
-                <th class="px-4 py-2">Roles</th>
-                <th class="px-4 py-2">Created At</th>
-                <th class="px-4 py-2">Actions</th>
-
-            </tr>
-            </thead>
+            <x-tables.users-table-header :show-actions="true"/>
             <tbody>
             @foreach($users as $user)
-                <tr>
-                    <td class="border px-4 py-2">{{ $user->id }}</td>
-                    <td class="border px-4 py-2">{{ $user->name }}</td>
-                    <td class="border px-4 py-2">{{ $user->email }}</td>
-                    <td class="border px-4 py-2">{{ $user->getUserRoleNamesWithCommas()}}</td>
-                    <td class="border px-4 py-2">{{ $user->created_at->diffForHumans() }}</td>
-                    <td class="border px-4 py-2 flex">
-                        <a wire:click="userFormShow({{$user->id}})" ><x-buttons.view></x-buttons.view></a>
-                        <a wire:click="userFormEdit({{$user->id}})"  ><x-buttons.edit></x-buttons.edit></a>
-                    </td>
-                </tr>
+                <x-tables.users-table-row :show-actions="true" :user="$user"/>
             @endforeach
             </tbody>
         </table>

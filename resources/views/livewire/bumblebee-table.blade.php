@@ -1,6 +1,7 @@
 <div>
     {{-- The whole world belongs to you. --}}
 
+    <!-- Selection Section -->
     <div class="w-full flex pb-10">
         <div class="w-3/6 mx-1">
             <input wire:model.debounce.700ms="searchString" type="text"
@@ -43,44 +44,11 @@
     </div>
 
     @if(count($bumblebees) )
-
         <table class="table-auto w-full mb-6">
-            <thead>
-            <tr>
-                <th class="px-4 py-2">ID</th>
-                <th class="px-4 py-2">Serial Number</th>
-                <th class="px-4 py-2">Mfg on</th>
-                <th class="px-4 py-2">Version</th>
-                <th class="px-4 py-2">Owner</th>
-                <th class="px-4 py-2">In Service</th>
-                <th class="px-4 py-2">Last Measurement</th>
-                <th class="px-4 py-2">Updated At</th>
-                <th class="px-4 py-2">Created At</th>
-                <th class="px-4 py-2">Actions</th>
-            </tr>
-            </thead>
+            <x-tables.bumblebees-table-header :show-actions="true"/>
             <tbody>
             @foreach($bumblebees as  $bumblebee)
-                @php($owner = $bumblebee->owner)
-                @php($lastMeasurement = $bumblebee->measurements->last())
-                <tr>
-                    <td class="border px-4 py-2">{{ $bumblebee->id }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->serial_number }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->manufactured_date }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
-                    <td class="border px-4 py-2">{{ $owner->name }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->removed_from_service ? 'No' : 'Yes' }}</td>
-                    <td class="border px-4 py-2">{{ empty($lastMeasurement) ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->updated_at->diffForHumans() }}</td>
-                    <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
-                    <td class="border px-4 py-2 flex-auto">
-                        @if(!empty($lastMeasurement))
-                            <a href="{{ route('measurements_bumblebee',['bumblebee_id' => $bumblebee->id]) }}" ><x-buttons.measurement></x-buttons.measurement></a>
-                        @endif
-                        <a wire:click="bumblebeeFormShow({{ $bumblebee->id }})"  ><x-buttons.view ></x-buttons.view></a>
-                        <a wire:click="bumblebeeFormEdit({{ $bumblebee->id }})"  ><x-buttons.edit></x-buttons.edit></a>
-                    </td>
-                </tr>
+                <x-tables.bumblebees-table-row :show-actions="true" :bumblebee="$bumblebee"/>
             @endforeach
             </tbody>
         </table>

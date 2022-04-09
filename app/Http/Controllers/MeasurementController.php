@@ -97,6 +97,7 @@ class MeasurementController extends Controller
         $measurement = Measurement::where('id', $measurement_id)->first();
 
         return view('measurements.measurement_form', [
+            'showBack' => true,
             'measurement' => $measurement,
             'allow_edit' => false,
             'create_new' => false,
@@ -126,6 +127,7 @@ class MeasurementController extends Controller
         debugbar()->info($measurement->attributesToArray());
 
         return view('measurements.measurement_form',[
+            'showBack' => true,
             'allow_edit' => true,
             'create_new' => true,
             'measurement' => $measurement,

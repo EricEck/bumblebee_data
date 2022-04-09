@@ -13,7 +13,6 @@ class ComponentForm extends Component
 
     public int $bow_id;
     public BowComponent $bowComponent;
-    public bool $showBack, $allow_edit, $create_new;
 
     public $componentManufacturers;
     public ?ComponentManufacturer $newComponentManufacturer;
@@ -23,10 +22,9 @@ class ComponentForm extends Component
     public ?BowComponentLocation $newComponentLocation;
     public $showAddComponentLocation;
 
-    public bool $saved;
-    public bool $readyToSave;
-    public bool $changed;
-
+    // Form Flags & Messaging
+    public bool $showBack, $allow_edit, $create_new;
+    public bool $saved, $readyToSave, $changed;
     public string $message;
 
     protected $rules = [
@@ -130,9 +128,9 @@ class ComponentForm extends Component
     public function save(){
         debugbar()->info('Saving bowComponent');
 
-
         // run validation rule
         $validatedData = $this->validate();
+
         try {
             $this->bowComponent->saveOrFail();
             debugbar()->info('bowComponent Saved');

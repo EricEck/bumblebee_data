@@ -71,6 +71,8 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\Address|null $address
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponentLocation[] $bowComponentLocations
+ * @property-read int|null $bow_component_locations_count
  * @property-read \App\Models\ConstructionType|null $bowConstructionType
  * @property-read \App\Models\FiltrationType|null $bowFiltrationType
  * @property-read \App\Models\BowLocationType|null $bowLocationType
@@ -164,7 +166,7 @@ namespace App\Models{
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property int $bodies_of_water_id
- * @property-read \App\Models\BodiesOfWater|null $body_of_water
+ * @property-read \App\Models\BodiesOfWater|null $bodyOfWater
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
  * @property-read int|null $components_count
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponentLocation newModelQuery()
@@ -375,6 +377,38 @@ namespace App\Models{
 
 namespace App\Models{
 /**
+ * App\Models\EllipticManufacturer
+ *
+ * @property int $id
+ * @property string $name
+ * @property string $description
+ * @property int $address_id
+ * @property string $contact
+ * @property string $phone_work
+ * @property string $email_work
+ * @property string $website_main_url
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\Address|null $address
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereAddressId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereContact($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereEmailWork($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer wherePhoneWork($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticManufacturer whereWebsiteMainUrl($value)
+ */
+	class EllipticManufacturer extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
  * App\Models\EllipticMember
  *
  * @property int $id
@@ -393,6 +427,78 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticMember whereUserId($value)
  */
 	class EllipticMember extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EllipticModel
+ *
+ * @property int $id
+ * @property string|null $name
+ * @property string|null $description
+ * @property int $is_bumblebee
+ * @property int $is_active
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereIsActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereIsBumblebee($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticModel whereUpdatedAt($value)
+ */
+	class EllipticModel extends \Eloquent {}
+}
+
+namespace App\Models{
+/**
+ * App\Models\EllipticProduct
+ *
+ * @property int $id
+ * @property int $elliptic_model_id
+ * @property string $serial_number
+ * @property int $bumblebee_id
+ * @property int $elliptic_manufacturer_id
+ * @property string|null $manufactured_on
+ * @property string $manufacture_construction_version
+ * @property string $manufacture_software_version
+ * @property string|null $warranty_started_on
+ * @property string|null $warranty_ends_on
+ * @property string $current_construction_version
+ * @property string $current_software_version
+ * @property int $installer_id
+ * @property string|null $removed_from_service_on
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \App\Models\BowComponent|null $bowComponent
+ * @property-read \App\Models\Bumblebee|null $bumblebee
+ * @property-read \App\Models\EllipticManufacturer|null $ellipticManufacturer
+ * @property-read \App\Models\EllipticModel|null $ellipticModel
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereBumblebeeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereCurrentConstructionVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereCurrentSoftwareVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereEllipticManufacturerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereEllipticModelId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereInstallerId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufactureConstructionVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufactureSoftwareVersion($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufacturedOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereRemovedFromServiceOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereSerialNumber($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereWarrantyEndsOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereWarrantyStartedOn($value)
+ */
+	class EllipticProduct extends \Eloquent {}
 }
 
 namespace App\Models{

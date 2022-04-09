@@ -67,23 +67,40 @@ class Measurement extends Model
         'calibration_id',
     ];
 
+    protected $attributes = [
+        'bumblebee_id' => 0,
+        'measurement_timestamp' => null,
+        'metric_sequence' => 0,
+        'metric' => '',
+        'method' => '',
+        'process' => '',
+        'value' => '',
+        'unit' => '',
+        'details' => '',
+    ];
+
     // eager load the bumblebee
     protected $with = ['bumblebee'];
 
-    /**
-     * Eloquent belongs to relationship Bumblebee Model
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
+    // Eloquent Relationships
     public function bumblebee(){
         return $this->belongsTo(Bumblebee::class);
     }
-    /**
-     * Eloquent belongs to relationship Calibration Model
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function calibration(){
         return $this->belongsTo(Calibration::class);
+    }
+
+
+    // METHODS
+
+    public function filled(){
+        return (
+            $this->bumblebee_id > 0
+            && strlen($this->metric) > 0
+            && strlen($this->method) > 0
+            && strlen($this->unit) > 0
+            && strlen($this->value) > 0
+        );
     }
 
     /**

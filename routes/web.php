@@ -55,6 +55,15 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('/user_form/new', [UserController::class, 'userFormNew'])
         ->name('user_form_new');
 
+    Route::get('elliptic_products', [\App\Http\Controllers\EllipticProductController::class, 'ellipticProductsList'])
+        ->name('elliptic_product_list');
+    Route::get('elliptic_products/new',[\App\Http\Controllers\EllipticProductController::class, 'ellipticProductNew'])
+        ->name('elliptic_product_new');
+    Route::get('elliptic_products/show/{id}',[\App\Http\Controllers\EllipticProductController::class, 'ellipticProductShow'])
+        ->name('elliptic_product_show');
+    Route::get('elliptic_products/edit/{id}',[\App\Http\Controllers\EllipticProductController::class, 'ellipticProductEdit'])
+        ->name('elliptic_product_edit');
+
     Route::get('bodies_of_water', [\App\Http\Controllers\BodiesOfWaterController::class, 'indexView'])
         ->name('bodies_of_water');
     Route::get('bodies_of_water/new', [\App\Http\Controllers\BodiesOfWaterController::class, 'bodyOfWaterFormNew'])
@@ -71,9 +80,9 @@ Route::group(['middleware' => ['auth']], function (){
 
     Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])
         ->name('bumblebees_table');
-    Route::get('/bumblebee_form/edit/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormEdit']);
-    Route::get('/bumblebee_form/show/{bumblebee_id}',
-        [BumblebeeController::class, 'bumblebeeFormShow'])
+    Route::get('/bumblebee_form/edit/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormEdit'])
+        ->name('bumblebeeFormEdit');
+    Route::get('/bumblebee_form/show/{bumblebee_id}', [BumblebeeController::class, 'bumblebeeFormShow'])
         ->name('bumblebeeFormShow');
     Route::get('/bumblebee_form/new', [BumblebeeController::class, 'bumblebeeFormNew']);
 
@@ -87,7 +96,8 @@ Route::group(['middleware' => ['auth']], function (){
         [MeasurementController::class, 'measurementFormShow'])
         ->name('measurementFormShow');
     Route::get('/measurements_form/new',
-        [MeasurementController::class, 'measurementFormNew']);
+        [MeasurementController::class, 'measurementFormNew'])
+        ->name('measurementFormNew');
 
     Route::get('/calibrations/new',
         [CalibrationController::class, 'calibrationFormNew'])
