@@ -518,8 +518,8 @@ class Measurement extends Model
 
     /**
      * Return Just the Colorimetric Data Scaled or Not Raw
-     * @param int $scaled 1 = clear ref, 2 = maximumm reference
-     * @return null|JSON
+     * @param int $scaled 1 = clear ref, 2 = maximum reference
+     * @return Measurement|null
      */
     public function valueDecodeColor($scaled = 0){
 
