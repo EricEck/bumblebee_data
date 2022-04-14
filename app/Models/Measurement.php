@@ -517,28 +517,22 @@ class Measurement extends Model
     }
 
     /**
-     * Return Just the Colorimetric Data Scaled or Not zScalled
+     * Return Just the Colorimetric Data Scaled or Not Raw
      * @param int $scaled 1 = clear ref, 2 = maximumm reference
      * @return null|JSON
      */
     public function valueDecodeColor($scaled = 0){
 
         if($this->colorimetricMethod()){
-            $c = json_decode($this->forceDoubleQuotedJSON())->value;
+            $copyMeas = $this;
+            $copyMeas->extractToColors();
             if ($scaled > 0){
-                $reference = $c->clear;
-                if ($scaled == 2) $reference = $this->maximumColorValue();
-                $c->violet = round($c->violet / $reference, 4);
-                $c->indigo = round($c->indigo / $reference, 4);
-                $c->blue = round($c->blue / $reference, 4);
-                $c->cyan = round($c->cyan / $reference, 4);
-                $c->green = round($c->green / $reference, 4);
-                $c->yellow = round($c->yellow / $reference, 4);
-                $c->orange = round($c->orange / $reference, 4);
-                $c->red = round($c->red / $reference, 4);
-                $c->nearIR = round($c->nearIR / $reference, 4);
+                $reference = $copyMeas->clear;
+                if ($scaled == 2)
+                    $reference = $this->maximumColorValue();
+                $copyMeas->divideAllColorsByFloat($reference);
             }
-            return $c;
+            return $copyMeas;
         }
         return null;
     }
