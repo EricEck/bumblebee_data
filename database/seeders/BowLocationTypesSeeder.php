@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\BowLocationType;
 use Illuminate\Database\Seeder;
 
-class BowLocationTypes extends Seeder
+class BowLocationTypesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

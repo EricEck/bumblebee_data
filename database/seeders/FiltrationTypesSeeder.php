@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\FiltrationType;
 use Illuminate\Database\Seeder;
 
-class FiltrationTypes extends Seeder
+class FiltrationTypesSeeder extends Seeder
 {
     /**
      * Run the database seeds.

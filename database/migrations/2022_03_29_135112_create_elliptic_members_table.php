@@ -16,7 +16,7 @@ class CreateEllipticMembersTable extends Migration
         Schema::create('elliptic_members', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId(\App\Models\User::class);
+            $table->foreignId('user_id');
             $table->boolean('active')->default(false);
 
             $table->timestamps();

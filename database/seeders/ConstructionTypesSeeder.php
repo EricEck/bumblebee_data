@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\ConstructionType;
 use Illuminate\Database\Seeder;
 
-class ConstructionTypes extends Seeder
+class ConstructionTypesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
