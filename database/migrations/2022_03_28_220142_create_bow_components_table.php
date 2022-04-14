@@ -26,17 +26,17 @@ class CreateBowComponentsTable extends Migration
 
             $table->foreignId('installation_service_company_id');
             $table->foreignId('installation_service_ticket_id');
-            $table->date('installation_date')->default(null);
+            $table->date('installation_date')->nullable()->default(null);
             $table->foreignId('installation_location_id');
             $table->boolean('installed_now')->default(false);
 
             $table->boolean('warranty')->default(false);
-            $table->date('warranty_end_date')->default(null);
+            $table->date('warranty_end_date')->nullable()->default(null);
 
             $table->string('model_number', 128)->default('');
             $table->string('serial_number', 128)->default('');
 
-            $table->date('removed_from_service_date')->default(null);
+            $table->date('removed_from_service_date')->nullable()->default(null);
             $table->foreignId('removed_from_service_ticket_id');
 
             $table->timestamps();

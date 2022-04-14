@@ -2,9 +2,13 @@
 
 namespace App\Http\Livewire;
 
+use App\Models\BodiesOfWater;
 use App\Models\BowComponent;
 use App\Models\BowComponentLocation;
 use App\Models\ComponentManufacturer;
+use App\Models\EllipticModel;
+use App\Models\EllipticProduct;
+use App\Models\User;
 use Livewire\Component;
 use function Symfony\Component\String\b;
 
@@ -22,13 +26,24 @@ class ComponentForm extends Component
     public ?BowComponentLocation $newComponentLocation;
     public $showAddComponentLocation;
 
+    public $ellipticProductModels;
+    public ?EllipticModel $ellipticProductModel;
+    public int $productModelId;
+
+    public $ellipticProductsAvailable;
+    public ?EllipticProduct $ellipticProduct;
+
+    public $poolOwners;
+    public int $pool_owner_id;
+    public $bodiesOfWater;
+
     // Form Flags & Messaging
     public bool $showBack, $allow_edit, $create_new;
     public bool $saved, $readyToSave, $changed;
     public string $message;
 
     protected $rules = [
-        'bowComponent.bodies_of_water_id' => 'exists:bodies_of_water,id',
+        'bowComponent.bodies_of_water_id' => 'exists:bodies_of_waters,id',
         'bowComponent.name' => 'string',
         'bowComponent.description' => 'string',
         'bowComponent.elliptic_product_id' => 'numeric|nullable',
@@ -36,7 +51,7 @@ class ComponentForm extends Component
         'bowComponent.installation_service_company_id' => 'numeric',
         'bowComponent.installation_service_ticket_id' => 'numeric',
         'bowComponent.installation_date' => 'date|nullable',
-        'bowComponent.installation_location_id' => 'exists:bow_component_locations',
+        'bowComponent.installation_location_id' => 'exists:bow_component_locations,id',
         'bowComponent.installed_now' => 'boolean',
         'bowComponent.warranty' => 'boolean',
         'bowComponent.warranty_end_date' => 'date|nullable',
@@ -60,10 +75,27 @@ class ComponentForm extends Component
         $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);
         $this->showAddComponentManufacturer = false;
         $this->showAddComponentLocation = false;
+
+        $this->ellipticProductModels = EllipticModel::allActive();
+        $this->productModelId = 0;
+        $this->pool_owner_id = 0;
+        if($this->bowComponent->id > 0) {
+            if ($this->bowComponent->brand->is_elliptic_works) {
+                $this->productModelId = $this->bowComponent->ellipticProduct->elliptic_model_id;
+            }
+            if ($this->bowComponent->bodyOfWater) {
+                $this->pool_owner_id = $this->bowComponent->bodyOfWater->owner->id;
+                $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
+            }
+        }
+        $this->ellipticProductsAvailable = EllipticProduct::allAvailable();
+
+        $this->poolOwners = User::allPoolOwners();
     }
 
     public function render(){
         debugbar()->info('render:ComponentForm');
+        debugbar()->info($this->bowComponent->attributesToArray());
         return view('livewire.component-form');
     }
 
@@ -95,11 +127,21 @@ class ComponentForm extends Component
 
     public function changed(){
         debugbar()->info('ComponentForm Changed');
+        debugbar()->info($this->productModelId);
+        debugbar()->info($this->bowComponent->filled());
+
         $this->changed = true;
+
+        if ($this->productModelId) {
+            $this->ellipticProductsAvailable = EllipticProduct::allAvailableByModelId($this->productModelId);
+            $this->ellipticProductModel = EllipticModel::find($this->productModelId);
+        }
 
         $this->readyToSave = false;
         if($this->bowComponent->filled())
             $this->readyToSave = true;
+
+        debugbar()->info($this->readyToSave);
     }
 
     public function discard(){
@@ -118,6 +160,21 @@ class ComponentForm extends Component
             'bodies_of_water_id' => $this->bowComponent->bodies_of_water_id,
         ]);
 
+        $this->ellipticProductModels = EllipticModel::allActive();
+        $this->productModelId = 0;
+        $this->pool_owner_id = 0;
+        if($this->bowComponent->id > 0) {
+            if ($this->bowComponent->brand->is_elliptic_works) {
+                $this->productModelId = $this->bowComponent->ellipticProduct->elliptic_model_id;
+            }
+            if ($this->bowComponent->bodyOfWater) {
+                $this->pool_owner_id = $this->bowComponent->bodyOfWater->owner->id;
+                $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
+            }
+        }
+
+        $this->ellipticProductsAvailable = EllipticProduct::allAvailable();
+
         $this->showAddComponentManufacturer = false;
         $this->readyToSave = false;
         $this->message = "Changes Discarded";
@@ -128,8 +185,12 @@ class ComponentForm extends Component
     public function save(){
         debugbar()->info('Saving bowComponent');
 
-        // run validation rule
+         // run validation rule
         $validatedData = $this->validate();
+//        debugbar()->info($this->bowComponent->attributesToArray());
+//        debugbar()->info($this->bowComponent->modelNumber());
+//        debugbar()->info($this->bowComponent->serialNumber());
+
 
         try {
             $this->bowComponent->saveOrFail();

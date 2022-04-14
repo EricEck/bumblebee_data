@@ -24,7 +24,12 @@ class EllipticProduct extends Model
         'current_software_version',
         'installer_id',
         'removed_from_service_on',
+        'pool_owner_id',
+        'bow_component_id',
     ];
+
+    // eloquent private properties
+    protected $privateProperties = []; // ?? https://stackoverflow.com/questions/40331167/how-do-i-make-a-property-private-in-a-laravel-eloquent-model
 
     protected $casts = [];
 
@@ -52,6 +57,9 @@ class EllipticProduct extends Model
     public function ellipticModel(){
         return $this->hasOne(EllipticModel::class, 'id', 'elliptic_model_id');
     }
+    public function model(){
+        return $this->hasOne(EllipticModel::class, 'id', 'elliptic_model_id');
+    }
     public function bumblebee(){
         return $this->hasOne(Bumblebee::class, 'id', 'bumblebee_id');
     }
@@ -62,10 +70,69 @@ class EllipticProduct extends Model
         return $this->belongsTo(BowComponent::class, 'id', 'elliptic_product_id');
     }
     public function bodyOfWater(){
-        return null;
+        return $this->hasOneThrough(
+            BodiesOfWater::class,
+            BowComponent::class,
+            'bodies_of_water_id',
+            'id');
     }
 
+
+
     // METHODS
+
+    public static function allAvailable(){
+        return EllipticProduct::query()
+            ->where('pool_owner_id', 0)
+            ->where('removed_from_service_on', null)
+            ->orderBy('elliptic_model_id', 'asc')
+            ->orderBy('serial_number', 'asc')
+            ->get();
+    }
+    public static function allAvailableByModelId(int $modelID){
+        return EllipticProduct::query()
+            ->where('pool_owner_id', 0)
+            ->where('removed_from_service_on', null)
+            ->where('elliptic_model_id', $modelID)
+            ->orderBy('elliptic_model_id', 'asc')
+            ->orderBy('serial_number', 'asc')
+            ->get();
+    }
+    public static function allOwnedByUser(User $user){
+        return self::allOwnedByUserId($user->id);
+    }
+    public static function allOwnedByUserId(int $userID){
+        return EllipticProduct::query()
+            ->where('pool_owner_id', $userID)
+            ->orderBy('elliptic_model_id', 'asc')
+            ->orderBy('serial_number', 'asc')
+            ->get();
+    }
+
+    public function owner(){
+        if ($this->pool_owner_id) {
+            return $this->hasOne(
+                User::class,
+                'id',
+                'pool_owner_id');
+        }
+        if ($this->bowComponent)
+            return $this->bowComponent->bodyOfWater->owner;
+        if($this->$this->bodyOfWater)
+            return $this->bodyOfWater->owner;
+
+        return null;
+    }
+    /**
+     * Get the Serial Number of the Elliptic Product
+     * @return mixed|string
+     */
+    public function serialNumber(){
+        if($this->bumblebee){
+            return $this->bumblebee->serial_number;
+        }
+        return $this->serial_number;
+    }
 
     public function filled(){
 

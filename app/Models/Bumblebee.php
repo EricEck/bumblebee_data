@@ -71,20 +71,34 @@ class Bumblebee extends Authenticatable
     ];
 
     // eager load
-    protected $with = ['owner'];
+    protected $with = [];
 
     // Eloquent Relationships
     public function measurements(){
         return $this->hasMany(Measurement::class);
     }
-    public function owner(){
-        return $this->belongsTo(User::class);
-    }
     public function calibrations(){
         return $this->hasMany(Calibration::class);
     }
+    public function ellipticProduct(){
+        return $this->belongsTo(EllipticProduct::class, 'id', 'bumblebee_id');
+    }
 
     // METHODS
+
+    public function bodyOfWater(){
+        if($this->ellipticProduct)
+            if($this->ellipticProduct->bowComponent)
+                return $this->ellipticProduct->bowComponent->bodyOfWater;
+
+        return null;
+    }
+
+    public function owner(){
+        if ($this->ellipticProduct)
+            return $this->ellipticProduct->owner();
+        return User::find($this->owner_id);
+    }
 
     public function filled(){
         return (

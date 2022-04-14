@@ -51,7 +51,7 @@
         </div>
 
         <div class="md:ml-4 bg-gray-50">
-            @livewire('component-table', ['components' => \App\Models\BowComponent::whereBowId($bow->id)])
+            @livewire('component-table',['bow' => $bow])
         </div>
     </div>
 

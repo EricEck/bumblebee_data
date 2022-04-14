@@ -62,11 +62,19 @@ class BodiesOfWater extends Model
     public function bowConstructionType(){
         return $this->hasOne(ConstructionType::class, 'id', 'filtration_type_id');
     }
-    public function components(){
+    public function bowComponents(){
         return $this->hasMany(BowComponent::class, 'bodies_of_water_id', 'id');
     }
     public function bowComponentLocations(){
         return $this->hasMany(BowComponentLocation::class, 'bodies_of_water_id', 'id');
+    }
+
+    // METHODS
+
+    public static function allForPoolOwnerId(int $pool_owner_id){
+        return BodiesOfWater::query()
+            ->where('pool_owner_id', $pool_owner_id)
+            ->get();
     }
 
     public function filled(){

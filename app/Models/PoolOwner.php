@@ -44,6 +44,26 @@ class PoolOwner extends Model
         return $this->hasMany(PoolOwner::class, 'id', 'primary_owner_id');
     }
 
+    // METHODS
+
+    public static function allPrimary(){
+        return PoolOwner::query()
+            ->where('is_primary_owner', 1)
+            ->get();
+    }
+
+    public static function allPrimaryExceptUser(User $exceptUser){
+        return self::allPrimaryExceptUserId($exceptUser->id);
+    }
+
+    public static function allPrimaryExceptUserId(int $exceptUserID){
+        return PoolOwner::query()
+            ->where('is_primary_owner', 1)
+            ->where('user_id', '!=', $exceptUserID)
+            ->get();
+    }
+
+
     /**
      * Find and Return an Owner by User ID
      * @param $user_id
@@ -54,6 +74,7 @@ class PoolOwner extends Model
             ->where('user_id', $user_id)
             ->first();
     }
+
 
 
 

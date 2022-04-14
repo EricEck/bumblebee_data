@@ -1,7 +1,7 @@
 @props(['measurement', 'showActions' => 0, 'method' => 'all', 'scaledColorimetric' => 0, 'types' => 0])
 
 @php($bumblebee = $measurement->bumblebee)
-@php($owner = $measurement->bumblebee->owner)
+@php($owner = $measurement->bumblebee->owner())
 @php($value = $measurement->val)
 <tr>
     <td class="border px-1 py-2 text-xs">{{ $measurement->id }}</td>
@@ -11,6 +11,7 @@
             <b>{{ $bumblebee->serial_number }}</b><br>({{ $owner->name }})
         </a>
     </td>
+    <td class="border px-1 py-2 text-xs">{{ $measurement->bodies_of_water_id ? $measurement->bodies_of_water_id : '--' }}</td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_value ? 'Yes' : 'No' }}</td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->method }}</td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->metric_sequence }}</td>
@@ -29,9 +30,8 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->red : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->nearIR : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() ?$colorValue->clear : ''  }}</td>
-        <td class="text-blue-700 border border-l-4 border-r-4 px-1 py-2 text-xs">{{ $measurement->spectralSummation() }}</td>
-    @php($colorimetricValue = round($measurement->colorimetricValue(),4))
-        <td class="text-blue-700 border border-r-4 border-r-4 px-1 py-2 text-xs">{{ $colorimetricValue == 0 ? '' : $colorimetricValue}}</td>
+{{--        <td class="text-blue-700 border border-l-4 border-r-4 px-1 py-2 text-xs">{{ $measurement->spectralSummation() }}</td>--}}
+        <td class="text-blue-700 border border-r-4 border-r-4 px-1 py-2 text-xs">{{ $measurement->colorimetricMethod() && !$measurement->manualMethod() & !$measurement->calibration_value ? $measurement->metricColorimetryValue() : ''}}</td>
 @endif
 @if(($method == "all" | $method == "auto" | $method == "probe" | $method == "") && $types < 3)
     <!-- Probe Value -->
@@ -47,9 +47,9 @@
         <td class="border px-1 py-2 text-xs">{{ $measurement->unit }}</td>
     @else
         <!-- Calibration Value -->
-        <td class="border px-1 py-2 text-xs text-center border-r-green-100">{{ $measurement->calibration_id ? $measurement->calibration_id : ''   }}</td>
-        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_value : ''  }}</td>
-        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id ? $measurement->calibrated_unit : '' }}</td>
+        <td class="border px-1 py-2 text-xs text-center border-r-green-100">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibration_id : ''   }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibrated_value : ''  }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibrated_unit : '' }}</td>
     @endif
 
     @if($showActions)

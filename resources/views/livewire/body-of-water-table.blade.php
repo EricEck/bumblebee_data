@@ -6,10 +6,10 @@
 
             <table class="table-auto w-full mb-6 border border-indigo-200">
 
-                <x-bow-table-header :show-actions="1" />
+                <x-tables.bow-table-header :show-actions="1" />
                 <tbody class="border-blue-500">
                 @foreach($bows as $bow)
-                    <x-bow-table-row :bow="$bow" :show-actions="1" />
+                    <x-tables.bow-table-row :bow="$bow" :show-actions="1" />
                 @endforeach
                 </tbody>
             </table>

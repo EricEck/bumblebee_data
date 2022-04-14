@@ -65,6 +65,7 @@ class Measurement extends Model
         'calibrated_value',
         'calibrated_unit',
         'calibration_id',
+        'bodies_of_water_id',
     ];
 
     protected $attributes = [
@@ -77,6 +78,7 @@ class Measurement extends Model
         'value' => '',
         'unit' => '',
         'details' => '',
+        'bodies_of_water_id' => 0,
     ];
 
     // eager load the bumblebee
@@ -88,6 +90,9 @@ class Measurement extends Model
     }
     public function calibration(){
         return $this->belongsTo(Calibration::class);
+    }
+    public function bodyOfWater(){
+        return $this->hasOne(BodiesOfWater::class, 'id', 'bodies_of_water_id');
     }
 
 
@@ -137,7 +142,8 @@ class Measurement extends Model
                 $this->calibrated_value = $this->calibration->slope_m * $this->valueDecodeNumber() + $this->calibration->offset_b;
                 break;
             case 'color absorption':
-                $this->calibrated_value = $this->calibration->slope_m * $this->colorimetricValue() + $this->calibration->offset_b;
+                // made sure only positive numbers
+                $this->calibrated_value = max($this->calibration->slope_m * $this->metricColorimetryValue() + $this->calibration->offset_b, 0);
                 break;
             default:
                 return false;
@@ -195,78 +201,80 @@ class Measurement extends Model
     public function colorimetricValue(){
         if ($this->colorimetricMethod() && $this->calibration_value != 1) {
             if($calibrationMeasurement = $this->previousCalibrationMeasurement()){
-                return $this->spectralSummation() / $calibrationMeasurement->spectralSummation();
+                return $this->metricColorimetryValue() / $calibrationMeasurement->metricColorimetryValue();
             }
         }
         return null;
     }
 
     /**
-     * Calculation for Colorimetric Spectrum for a given Metric
-     *
-     * @return float|null
+     * Calculation for Colorimetric Spectrum for a given Metric UNCALIBRATED
+     * Updated 4/14/22   uses extractWhiteBalanceClearNormalize
+     * @return float
      */
-    public function spectralSummation(){
+    public function metricColorimetryValue(){
+        $sum = 0;
         if ($this->colorimetricMethod()) {
-            $spectrum = $this->valueDecodeColor();
-            $sum = 0;
+            $this->extractWhiteBalanceClearNormalize();
             switch ($this->metric){
                 case 'alkalinity':
-//                     $sum += $spectrum->violet;
-//                     $sum += $spectrum->indigo;
-                     $sum += $spectrum->blue;
-                     $sum += $spectrum->cyan;
-                     $sum += $spectrum->green;
-                     $sum += $spectrum->yellow;
-                     $sum += $spectrum->orange;
-                     $sum += $spectrum->red;
+                    // yellow & green absorption spectra best fit 4/14/22
+//                     $sum += $this->violet;
+//                     $sum += $this->indigo;
+//                     $sum += $this->blue;
+//                     $sum += $this->cyan;
+                     $sum += $this->green;
+                     $sum += $this->yellow;
+//                     $sum += $this->orange;
+//                     $sum += $this->red;
                     break;
                 case 'free chlorine':
-                    $sum += $spectrum->violet;
-                    $sum += $spectrum->indigo;
-//                    $sum += $spectrum->blue;
-//                    $sum += $spectrum->cyan;
-//                    $sum += $spectrum->green;
-//                    $sum += $spectrum->yellow;
-//                    $sum += $spectrum->orange;
-//                    $sum += $spectrum->red;
+                    // cyan spectrum
+//                    $sum += $this->violet;
+//                    $sum += $this->indigo;
+//                    $sum += $this->blue;
+                    $sum += $this->cyan;
+//                    $sum += $this->green;
+//                    $sum += $this->yellow;
+//                    $sum += $this->orange;
+//                    $sum += $this->red;
                     break;
                 case 'total chlorine':
-                    $sum += $spectrum->violet;
-                    $sum += $spectrum->indigo;
-                    $sum += $spectrum->blue;
-                    $sum += $spectrum->cyan;
-                    $sum += $spectrum->green;
-//                    $sum += $spectrum->yellow;
-//                    $sum += $spectrum->orange;
-//                    $sum += $spectrum->red;
+                    // indigo spectrum
+//                    $sum += $this->violet;
+                    $sum += $this->indigo;
+//                    $sum += $this->blue;
+//                    $sum += $this->cyan;
+//                    $sum += $this->green;
+//                    $sum += $this->yellow;
+//                    $sum += $this->orange;
+//                    $sum += $this->red;
                     break;
                 case 'calcium':
-//                    $sum += $spectrum->violet;
-//                    $sum += $spectrum->indigo;
-//                    $sum += $spectrum->blue;
-//                    $sum += $spectrum->cyan;
-                    $sum += $spectrum->green;
-//                    $sum += $spectrum->yellow;
-//                    $sum += $spectrum->orange;
-//                    $sum += $spectrum->red;
+//                    $sum += $this->violet;
+//                    $sum += $this->indigo;
+//                    $sum += $this->blue;
+//                    $sum += $this->cyan;
+                    $sum += $this->green;
+//                    $sum += $this->yellow;
+//                    $sum += $this->orange;
+//                    $sum += $this->red;
                     break;
                 case 'ph':
-//                    $sum += $spectrum->violet;
-//                    $sum += $spectrum->indigo;
-//                    $sum += $spectrum->blue;
-                    $sum += $spectrum->cyan;
-                    $sum += $spectrum->green;
-                    $sum += $spectrum->yellow;
-//                    $sum += $spectrum->orange;
-//                    $sum += $spectrum->red;
+//                    $sum += $this->violet;
+//                    $sum += $this->indigo;
+//                    $sum += $this->blue;
+//                    $sum += $this->cyan;
+                    $sum += $this->green;       // Per Phenol Red absoption at 550nm
+//                    $sum += $this->yellow;
+//                    $sum += $this->orange;
+//                    $sum += $this->red;
                     break;
                 default:
                     break;
             }
-            return $sum;
         }
-        return null;
+        return $sum;
     }
 
     /**
@@ -536,41 +544,127 @@ class Measurement extends Model
     }
 
     /**
+     * Extract Color Values and Normalize to previous Calibration Measurement
+     * @return bool success
+     */
+    public function  extractWhiteBalanceClearNormalize(){
+           $this->extractToColors();
+           $prevCalMeas = $this->previousCalibrationMeasurement();
+           if ($prevCalMeas) {
+               $prevCalMeas->extractToColors();
+               $prevCalMeas->divideAllColorsByFloat($prevCalMeas->maximumColorValue());
+               $this->divideAllColorsByMeasurement($prevCalMeas);
+               $this->divideAllColorsByClear();
+               return true;
+           }
+           return false;
+    }
+
+    /**
+     * Divide all the colors of THIS by another Measurements color values
+     * @param Measurement $measDivisor
+     * @return void
+     */
+    public function divideAllColorsByMeasurement(Measurement $measDivisor){
+        try {
+            $this->violet = round($this->violet / $measDivisor->violet, 4);
+            $this->indigo = round($this->indigo / $measDivisor->indigo, 4);
+            $this->blue = round($this->blue / $measDivisor->blue, 4);
+            $this->cyan = round($this->cyan / $measDivisor->cyan, 4);
+            $this->green = round($this->green / $measDivisor->green, 4);
+            $this->yellow = round($this->yellow / $measDivisor->yellow, 4);
+            $this->orange = round($this->orange / $measDivisor->orange, 4);
+            $this->red = round($this->red / $measDivisor->red, 4);
+            $this->nearIR = round($this->nearIR / $measDivisor->nearIR, 4);
+        } catch (\Exception $e){
+            return;
+        } finally {
+            return;
+        }
+    }
+
+    /**
+     * Divide all the colors by $divisor
+     * @return void
+     */
+    public function divideAllColorsByFloat(float $divisor){
+
+        $this->violet = round($this->violet / $divisor, 4);
+        $this->indigo = round($this->indigo / $divisor, 4);
+        $this->blue = round($this->blue / $divisor, 4);
+        $this->cyan = round($this->cyan / $divisor, 4);
+        $this->green = round($this->green / $divisor, 4);
+        $this->yellow = round($this->yellow / $divisor, 4);
+        $this->orange = round($this->orange / $divisor, 4);
+        $this->red = round($this->red / $divisor, 4);
+        $this->nearIR = round($this->nearIR / $divisor, 4);
+    }
+
+    /**
+     * Divide all colors by Clear Color Value
+     * @return void
+     */
+    public function divideAllColorsByClear(){
+        $this->divideAllColorsByFloat($this->clear);
+    }
+
+    /**
      * Return the maximum value of Color
-     * @return null|float
+     * Colors must be extracted FIRST
+     * @return float 0 if no colors found
      */
     public function maximumColorValue()
     {
         if ($this->colorimetricMethod()){
-            $c = json_decode($this->forceDoubleQuotedJSON())->value;
 
-            $max = $c->violet;
+            $max = $this->violet;
 
-            if ($c->indigo > $max) {
-                $max = $c->indigo;
+            if ($this->indigo > $max) {
+                $max = $this->indigo;
             }
-            if ($c->blue > $max) {
-                $max = $c->blue;
+            if ($this->blue > $max) {
+                $max = $this->blue;
             }
-            if ($c->cyan > $max) {
-                $max = $c->cyan;
+            if ($this->cyan > $max) {
+                $max = $this->cyan;
             }
-            if ($c->green > $max) {
-                $max = $c->green;
+            if ($this->green > $max) {
+                $max = $this->green;
             }
-            if ($c->yellow > $max) {
-                $max = $c->yellow;
+            if ($this->yellow > $max) {
+                $max = $this->yellow;
             }
-            if ($c->orange > $max) {
-                $max = $c->orange;
+            if ($this->orange > $max) {
+                $max = $this->orange;
             }
-            if ($c->red > $max) {
-                $max = $c->red;
+            if ($this->red > $max) {
+                $max = $this->red;
             }
             return $max;
         }
-        return null;
+        return 0;
     }
+
+    /**
+     * Extract the JSON Color Values to individual colors in THIS
+     * @return void
+     */
+    public function extractToColors(){
+
+        $c = json_decode($this->forceDoubleQuotedJSON())->value;
+
+        $this->violet = $c->violet;
+        $this->indigo = $c->indigo;
+        $this->blue = $c->blue;
+        $this->cyan = $c->cyan;
+        $this->green = $c->green;
+        $this->yellow = $c->yellow;
+        $this->orange = $c->orange;
+        $this->red = $c->red;
+        $this->nearIR = $c->nearIR;
+        $this->clear = $c->clear;
+    }
+
 
     /**
      * Search for specific measurements(s) across all visible fields

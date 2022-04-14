@@ -12,8 +12,8 @@
         </div>
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="md:py-1">
+        <div class="md:max-w-7xl sm:max-w-2xl mx-auto md:px-6 md:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 @livewire('measurement-form', [
                         'measurement' => $measurement,

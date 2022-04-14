@@ -30,33 +30,59 @@ class BowComponent extends Model
 
     // automatically filled on new
     protected $attributes = [
-        'bodies_of_water_id' => '0',
+        'bodies_of_water_id' => 0,
         'name' => '',
         'description' => '',
-        'elliptic_product_id' => -1,
-        'manufacturer_id' => -1,
-        'installation_service_company_id' => null,
-        'installation_service_ticket_id' => null,
+        'elliptic_product_id' => 0,
+        'manufacturer_id' => 0,
+        'installation_service_company_id' => 0,
+        'installation_service_ticket_id' => 0,
         'installation_date' => null,
-        'installation_location_id' => -1,
+        'installation_location_id' => 0,
         'installed_now' => 0,
         'warranty' => 0,
         'warranty_end_date'=> null,
         'model_number'=> '',
         'serial_number'=> '',
         'removed_from_service_date'=> null,
-        'removed_from_service_ticket_id'=> null,
+        'removed_from_service_ticket_id'=> 0,
     ];
 
 
     // Eloquent Relationships
     public function bodyOfWater(){
-        return $this->hasOne(BodiesOfWater::class, 'id', 'bodies_of_water_id');
+        return $this->belongsTo(BodiesOfWater::class, 'bodies_of_water_id', 'id');
     }
     public function componentLocation(){
         return $this->hasOne(BowComponentLocation::class, 'id', 'installation_location_id');
     }
+    public function ellipticProduct(){
+        return $this->hasOne(EllipticProduct::class, 'id', 'elliptic_product_id');
+    }
+    public function brand(){
+        return $this->hasOne(ComponentManufacturer::class, 'id', 'manufacturer_id');
+    }
 
+
+    // METHODS
+    public function serialNumber(){
+        if ($this->brand->is_elliptic_works){
+            return $this->ellipticProduct->serialNumber();
+        }
+        return $this->serial_number;
+    }
+    public function modelNumber(){
+        if ($this->brand->is_elliptic_works){
+            return $this->ellipticProduct->model->name;
+        }
+        return $this->model_number;
+    }
+    public function manufacturer(){
+        if ($this->brand->is_elliptic_works) {
+            return $this->ellipticProduct->ellipticManufacturer;
+        }
+        return $this->brand;
+    }
 
     /**
      * Return all Components for a Body of Water ID
@@ -69,6 +95,19 @@ class BowComponent extends Model
     }
 
     public function filled(){
-        return false;
+        if ($this->brand && $this->brand->is_elliptic_works){
+            return (
+                $this->bodies_of_water_id > 0
+                && $this->manufacturer_id > 0
+                && $this->ellipticProduct
+                && $this->ellipticProduct->id > 0
+            );
+        }
+        return (
+            $this->bodies_of_water_id > 0
+            && $this->manufacturer_id > 0
+            && strlen($this->model_number) > 0
+            && strlen($this->serial_number) > 0
+        );
     }
 }

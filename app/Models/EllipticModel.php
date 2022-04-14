@@ -30,4 +30,18 @@ class EllipticModel extends Model
     protected $with = [];
 
     // Eloquent Relationships
+
+    // METHODS
+
+    /**
+     * All Active Elliptic Product Models
+     * @return EllipticModel[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
+     */
+    public static function allActive(){
+        return EllipticModel::query()
+            ->where('is_active', 1)
+            ->orderBy('name', 'asc')
+            ->get();
+    }
+
 }

@@ -9,13 +9,13 @@
 
             @if(isset($bumblebee_select))
                 <div class="block text-xs appearance-none w-full bg-blue-200 border border-gray-200 text-gray-700 py-3 px-4 rounded leading-tight" id="grid-state">
-                    <b>{{ $bumblebee_select->serial_number}}</b><br>owned by {{ $bumblebee_select->owner->name }}
+                    <b>{{ $bumblebee_select->serial_number}}</b><br>owned by {{ $bumblebee_select->owner()->name }}
                 </div>
             @else
                 <select wire:model="bumblebeeID" class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
                     <option value="0" selected>All Bumblebees</option>
                     @foreach($bumblebees as $bumblebee)
-                        <option value="{{$bumblebee->id}}">{{ $bumblebee->serial_number }} (owner: {{ $bumblebee->owner->name }})</option>
+                        <option value="{{$bumblebee->id}}">{{ $bumblebee->serial_number }} (owner: {{ $bumblebee->owner()->name }})</option>
                     @endforeach
                 </select>
                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">

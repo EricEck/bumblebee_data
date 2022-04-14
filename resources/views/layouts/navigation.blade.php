@@ -51,7 +51,7 @@
                     </x-dropdown>
                 </div>
 
-                <!-- People, PLaces & Parts -->
+                <!-- People, Places -->
                 <div class="hidden z-50 space-x-8 sm:flex sm:items-center sm:ml-10 sm:flex">
                     <x-dropdown width="48">
                         <x-slot name="trigger">
@@ -61,10 +61,11 @@
                                     |request()->routeIs('body_of_water_edit')
                                     |request()->routeIs('body_of_water_new')
                                     |request()->routeIs('bodies_of_water')
+                                    |request()->routeIs('bow_components_all')
                                     |request()->routeIs('user_form_edit')
                                     |request()->routeIs('user_form_new')
                                     |request()->routeIs('user_form_show')">
-                                {{ __('People, Places & Parts') }}
+                                {{ __('People & Places') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                         <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -85,6 +86,9 @@
                             </x-dropdown-link>
                             <x-dropdown-link :href="route('body_of_water_new')" :active="request()->routeIs('body_of_water_new')">
                                 {{ __('New Body of Water') }}
+                            </x-dropdown-link>
+                            <x-dropdown-link :href="route('bow_components_all')" :active="request()->routeIs('bow_components_all')">
+                                {{ __('All BoW Components') }}
                             </x-dropdown-link>
                         </x-slot>
                     </x-dropdown>

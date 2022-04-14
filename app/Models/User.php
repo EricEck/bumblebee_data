@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 use Laratrust\Traits\LaratrustUserTrait;
 use App\Traits\UserRole;
@@ -82,7 +83,7 @@ class User extends Authenticatable
         return $this->hasOne(Address::class, 'id', 'address_home_id');
     }
     public function poolOwner(){
-        return $this->hasOne(PoolOwner::class, 'id', 'pool_owner_id');
+        return $this->hasOne(PoolOwner::class, 'user_id', 'id');
     }
     /**
      * Eloquent has many relationship Calibration Model
@@ -102,6 +103,24 @@ class User extends Authenticatable
 
     }
 
+
+    // METHODS
+
+    public static function allPoolOwners(){
+        return User::whereRoleIs('pool_owner')->get();
+    }
+    public static function allEllipticMembers(){
+        return User::whereRoleIs('elliptic_members')->get();
+    }
+    public static function allEllipticAdmins(){
+        return User::whereRoleIs('elliptic_admins')->get();
+    }
+    public static function allServiceOwners(){
+        return User::whereRoleIs('service_owner')->get();
+    }
+    public static function allServiceMember(){
+        return User::whereRoleIs('service_member')->get();
+    }
     /**
      * Minimum Required Validation for a User
      * @return bool

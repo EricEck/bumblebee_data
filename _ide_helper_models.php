@@ -474,13 +474,18 @@ namespace App\Models{
  * @property string|null $removed_from_service_on
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property int $pool_owner_id
+ * @property int $bow_component_id
+ * @property-read \App\Models\BodiesOfWater|null $bodyOfWater
  * @property-read \App\Models\BowComponent|null $bowComponent
  * @property-read \App\Models\Bumblebee|null $bumblebee
  * @property-read \App\Models\EllipticManufacturer|null $ellipticManufacturer
  * @property-read \App\Models\EllipticModel|null $ellipticModel
+ * @property-read \App\Models\User|null $owner
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct query()
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereBowComponentId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereBumblebeeId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereCreatedAt($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereCurrentConstructionVersion($value)
@@ -492,6 +497,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufactureConstructionVersion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufactureSoftwareVersion($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereManufacturedOn($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct wherePoolOwnerId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereRemovedFromServiceOn($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereSerialNumber($value)
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct whereUpdatedAt($value)

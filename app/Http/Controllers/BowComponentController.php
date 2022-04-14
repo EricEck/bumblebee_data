@@ -8,9 +8,12 @@ use Illuminate\Http\Request;
 
 class BowComponentController extends Controller
 {
+    public function bowComponentsListAll(){
+        return view('bow_components.index');
+    }
 
-    public function bowComponentsList(int $bod_id){
-        $bow = BodiesOfWater::find($bod_id);
+    public function bowComponentsList(int $bow_id){
+        $bow = BodiesOfWater::find($bow_id);
         if($bow == null) abort(404);    // not found
 
         return view('bow_components.bow_index', [
@@ -29,6 +32,34 @@ class BowComponentController extends Controller
             'showBack' => true,
             'allow_edit' => true,
             'create_new' => true,
+        ]);
+    }
+
+    public function bowComponentShow(int $bow_component_id){
+
+        $bowComponent = BowComponent::find($bow_component_id);
+        $bow_id = $bowComponent->bodyOfWater->id;
+
+        return view('bow_components.bow_component_form',[
+            'bowComponent' => $bowComponent,
+            'bow_id' => $bow_id,
+            'showBack' => true,
+            'allow_edit' => false,
+            'create_new' => false,
+        ]);
+    }
+
+    public function bowComponentEdit(int $bow_component_id){
+
+        $bowComponent = BowComponent::find($bow_component_id);
+        $bow_id = $bowComponent->bodyOfWater->id;
+
+        return view('bow_components.bow_component_form',[
+            'bowComponent' => $bowComponent,
+            'bow_id' => $bow_id,
+            'showBack' => true,
+            'allow_edit' => true,
+            'create_new' => false,
         ]);
     }
 }

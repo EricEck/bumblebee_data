@@ -163,7 +163,7 @@ class MeasurementController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'bumblebee_id' => 'required|string',
+            'bumblebee_id' => 'string',
             'measurement_timestamp' => 'required',
             'metric_sequence' => 'required|integer',
             'metric' => 'string|required',
@@ -172,12 +172,21 @@ class MeasurementController extends Controller
             'value' => 'string|required',
             'unit' => 'string|nullable',
             'details' => 'string|nullable',
-            'calibration_value' => 'exclude'
+            'calibration_value' => 'exclude',
+            'bodies_of_water_id' => 'string',
             ]);
 
-        if (!Bumblebee::find($request['bumblebee_id'])){
-            return response(['message' => 'Bumblebee unit not found'], 200);
+        if(strlen($request['bumblebee_id'])) {
+            $bb = Bumblebee::find($request['bumblebee_id']);
+            if (!$bb) {
+                return response(['message' => 'Bumblebee unit not found'], 200);
+            }
+            // Add the current body of water to the measurement if not already assigned/overridden
+            if(strlen($request['bodies_of_water_id']) == 0){
+                $request['bodies_of_water_id'] = $bb->bodyOfWater()->id;
+            }
         }
+
         $request['calibration_value'] = false;
 
         return response(Measurement::create($request->all()));

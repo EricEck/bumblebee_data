@@ -3,6 +3,7 @@
 namespace App\Http\Livewire;
 
 use App\Models\Bumblebee;
+use App\Models\PoolOwner;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -12,7 +13,7 @@ class BumblebeeForm extends Component
 {
     public Bumblebee $bumblebee;
     public string $new_password = '';
-    public  $users;
+    public  $poolOwners;
 
     // Form Flags & Messaging
     public bool $showBack, $allow_edit, $create_new;
@@ -43,6 +44,7 @@ class BumblebeeForm extends Component
         $this->changed = false;
         $this->readyToSave = false;
         $this->saved = false;
+        $this->poolOwners = User::allPoolOwners();
         $this->users = User::query()
             ->where('id','>','0')
             ->orderBy('name', 'asc')

@@ -45,11 +45,15 @@
 
     @if(count($bumblebees) )
         <table class="table-auto w-full mb-6">
+
             <x-tables.bumblebees-table-header :show-actions="true"/>
+
             <tbody>
+
             @foreach($bumblebees as  $bumblebee)
                 <x-tables.bumblebees-table-row :show-actions="true" :bumblebee="$bumblebee"/>
             @endforeach
+
             </tbody>
         </table>
 

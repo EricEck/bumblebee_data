@@ -31,7 +31,7 @@ class UserForm extends Component
     public $roles;
 
     public ?PoolOwner $poolOwner;
-    public $ownersList;
+    public $primaryOwnersList;
 
     public ?EllipticMember $ellipticMember;     // php 7.1+ allows for null return
 
@@ -68,7 +68,8 @@ class UserForm extends Component
 
         $this->addressBilling = new Address();
 
-        $this->ownersList = PoolOwner::all();
+
+        $this->primaryOwnersList = PoolOwner::allPrimary();
 
         $this->poolOwner = new PoolOwner([
             'user_id' => $this->user->id,
@@ -77,7 +78,7 @@ class UserForm extends Component
             'is_primary_owner' => 1,
             'primary_owner_id' => $this->user->id,
         ]);
-        if($this->user->hasRole('pool-owner')){
+        if($this->user->hasRole('pool_owner')){
             $this->poolOwner = PoolOwner::findOwner($this->user->id);
             if(!$this->poolOwner){
                 $this->poolOwner = new PoolOwner([
@@ -91,8 +92,10 @@ class UserForm extends Component
             }
             if($this->poolOwner->is_primary_owner){
                 $this->addressBilling = Address::find($this->poolOwner->billing_address_id);
+                $this->primaryOwnersList = PoolOwner::allPrimaryExceptUser($this->user);
             }
         }
+
 
         $this->ellipticMember = new EllipticMember([
             'user_id' => $this->user->id,
@@ -132,7 +135,17 @@ class UserForm extends Component
     public function changed(){
         $this->changed = true;
         debugbar()->info('User Form Changed');
-        debugbar()->info($this->user->filled());
+//        debugbar()->info($this->user->attributesToArray());
+//        debugbar()->info($this->poolOwner->attributesToArray());
+//        debugbar()->info($this->user->filled());
+
+        // update the owners list to NOT include them if they are a primary owner
+        if($this->user->hasRole('pool_owner')){
+            if($this->user->poolOwner->is_primary_owner){
+                $this->primaryOwnersList = PoolOwner::allPrimaryExceptUser($this->user);
+            }
+        }
+
         if($this->user->filled()){
             $this->readyToSave = true;
         } else {
@@ -172,7 +185,7 @@ class UserForm extends Component
         } else {
             $this->user = new User();
         }
-        if($this->user->hasRole('pool-owner')){
+        if($this->user->hasRole('pool_owner')){
             $this->poolOwner = PoolOwner::findOwner($this->user->id);
         } else
             $this->poolOwner = new PoolOwner();
@@ -238,7 +251,7 @@ class UserForm extends Component
         }
 
         // link pool owner table if needed
-        if ($this->user->hasRole('pool-owner')){
+        if ($this->user->hasRole('pool_owner')){
             if(!PoolOwner::findOwner($this->user->id)){
                 $this->poolOwner = new PoolOwner([
                     'user_id' => $this->user->id,
@@ -253,7 +266,7 @@ class UserForm extends Component
                 } catch (\Exception $e){
                     $this->message = "Error Making User Pool Owner... ".$e->getMessage();
                     $this->emit('message');   // alpine JS $this.on('message',() => {}) event
-                    $this->user->detachRole('pool-owner');
+                    $this->user->detachRole('pool_owner');
                 }
             }
 

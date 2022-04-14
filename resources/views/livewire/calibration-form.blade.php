@@ -115,7 +115,7 @@
                                     <option selected value="0" disabled>--Which Bumblebee to Calibrate (required)</option>
 
                                     @foreach($bumblebees as $bumblebee)
-                                        <option value="{{ $bumblebee->id }}">{{ $bumblebee->serial_number }}, Current owner: ({{ $bumblebee->owner->name }})</option>
+                                        <option value="{{ $bumblebee->id }}">{{ $bumblebee->serial_number }}, Current owner: ({{ $bumblebee->owner()->name }})</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -252,7 +252,7 @@
                                 <h3 class="text-lg font-medium leading-6 text-gray-900">Color Absorption for {{ ucwords($calibration->metric) }}</h3>
 
                                 <div class="py-4 px-10 bg-gray-100 mt-6 mb-6">
-                                    <h2 class="text-lg">Calibrated Output({{ ( $calibration->slope_m == null || $calibration->offset_b == null) ? '' : round($measurement->colorimetricValue() * $calibration->slope_m + $calibration->offset_b,3) }}{{" ".$calibration->default_output_units." "}}) = Slope( {{ $calibration->slope_m == null ? '' : $calibration->slope_m }}{{" ".$calibration->default_output_units." "." / "." ".$measurement->unit." "}}) * Measurement( {{ $measurement->id == 0 ? '' : round($measurement->colorimetricValue(), 3).' '.$measurement->unit }} ) + Offset( {{ $calibration->offset_b == null ? '' : $calibration->offset_b }}{{" ".$calibration->default_output_units." "}})</h2>
+                                    <h2 class="text-lg">Calibrated Output({{ ( $calibration->slope_m == null || $calibration->offset_b == null) ? '' : round($measurement->metricColorimetryValue() * $calibration->slope_m + $calibration->offset_b,3) }}{{" ".$calibration->default_output_units." "}}) = Slope( {{ $calibration->slope_m == null ? '' : $calibration->slope_m }}{{" ".$calibration->default_output_units." "." / "." ".$measurement->unit." "}}) * Measurement( {{ $measurement->id == 0 ? '' : round($measurement->metricColorimetryValue(), 3).' '.$measurement->unit }} ) + Offset( {{ $calibration->offset_b == null ? '' : $calibration->offset_b }}{{" ".$calibration->default_output_units." "}})</h2>
                                 </div>
 
                                 <div class="sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">

@@ -18,23 +18,31 @@
         <td class="border px-1 py-1 ">{{ $ellipticProduct->bumblebee->serial_number}}</td>
         <td class="border px-1 py-1 ">{{ $ellipticProduct->bumblebee->manufactured_date}}</td>
     @else
-        <td class="border px-1 py-1 ">{{ $ellipticProduct->serial_number}}</td>
+        <td class="border px-1 py-1 ">{{ $ellipticProduct->serialNumber()}}</td>
         <td class="border px-1 py-1 ">{{ $ellipticProduct->manufactured_on}}</td>
     @endif
     <td class="border px-1 py-1 ">{{ $ellipticProduct->ellipticManufacturer ? $ellipticProduct->ellipticManufacturer->name : '--'}}</td>
 
-    @if($ellipticProduct->owner)
-        <td class="border px-1 py-1 ">{{ $ellipticProduct->owner->name }}</td>
+    @if($ellipticProduct->owner())
+        <td class="border px-1 py-1 ">{{ $ellipticProduct->owner()->name }}</td>
     @else
-        <td class="border px-1 py-1 "><x-buttons.new/></td>
+        <td class="border px-1 py-1 ">Not Assigned</td>
     @endif
 
-    <td class="border px-1 py-1 "><x-buttons.new/></td>
+    @if($ellipticProduct->bodyOfWater)
+        <td class=" px-1 py-1 flex flex-auto">
+            <span class="flex-auto -mt-8">{{ $ellipticProduct->bodyOfWater->name }}</span>
+            <a class="flex-auto -mt-10" href="{{route('body_of_water_show', ['bow_id' => $ellipticProduct->bodyOfWater->id])}}">
+                <x-buttons.view/></a>
+        </td>
+    @else
+        <td class="border px-1 py-1 ">No Assigned</td>
+    @endif
     <td class="border px-1 py-1 ">{{ $ellipticProduct->current_construction_version}}</td>
     <td class="border px-1 py-1 ">{{ $ellipticProduct->current_software_version}}</td>
 
     @if($showActions)
-        <td class="border px-1 py-1 flex">
+        <td class=" px-1 py-1 flex">
             <a class="flex-1 w-1/2" href="{{route('elliptic_product_edit',['id' => $ellipticProduct->id])}}" >
                 <x-buttons.edit/></a>
             <a class="flex-1 w-1/2" href="{{route('elliptic_product_show',['id' => $ellipticProduct->id])}}" >

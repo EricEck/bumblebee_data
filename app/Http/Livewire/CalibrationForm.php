@@ -105,8 +105,8 @@ class CalibrationForm extends Component
         debugbar()->info('CalibrationForm.php::changed()');
 
         $this->calibration->effective = intval($this->calibration->effective);
-        $this->calibration->slope_m = $this->calibration->slope_m ? floatval($this->calibration->slope_m) : null;
-        $this->calibration->offset_b = $this->calibration->offset_b ? floatval($this->calibration->offset_b) : null;
+        $this->calibration->slope_m = $this->calibration->slope_m ? floatval($this->calibration->slope_m) : 0;
+        $this->calibration->offset_b = $this->calibration->offset_b ? floatval($this->calibration->offset_b) : 0;
 
         debugbar()->info($this->calibration->filled());
         debugbar()->info($this->calibration->attributesToArray());

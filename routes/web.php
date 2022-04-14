@@ -73,10 +73,16 @@ Route::group(['middleware' => ['auth']], function (){
     Route::get('bodies_of_water/show/{bow_id}', [\App\Http\Controllers\BodiesOfWaterController::class, 'bodyOfWaterFormShow'])
         ->name('body_of_water_show');
 
+    Route::get('bow_components/all',[\App\Http\Controllers\BowComponentController::class, 'bowComponentsListAll'])
+        ->name('bow_components_all');
     Route::get('bow_components/{bow_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentsList'])
         ->name('bow_components_list');
     Route::get('bow_components/new/{bow_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentNew'])
         ->name('bow_component_new');
+    Route::get('bow_components/show/{bow_component_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentShow'])
+        ->name('bow_component_show');
+    Route::get('bow_components/edit/{bow_component_id}',[\App\Http\Controllers\BowComponentController::class, 'bowComponentEdit'])
+        ->name('bow_component_edit');
 
     Route::get('/bumblebees_table', [BumblebeeController::class, 'indexView'])
         ->name('bumblebees_table');

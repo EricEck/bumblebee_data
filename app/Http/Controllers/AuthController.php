@@ -37,9 +37,14 @@ class AuthController extends Controller
 
         $token = $bumblebee->createToken($bumblebee->serial_number.'_api')->plainTextToken;
 
+        $bow_id = $bumblebee->ellipticProduct->bowComponent->bodyOfWater->id;
         $response = [
             'bumblebee' => $bumblebee,
-            'token' => $token
+            'bodies_of_water_id' => $bow_id,
+            'application' => config('app.name'),
+            'data_model' => 'bumblebee',
+            'api_version' => config('app.api_version'),
+            'token' => $token,
         ];
 
         return response($response, 200);

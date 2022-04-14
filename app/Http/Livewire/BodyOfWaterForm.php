@@ -7,6 +7,7 @@ use App\Models\BodiesOfWater;
 use App\Models\BowLocationType;
 use App\Models\ConstructionType;
 use App\Models\FiltrationType;
+use App\Models\PoolOwner;
 use App\Models\User;
 use Livewire\Component;
 
@@ -14,7 +15,7 @@ class BodyOfWaterForm extends Component
 {
     public BodiesOfWater $bodyOfWater;
 
-    public $users, $addresses, $locationTypes, $filtrationTypes, $constructionTypes;
+    public $primaryOwnersList, $addresses, $locationTypes, $filtrationTypes, $constructionTypes;
     public User $owner;
     public Address $address;
     public bool $createNewAddress;
@@ -57,7 +58,8 @@ class BodyOfWaterForm extends Component
     public function mount(){
         debugbar()->info('Mounting BoW Form');
 
-        $this->users = User::all();
+        $this->primaryOwnersList = PoolOwner::allPrimary();
+
         $this->owner = new User();
 
         $this->addresses = Address::all();
