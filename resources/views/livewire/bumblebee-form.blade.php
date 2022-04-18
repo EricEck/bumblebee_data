@@ -76,21 +76,25 @@
                 explanation="enter the date built"
                 allow-edit={{$allow_edit}} />
 
-
-            <x-forms.field-input-select-start
+            <x-forms.field-input-select
                 label="Current Owner"
                 model-method="bumblebee.owner_id"
                 change-method="changed"
-                explanation="Must be a pool owner"
-                select-heading="-- Select Owner by Name"
-                allow-edit={{$allow_edit}} />
+                allow-edit="{{$allow_edit}}">
 
-            @foreach($poolOwners as $user)
-                <option value="{{ $user->id }}">{{ $user->name }}</option>
-            @endforeach
+                <x-slot name="first_option">
+                    -- Select a Pool Owner
+                </x-slot>
+                <x-slot name="select_options">
+                    @foreach($poolOwners as $user)
+                        <option value="{{ $user->id }}">{{ $user->name }}</option>
+                    @endforeach
+                </x-slot>
+                <x-slot name="explanation">
+                    Must be a pool owner
+                </x-slot>
+            </x-forms.field-input-select>
 
-            <x-forms.field-input-select-end
-                explanation="Must be a pool owner"/>
 
             @if($bumblebee->ellipticProduct)
                 <x-forms.field-display-only
@@ -116,20 +120,20 @@
                 explanation="date the unit was assigned to this owner"
                 allow-edit={{$allow_edit}} />
 
-            <x-forms.field-input-select-start
+            <x-forms.field-input-select
                 label="Service Status"
                 model-method="bumblebee.removed_from_service"
                 change-method="changed"
-                explanation="is the unit still be used in field"
-                select-heading=""
-                allow-edit={{$allow_edit}} />
+                allow-edit="{{$allow_edit}}">
 
-            <option value="0">In Service</option>
-            <option value="1">Out of Service</option>
-
-            <x-forms.field-input-select-end
-                explanation="is the unit still be used in field"/>
-
+                <x-slot name="select_options">
+                    <option value="0">In Service</option>
+                    <option value="1">Out of Service</option>
+                </x-slot>
+                <x-slot name="explanation">
+                    is the unit still be used in field
+                </x-slot>
+            </x-forms.field-input-select>
 
             <x-forms.field-input-password
                 label="API Password"
@@ -159,7 +163,7 @@
     <!-- Errors Display Markup -->
     @if ($errors->any())
         <x-form-error-block :errors="$errors"/>
-@endif
+    @endif
 
     <!-- Process Buttons -->
     <div class="flex flex-row items-end mt-4 mb-1">

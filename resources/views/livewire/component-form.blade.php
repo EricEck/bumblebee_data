@@ -65,7 +65,9 @@
                     @endforeach
                 </x-slot>
             </x-forms.field-input-select>
+
             @if($pool_owner_id > 0)
+                @php($bodiesOfWater = \App\Models\BodiesOfWater::where('pool_owner_id', $pool_owner_id)->get())
                 <x-forms.field-input-select
                     allow-edit={{$allow_edit}}
                     change-method="changed"

@@ -108,6 +108,14 @@ class EllipticProduct extends Model
             ->orderBy('serial_number', 'asc')
             ->get();
     }
+    public static function allBumblebeesOwnedByUserId(int $userID){
+        return EllipticProduct::query()
+            ->where('pool_owner_id', $userID)
+            ->where('bumblebee_id', '>', 0)
+            ->orderBy('elliptic_model_id', 'asc')
+            ->orderBy('serial_number', 'asc')
+            ->get();
+    }
 
     public function owner(){
         if ($this->pool_owner_id) {

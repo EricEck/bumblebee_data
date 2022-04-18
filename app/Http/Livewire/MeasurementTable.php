@@ -3,8 +3,11 @@
 namespace App\Http\Livewire;
 
 use App\Http\Controllers\CalibrationController;
+use App\Models\BodiesOfWater;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
+use App\Models\PoolOwner;
+use App\Models\User;
 use Carbon\Carbon;
 use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
 use Livewire\Component;
@@ -14,7 +17,16 @@ class MeasurementTable extends Component
 {
     use WithPagination;
 
+    public bool $changed;
+    public string $message;
+
     public Bumblebee $bumblebee_select;
+
+    public $bodiesOfWater;
+    public int $body_of_water_id;
+
+    public $poolOwners;
+    public int $pool_owner_id;
 
     public $measurementsPerPage = 10;
     public $scaledColorimetric = 0;
@@ -41,6 +53,15 @@ class MeasurementTable extends Component
 
     public function mount(){
         debugbar()->info('mount: MeasurementTable');
+
+        $this->changed = false;
+        $this->message = '';
+
+        $this->bodiesOfWater = BodiesOfWater::all();
+        $this->body_of_water_id = 0;
+        $this->poolOwners = User::allPoolOwners();
+        $this->pool_owner_id = 0;
+
         if($this->actualOnly){
             debugbar()->info('Actual Only Measurements');
             $this->types = 3;
@@ -61,14 +82,8 @@ class MeasurementTable extends Component
         if(isset($this->bumblebee_select)){
             debugbar()->info('Use only this bumblebee: '.$this->bumblebee_select);
         }
-
     }
 
-    /**
-     * All Measurements Index/Search
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
     public function render()
     {
         debugbar()->info('render: MeasurementTable');
@@ -88,6 +103,11 @@ class MeasurementTable extends Component
 
             'bumblebees' => Bumblebee::all(),
         ]);
+    }
+
+    public function changed(){
+        debugbar()->info('changed: MeasurementTable');
+        $this->changed = true;
     }
 
     /**

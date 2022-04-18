@@ -1,5 +1,5 @@
 @props(['label' => '',
-'first_option',
+'first_option' => '',
 'first_option_value' => 0,
 'allow_edit' => true,
 'autofocus' => false,

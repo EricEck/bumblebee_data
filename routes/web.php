@@ -92,6 +92,15 @@ Route::group(['middleware' => ['auth']], function (){
         ->name('bumblebeeFormShow');
     Route::get('/bumblebee_form/new', [BumblebeeController::class, 'bumblebeeFormNew']);
 
+
+
+    Route::get('bumblebee/{bumblebee_id}', function ($bb_id){
+        debugbar()->info('test: '.$bb_id);
+        $bbc = new BumblebeeController();
+        return $bbc->bumblebeeFormNew();
+    });
+
+    // Measurement Related
     Route::get('/measurements_table', [MeasurementController::class, 'indexView'])
         ->name('measurements_table');
     Route::get('/measurements_table/actual', [MeasurementController::class, 'actualView'])

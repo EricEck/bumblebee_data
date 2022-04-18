@@ -15,13 +15,15 @@ class BumblebeeTable extends Component
     public $orderAscending = true;
     public $orderBy = 'serial_number';
 
-    /**
-     * All Bumblebees Index/Search
-     *
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
+
+    public function mount(){
+        debugbar()->info('mount: BumblebeeTable');
+    }
+
     public function render()
     {
+        debugbar()->info('render: BumblebeeTable');
+
         return view('livewire.bumblebee-table',[
             'bumblebees' => Bumblebee::searchView($this->searchString)
                 ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')

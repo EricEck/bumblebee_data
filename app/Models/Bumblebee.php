@@ -62,6 +62,7 @@ class Bumblebee extends Authenticatable
         'owner_id',
         'install_id',
         'assigned_to_owner_on',
+        'removed_from_service',
         'api_password',
         'remember_token'
     ];

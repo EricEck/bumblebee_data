@@ -112,15 +112,16 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <x-dropdown-link :href="route('measurementFormNew')" :active="request()->routeIs('measurementFormNew')">
-                                {{ __('New Measurement') }}
-                            </x-dropdown-link><br>
+
                             <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
                                 {{ __('All Measurements') }}
                             </x-dropdown-link><br>
                             <x-dropdown-link :href="route('measurements_table_actual')" :active="request()->routeIs('measurements_table_actual')">
-                                {{ __('Actual Measurements') }}
-                            </x-dropdown-link>
+                                {{ __('Actual/Calibrated Measurements') }}
+                            </x-dropdown-link><br/>
+                            <x-dropdown-link :href="route('measurementFormNew')" :active="request()->routeIs('measurementFormNew')">
+                                {{ __('New Measurement') }}
+                            </x-dropdown-link><br>
                         </x-slot>
                     </x-dropdown>
                 </div>

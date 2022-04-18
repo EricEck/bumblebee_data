@@ -112,7 +112,6 @@ class ComponentForm extends Component
         $this->bowComponent->installation_location_id = -1;
         $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);  // reload the locations
     }
-
     public function addComponentManufacturer(){
         debugbar()->info('addComponentManufacturer: ');
         $this->newComponentManufacturer = new ComponentManufacturer();
@@ -192,6 +191,7 @@ class ComponentForm extends Component
 //        debugbar()->info($this->bowComponent->serialNumber());
 
 
+
         try {
             $this->bowComponent->saveOrFail();
             debugbar()->info('bowComponent Saved');
@@ -199,6 +199,12 @@ class ComponentForm extends Component
             $this->changed = false;
             $this->message = "BoW Component Saved";
             $this->emit('message');
+            if($this->bowComponent->ellipticProduct) {
+                $this->bowComponent->ellipticProduct->pool_owner_id = $this->pool_owner_id;
+                $this->bowComponent->ellipticProduct->saveOrFail();
+                $this->message = "Elliptic Product Updated";
+                $this->emit('message');
+            }
         } catch (\Exception $e){
             $this->message = "Error Saving BoW Component... ".$e->getMessage();
             $this->emit('message');   // alpine JS $this.on('message',() => {}) event
