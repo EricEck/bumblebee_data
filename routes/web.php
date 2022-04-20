@@ -114,6 +114,11 @@ Route::group(['middleware' => ['auth']], function (){
         [MeasurementController::class, 'measurementFormNew'])
         ->name('measurementFormNew');
 
+    // using get search parameters
+    Route::get('measurements',
+        [MeasurementController::class, 'measurementSearchTable'])
+    ->name('measurement_search');
+
     Route::get('/calibrations/new',
         [CalibrationController::class, 'calibrationFormNew'])
         ->name('calibrationFormNew');

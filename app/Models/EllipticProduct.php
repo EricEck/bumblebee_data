@@ -76,10 +76,13 @@ class EllipticProduct extends Model
             'bodies_of_water_id',
             'id');
     }
+    public function owner(){
+        return $this->hasOne(User::class, 'id', 'pool_owner_id');
+    }
 
 
 
-    // METHODS
+    // STATIC METHODS
 
     public static function allAvailable(){
         return EllipticProduct::query()
@@ -117,20 +120,24 @@ class EllipticProduct extends Model
             ->get();
     }
 
-    public function owner(){
-        if ($this->pool_owner_id) {
-            return $this->hasOne(
-                User::class,
-                'id',
-                'pool_owner_id');
-        }
-        if ($this->bowComponent)
-            return $this->bowComponent->bodyOfWater->owner;
-        if($this->$this->bodyOfWater)
-            return $this->bodyOfWater->owner;
 
-        return null;
-    }
+
+    // METHODS
+
+//    public function owner(){
+//        if ($this->pool_owner_id) {
+//            return $this->hasOne(
+//                User::class,
+//                'id',
+//                'pool_owner_id');
+//        }
+//        if ($this->bowComponent)
+//            return $this->bowComponent->bodyOfWater->owner;
+//        if($this->$this->bodyOfWater)
+//            return $this->bodyOfWater->owner;
+//
+//        return null;
+//    }
     /**
      * Get the Serial Number of the Elliptic Product
      * @return mixed|string

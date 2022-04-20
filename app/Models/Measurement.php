@@ -96,6 +96,117 @@ class Measurement extends Model
     }
 
 
+
+    // STATIC METHODS
+
+    /**
+     * All Possible metrics for measurements
+     *
+     * @return array
+     */
+    public static function metricEnums(){
+        return array(
+            'ph','orp', 'conductivity', 'free chlorine', 'total chlorine', 'alkalinity', 'calcium',
+            'temperature', 'pressure', 'flow', 'LSI', 'other');
+    }
+    /**
+     * All Possible units for measurements
+     *
+     * @return array
+     */
+    public static function unitEnums(){
+        return array(
+            'uV', 'mV', 'V', 'uA', 'mA', 'A',
+            'count',
+            'bar', 'psi', 'atm', 'Pa',
+            'F', 'C',
+            'gpm', 'cfs',
+            'ppm', 'ppb',
+            'uS/cm', 'mS/cm',
+            'none');
+    }
+    /**
+     * All Possible methods for measurements
+     *
+     * @return array
+     */
+    public static function methodEnums(){
+        return array(
+            'probe', 'colorimetric',
+            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe', 'other');
+    }
+    /**
+     * All Possible methods for measurements (manual only)
+     *
+     * @return array
+     */
+    public static function methodManualEnums(){
+        return array('manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe');
+    }
+    public static function displayMetricMethodUnits(){
+        return array(
+            ['metric' => 'ph', 'method' => 'probe', 'unit' => ''],
+            ['metric' => 'orp', 'method' => 'probe', 'unit' => 'mV'],
+            ['metric' => 'ph', 'method' => 'colorimetric', 'unit' => ''],
+            ['metric' => 'conductivity', 'method' => 'probe', 'unit' => 'uS/cm'],
+            ['metric' => 'temperature', 'method' => 'probe', 'unit' => 'F'],
+            ['metric' => 'pressure', 'method' => 'probe', 'unit' => 'psi'],
+            ['metric' => 'free chlorine', 'method' => 'colorimetric', 'unit' => 'ppm'],
+            ['metric' => 'total chlorine', 'method' => 'colorimetric', 'unit' => 'ppm'],
+            ['metric' => 'alkalinity', 'method' => 'colorimetric', 'unit' => 'ppm'],
+            ['metric' => 'calcium', 'method' => 'colorimetric', 'unit' => 'ppm'],
+            ['metric' => 'LSI', 'method' => 'calculation', 'calculation' => 'lsi', 'unit' => ''],
+        );
+    }
+    public static function allBetweenTimesforBowId(int $bow_id, string $endTime, string $startTime){
+        return Measurement::query()
+            ->where('bodies_of_water_id', $bow_id)
+            ->where('measurement_timestamp', '<=', $endTime)
+            ->where('measurement_timestamp', '>=', $startTime)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->get();
+    }
+    /**
+     * Find all non-calibration bow/metric/method between two times
+     * @param int $bow_id
+     * @param string $metric
+     * @param string $method
+     * @param string $endTime
+     * @param string $startTime
+     * @return Measurement[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Query\Builder[]|\Illuminate\Support\Collection
+     */
+    public static function allNonCalibrationBetweenTimesforMetricMethodBowId(int $bow_id, string $metric, string $method, string $endTime, string $startTime){
+        return Measurement::query()
+            ->where('calibration_value', 0)
+            ->where('bodies_of_water_id', $bow_id)
+            ->where('metric', $metric)
+            ->where('method', $method)
+            ->where('measurement_timestamp', '<=', $endTime)
+            ->where('measurement_timestamp', '>=', $startTime)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->get();
+    }
+    public static function latestMeasurementforBowID(int $bow_id){
+        return Measurement::query()
+            ->where('bodies_of_water_id', $bow_id)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->first();
+    }
+    /**
+     * Latest non-calibration measurement for bow between two times
+     * @param int $bow_id
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public static function latestNonCalibrationMeasurementforBowID(int $bow_id){
+        return Measurement::query()
+            ->where('bodies_of_water_id', $bow_id)
+            ->where('calibration_value', 0)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->first();
+    }
+
+
+
     // METHODS
 
     public function filled(){
@@ -377,54 +488,6 @@ class Measurement extends Model
         return false;
     }
 
-    /**
-     * All Possible metrics for measurements
-     *
-     * @return array
-     */
-    public static function metricEnums(){
-        return array(
-            'ph','orp', 'conductivity', 'free chlorine', 'total chlorine', 'alkalinity', 'calcium',
-                'temperature', 'pressure', 'flow', 'LSI', 'other');
-    }
-
-    /**
-     * All Possible units for measurements
-     *
-     * @return array
-     */
-    public static function unitEnums(){
-        return array(
-            'uV', 'mV', 'V', 'uA', 'mA', 'A',
-            'count',
-            'bar', 'psi', 'atm', 'Pa',
-            'F', 'C',
-            'gpm', 'cfs',
-            'ppm', 'ppb',
-            'uS/cm', 'mS/cm',
-            'none');
-    }
-
-
-    /**
-     * All Possible methods for measurements
-     *
-     * @return array
-     */
-    public static function methodEnums(){
-        return array(
-            'probe', 'colorimetric',
-            'manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe', 'other');
-    }
-
-    /**
-     * All Possible methods for measurements (manual only)
-     *
-     * @return array
-     */
-    public static function methodManualEnums(){
-        return array('manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe');
-    }
 
     /**
      * Check the type of Method is Colorimetric

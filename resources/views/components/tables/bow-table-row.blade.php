@@ -5,6 +5,7 @@
     <td class="border px-1 py-1 ">{{ $bow->owner->name }}</td>
     <td class="border px-1 py-1 ">{{ $bow->name }}</td>
     <td class="border px-1 py-1 ">{{ $bow->address->oneLineAddress() }}</td>
+    <td class="border px-1 py-1 ">{{ \App\Models\BowComponent::countForBodyOfWaterId($bow->id) }}</td>
     <td class="border px-1 py-1 ">#</td>
     <td class="border px-1 py-1 ">{{$bow->bowLocationType->name}}</td>
     <td class="border px-1 py-1 ">{{$bow->indoor ? 'Yes' : 'No'}}</td>

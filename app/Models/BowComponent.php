@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use phpDocumentor\Reflection\Types\Collection;
 
 class BowComponent extends Model
 {
@@ -64,6 +66,47 @@ class BowComponent extends Model
     }
 
 
+
+    // STATIC METHODS
+
+    public static function countForBodyOfWaterId(int  $bow_id): int {
+        return BowComponent::where('bodies_of_water_id', $bow_id)->count();
+    }
+    public static function ellipticProducts():array {
+        return BowComponent::where('elliptic_product_id', '>', 0)
+            ->get();
+    }
+    public static function ellipticBumblebees() {
+        return DB::table('bow_components')
+            ->where('elliptic_product_id', '>', 0)
+            ->join('elliptic_products', 'bow_components.elliptic_product_id', '=', 'elliptic_products.id')
+            ->where('elliptic_products.bumblebee_id' , '>', 0)
+            ->select('elliptic_products.*', 'bow_components.bodies_of_water_id')
+            ->get();
+    }
+    public static function ellipticBumblebeeForBodyOfWaterId(int $bow_id) {
+        return DB::table('bow_components')
+            ->where('elliptic_product_id', '>', 0)
+            ->where('bodies_of_water_id', '=', $bow_id)
+            ->join('elliptic_products', 'bow_components.elliptic_product_id', '=', 'elliptic_products.id')
+            ->where('elliptic_products.bumblebee_id' , '>', 0)
+            ->select('elliptic_products.*', 'bow_components.bodies_of_water_id')
+            ->get();
+    }
+
+    /**
+     * Return all Components for a Body of Water ID
+     * @param int $bow_id
+     * @return BowComponent[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public static function whereBowId(int $bow_id){
+        return BowComponent::where('bodies_of_water_id', $bow_id)
+            ->get();
+    }
+
+
+
+
     // METHODS
     public function serialNumber(){
         if ($this->brand->is_elliptic_works){
@@ -84,15 +127,7 @@ class BowComponent extends Model
         return $this->brand;
     }
 
-    /**
-     * Return all Components for a Body of Water ID
-     * @param int $bow_id
-     * @return BowComponent[]|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
-     */
-    public static function whereBowId(int $bow_id){
-        return BowComponent::where('bodies_of_water_id', $bow_id)
-            ->get();
-    }
+
 
     public function filled(){
         if ($this->brand && $this->brand->is_elliptic_works){

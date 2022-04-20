@@ -79,21 +79,23 @@ class User extends Authenticatable
     public function bumblebees(){
         return $this->hasMany(Bumblebee::class, 'owner_id', 'id');
     }
+    public function ellipticProducts(){
+        return $this->hasMany(EllipticProduct::class, 'pool_owner_id', 'id');
+    }
     public function addressHome(){
         return $this->hasOne(Address::class, 'id', 'address_home_id');
     }
     public function poolOwner(){
         return $this->hasOne(PoolOwner::class, 'user_id', 'id');
     }
-    /**
-     * Eloquent has many relationship Calibration Model
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
     public function calibrations(){
         return $this->hasMany(Calibration::class);
     }
     public function ellipticMember(){
         return $this->hasOne(EllipticMember::class, 'id', 'elliptic_member_id');
+    }
+    public function bodiesOfWater(){
+        return $this->hasMany(BodiesOfWater::class, 'pool_owner_id', 'id');
     }
 
     public function makeEllipticMember(){

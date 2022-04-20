@@ -24,7 +24,7 @@
     <td class="border px-1 py-1 ">{{ $ellipticProduct->ellipticManufacturer ? $ellipticProduct->ellipticManufacturer->name : '--'}}</td>
 
     @if($ellipticProduct->owner())
-        <td class="border px-1 py-1 ">{{ $ellipticProduct->owner()->name }}</td>
+        <td class="border px-1 py-1 ">{{ $ellipticProduct->owner ? $ellipticProduct->owner->name : '--' }}</td>
     @else
         <td class="border px-1 py-1 ">Not Assigned</td>
     @endif

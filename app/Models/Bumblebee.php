@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\HasApiTokens;
 
 
@@ -84,6 +85,10 @@ class Bumblebee extends Authenticatable
     public function ellipticProduct(){
         return $this->belongsTo(EllipticProduct::class, 'id', 'bumblebee_id');
     }
+    public function owner(){
+        return $this->hasOne(User::class, 'id', 'owner_id');
+    }
+
 
     // METHODS
 
@@ -91,15 +96,15 @@ class Bumblebee extends Authenticatable
         if($this->ellipticProduct)
             if($this->ellipticProduct->bowComponent)
                 return $this->ellipticProduct->bowComponent->bodyOfWater;
-
         return null;
     }
 
-    public function owner(){
-        if ($this->ellipticProduct)
-            return $this->ellipticProduct->owner();
-        return User::find($this->owner_id);
-    }
+
+//    public function owner(){
+//        if ($this->ellipticProduct)
+//            return $this->ellipticProduct->owner();
+//        return User::find($this->owner_id);
+//    }
 
     public function filled(){
         return (

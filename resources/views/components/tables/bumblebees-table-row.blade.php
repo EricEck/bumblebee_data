@@ -6,7 +6,7 @@
     <td class="border px-4 py-2">{{ $bumblebee->manufactured_date }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->ellipticProduct ? 'Yes' : 'No' }}</td>
-    <td class="border px-4 py-2">{{ $bumblebee->ellipticProduct ? $bumblebee->owner()->name : '--' }}</td>
+    <td class="border px-4 py-2">{{ $bumblebee->owner ? $bumblebee->owner->name : '--' }}</td>
     <td class="border px-4 py-2">{!! $bumblebee->removed_from_service  !!}</td>
     <td class="border px-4 py-2">{{ $bumblebee->bodyOfWater() ? $bumblebee->bodyOfWater()->name : 'None' }}</td>
     <td class="border px-4 py-2">{{ empty($lastMeasurement) ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>

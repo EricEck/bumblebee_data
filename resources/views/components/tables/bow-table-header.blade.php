@@ -6,6 +6,7 @@
         <th class="border-2 border-white">Primary<br>Owner</th>
         <th class="border-2 border-white">Name</th>
         <th class="border-2 border-white">Address</th>
+        <th class="border-2 border-white">Bow<br/>Components</th>
         <th class="border-2 border-white">BB<br>Unit</th>
         <th class="border-2 border-white">Type</th>
         <th class="border-2 border-white">Indoor</th>

@@ -69,7 +69,8 @@ class BodiesOfWater extends Model
         return $this->hasMany(BowComponentLocation::class, 'bodies_of_water_id', 'id');
     }
 
-    // METHODS
+
+    //  STATIC METHODS
 
     public static function allForPoolOwnerId(int $pool_owner_id){
         return BodiesOfWater::query()
@@ -77,6 +78,9 @@ class BodiesOfWater extends Model
             ->get();
     }
 
+
+
+    //  METHODS
     public function filled(){
         return (
             $this->pool_owner_id > 0
@@ -87,6 +91,8 @@ class BodiesOfWater extends Model
             && $this->construction_type_id > 0
         );
     }
+
+
 
 
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\MeasurementsAllExport;
 use App\Exports\MeasurementsExport;
+use App\Models\BodiesOfWater;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
 use Excel;
@@ -302,6 +303,17 @@ class MeasurementController extends Controller
         return response(["message" => "not found"], 404);
     }
 
+    public function measurementSearchTable(Request $request){
+        $params = $request->all();
+        $bow_id = urldecode($params["bow_id"]);
+
+        if ($bodyOfWater = BodiesOfWater::find($bow_id))
+            return view('measurements.bow',[
+                'bodyOfWater' => $bodyOfWater,
+                'params' => $params]);
+
+        abort(404);
+    }
 
     /**
     * Find all Measurements when the bumblebee id matches

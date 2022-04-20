@@ -7,7 +7,7 @@
         <div class="w-1/6 relative mx-1">
             <select
                 wire:model="pool_owner_id"
-                wire:change="changed"
+                wire:change="changed('pool_owner_id')"
                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state">
                 <option selected disabled value="0">-- Pool Owner</option>
@@ -27,12 +27,12 @@
         <div class="w-1/6 relative mx-1">
             <select
                 wire:model="body_of_water_id"
-                wire:change="changed"
+                wire:change="changed('body_of_water_id')"
                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                 id="grid-state">
                 <option selected disabled value="0">-- Body of Water</option>
                 @if($pool_owner_id < 1)
-                    <option value="-1">All BoW</option>
+                    <option value="-1">All Bodies of Water</option>
                 @endif
                 @foreach($bodiesOfWater as $bodyOfWater)
                     <option value="{{$bodyOfWater->id}}">{{$bodyOfWater->name}}</option>
@@ -44,10 +44,10 @@
         </div>
         <div class="w-1/6 relative mx-1">
             <select
-                wire:model="bumblebeeID"
+                wire:model="bumblebee_id"
                 wire:change="changed"
                 class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" id="grid-state">
-                <option value="0" selected>All Bumblebees</option>
+                <option value="-1" selected>All Bumblebees</option>
                 @foreach($bumblebees as $bumblebee)
                     <option value="{{$bumblebee->id}}">{{ $bumblebee->serial_number }} (owner: )</option>
                 @endforeach

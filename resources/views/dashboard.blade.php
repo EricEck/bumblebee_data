@@ -15,6 +15,9 @@
                     <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
                 </div>
             </div>
+            <a href="{{route('measurement_search', array(
+                    'bow_id' => urlencode(5),
+                    ))}}">CLICK</a>
         </div>
     </div>
 </x-app-layout>
