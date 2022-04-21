@@ -4,13 +4,21 @@ namespace App\Http\Livewire;
 
 use App\Models\BodiesOfWater;
 use App\Models\Measurement;
+use App\Models\User;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Collection;
 use Livewire\Component;
 
 class MeasurementTable2 extends Component
 {
     public BodiesOfWater $bodyOfWater;
     public int $bow_id;
+    public Collection $bodiesOfWater;
+    public bool $bodyOfWaterFound;
+
+    public int $pool_owner_id;
+    public Collection $poolOwners;
+
 
     public $measurements;
 
@@ -28,16 +36,78 @@ class MeasurementTable2 extends Component
 
     public function mount(){
         debugbar()->info('mount: MeasurementTable2');
-
-        if(!$this->decodeParams())
-            abort(404); // not found
-
-        $this->metricsToDisplay = Measurement::displayMetricMethodUnits();
+        $this->bodyOfWaterFound = false;
+        $this->poolOwners = User::allPoolOwners();
+        $this->pool_owner_id = 0;
+        $this->bodiesOfWater = BodiesOfWater::all();
+        $this->bow_id = 0;
 
         $this->timeSlotCount = 4;
         $this->minutesBetweenTimeSlots = 15;
 
-        $this->latestMeasurement = Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id);
+        if($this->decodeParams()){
+            // check if we have a url forced body of water
+            if($this->bodyOfWater = BodiesOfWater::find(($this->bow_id))){
+                $this->loadBodyOfWaterData();
+                $this->pool_owner_id = $this->bodyOfWater->owner->id;
+                $this->bodyOfWaterFound = true;
+            }
+        }
+    }
+
+    public function render(){
+
+//        debugbar()->info($this->measurements);
+
+        debugbar()->info('render: MeasurementTable2');
+        debugbar()->info($this->metricsToDisplay);
+        debugbar()->info($this->pool_owner_id);
+        debugbar()->info($this->poolOwners);
+        debugbar()->info($this->bow_id);
+        debugbar()->info($this->bodiesOfWater);
+        debugbar()->info($this->bodyOfWaterFound);
+
+        return view('livewire.measurement-table2');
+    }
+
+
+    // General METHODS for this Livewire Component
+
+
+    public function changed(string $what){
+        debugbar()->info('changed: MeasurementTable -- '. $what);
+//        $this->changed = true;
+
+        switch ($what){
+            case ('pool_owner_id'):
+                $this->bow_id = 0;
+                $this->bodyOfWaterFound = false;
+//                $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
+//                debugbar()->info($this->bodiesOfWater);
+//                if($this->pool_owner_id == 0) {
+//                    $this->bodiesOfWater = BodiesOfWater::all();
+//                } else {
+//                    $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
+//                }
+                break;
+            case ('bow_id'):
+                $this->bodyOfWaterFound = false;
+                if($this->bodyOfWater = BodiesOfWater::find($this->bow_id)){
+                    $this->pool_owner_id = $this->bodyOfWater->owner->id;
+                    $this->bodyOfWaterFound = true;
+                    $this->loadBodyOfWaterData();
+                }
+                break;
+        }
+    }
+
+
+    public function loadBodyOfWaterData(){
+        debugbar()->info('loadBodyOfWaterData:');
+
+        if(!$this->latestMeasurement = Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id))
+            return false;
+
         $this->latestMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
 
         $this->timeSlots = $this->generatePastMySqlTimeSlots(
@@ -48,7 +118,7 @@ class MeasurementTable2 extends Component
 
         $this->newestTime = $this->timeSlots[0];
 
-
+        $this->metricsToDisplay = Measurement::displayMetricMethodUnits();
 
         for($mtd = 0; $mtd < count($this->metricsToDisplay); $mtd++){
             $this->metricsToDisplay[$mtd]['values'] = array();
@@ -72,15 +142,15 @@ class MeasurementTable2 extends Component
 
                     // average them
                     $valueAverage = 0;
-                    debugbar()->info('measurements:' . count($tempMeasArray));
+//                    debugbar()->info('measurements:' . count($tempMeasArray));
                     for ($m = 0; $m < count($tempMeasArray); $m++) {
 
                         if ($tempMeasArray[$m]->colorimetricMethod()) {
-                            debugbar()->info('color');
+//                            debugbar()->info('color');
 
                             $valueAverage += $tempMeasArray[$m]->metricColorimetryValue();
                         } elseif ($tempMeasArray[$m]->probeMethod()) {
-                            debugbar()->info('probe');
+//                            debugbar()->info('probe');
                             $valueAverage += $tempMeasArray[$m]->valueDecodeNumber();
                         }
                     }
@@ -96,42 +166,18 @@ class MeasurementTable2 extends Component
         }
 
         debugbar()->info($this->metricsToDisplay);
-
-//        $this->measurements = Measurement::allBetweenTimesforBowId(
-//            $this->bow_id,
-//            $this->timeSlots[0],
-//            $this->timeSlots[1]
-//        );
-
-
-//        debugbar()->info('Body of Water ID: '.$this->bow_id);
-//        debugbar()->info('Body of Water Last Measurement: '.$this->latestMeasurementTime->toDateTimeString());
-//        debugbar()->info($this->bodyOfWater->name);
-//        debugbar()->info($this->timeSlots);
+        return true;
     }
-
-    public function render(){
-
-
-//        debugbar()->info($this->measurements);
-
-        debugbar()->info('render: MeasurementTable2');
-        return view('livewire.measurement-table2');
-    }
-
-
-    // General METHODS for this Livewire Component
 
     /**
-     * Decode the passed parameter array and populate variables
+     * Decode the passed parameter array and populate index keys
      * @return bool success
      */
-    private function decodeParams(){
-        if($this->bow_id = urldecode($this->params["bow_id"])) {
-            if($this->bodyOfWater = BodiesOfWater::find(($this->bow_id))){
+    public function decodeParams(){
+        if (isset($this->params["bow_id"]))
+            if($this->bow_id = urldecode($this->params["bow_id"])) {
                 return true;
             }
-        }
         return false;
     }
 

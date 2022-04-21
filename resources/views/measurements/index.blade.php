@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        {{ request()->get('niblet') ?? 'All Measurements'}}
+        {{ request()->get('niblet') ?? 'Measurements'}}
     </x-slot>
 
     @livewire('measurement-table')

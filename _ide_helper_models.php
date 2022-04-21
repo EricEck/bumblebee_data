@@ -73,11 +73,11 @@ namespace App\Models{
  * @property-read \App\Models\Address|null $address
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponentLocation[] $bowComponentLocations
  * @property-read int|null $bow_component_locations_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $bowComponents
+ * @property-read int|null $bow_components_count
  * @property-read \App\Models\ConstructionType|null $bowConstructionType
  * @property-read \App\Models\FiltrationType|null $bowFiltrationType
  * @property-read \App\Models\BowLocationType|null $bowLocationType
- * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BowComponent[] $components
- * @property-read int|null $components_count
  * @property-read \App\Models\User|null $owner
  * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BodiesOfWater newQuery()
@@ -117,19 +117,21 @@ namespace App\Models{
  * @property int $manufacturer_id
  * @property int $installation_service_company_id
  * @property int $installation_service_ticket_id
- * @property string $installation_date
+ * @property string|null $installation_date
  * @property int $installation_location_id
  * @property int $installed_now
  * @property int $warranty
- * @property string $warranty_end_date
+ * @property string|null $warranty_end_date
  * @property string $model_number
  * @property string $serial_number
- * @property string $removed_from_service_date
+ * @property string|null $removed_from_service_date
  * @property int $removed_from_service_ticket_id
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
  * @property-read \App\Models\BodiesOfWater|null $bodyOfWater
+ * @property-read \App\Models\ComponentManufacturer|null $brand
  * @property-read \App\Models\BowComponentLocation|null $componentLocation
+ * @property-read \App\Models\EllipticProduct|null $ellipticProduct
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|BowComponent query()
@@ -246,6 +248,7 @@ namespace App\Models{
  * @method static \Illuminate\Database\Eloquent\Builder|Bumblebee whereSerialNumber($value)
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Calibration[] $calibrations
  * @property-read int|null $calibrations_count
+ * @property-read \App\Models\EllipticProduct|null $ellipticProduct
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Measurement[] $measurements
  * @property-read int|null $measurements_count
  * @property-read \App\Models\User|null $owner
@@ -481,6 +484,7 @@ namespace App\Models{
  * @property-read \App\Models\Bumblebee|null $bumblebee
  * @property-read \App\Models\EllipticManufacturer|null $ellipticManufacturer
  * @property-read \App\Models\EllipticModel|null $ellipticModel
+ * @property-read \App\Models\EllipticModel|null $model
  * @property-read \App\Models\User|null $owner
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|EllipticProduct newQuery()
@@ -568,8 +572,11 @@ namespace App\Models{
  * @property float $calibrated_value
  * @property string $calibrated_unit
  * @property int|null $calibration_id
+ * @property int $bodies_of_water_id
+ * @property-read \App\Models\BodiesOfWater|null $bodyOfWater
  * @property-read \App\Models\Bumblebee|null $bumblebee
  * @property-read \App\Models\Calibration|null $calibration
+ * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereBodiesOfWaterId($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedUnit($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibratedValue($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Measurement whereCalibrationId($value)
@@ -854,11 +861,15 @@ namespace App\Models{
  * @property int $service_employee_id
  * @property int $elliptic_member_id
  * @property-read \App\Models\Address|null $addressHome
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\BodiesOfWater[] $bodiesOfWater
+ * @property-read int|null $bodies_of_water_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Bumblebee[] $bumblebees
  * @property-read int|null $bumblebees_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Calibration[] $calibrations
  * @property-read int|null $calibrations_count
  * @property-read \App\Models\EllipticMember|null $ellipticMember
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\EllipticProduct[] $ellipticProducts
+ * @property-read int|null $elliptic_products_count
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read int|null $notifications_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Permission[] $permissions

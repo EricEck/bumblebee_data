@@ -72,7 +72,7 @@ class BodiesOfWater extends Model
 
     //  STATIC METHODS
 
-    public static function allForPoolOwnerId(int $pool_owner_id){
+    public static function allForPoolOwnerId(int $pool_owner_id = 0){
         return BodiesOfWater::query()
             ->where('pool_owner_id', $pool_owner_id)
             ->get();

@@ -8,7 +8,7 @@
     <td class="border px-1 py-2 text-xs">{{ date('l',strtotime($measurement->measurement_timestamp)) }}<br>{{  date('m-d-Y',strtotime($measurement->measurement_timestamp)) }}<br>{{ date('g:i a',strtotime($measurement->measurement_timestamp)) }}</td>
     <td class="border px-1 py-2 font-thin text-xs text-center">
         <a href="{{route('bumblebeeFormShow', ['bumblebee_id' => $bumblebee->id])}}">
-            <b>{{ $bumblebee->serial_number }}</b><br>({{ $owner->name }})
+            <b>{{ $bumblebee->serial_number }}</b><br>({{ $bumblebee->owner->name }})
         </a>
     </td>
     <td class="border px-1 py-2 text-xs">{{ $measurement->bodies_of_water_id ? $measurement->bodies_of_water_id : '--' }}</td>

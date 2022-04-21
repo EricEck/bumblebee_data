@@ -3,11 +3,8 @@
 namespace App\Http\Livewire;
 
 use App\Http\Controllers\CalibrationController;
-use App\Models\BodiesOfWater;
 use App\Models\Bumblebee;
 use App\Models\Measurement;
-use App\Models\PoolOwner;
-use App\Models\User;
 use Carbon\Carbon;
 use League\CommonMark\Extension\CommonMark\Node\Block\ThematicBreak;
 use Livewire\Component;
@@ -17,18 +14,7 @@ class MeasurementTable extends Component
 {
     use WithPagination;
 
-    public bool $changed;
-    public string $message;
-
     public Bumblebee $bumblebee_select;
-    public $bumblebees;
-    public $bumblebee_id = -1;
-
-    public $bodiesOfWater;
-    public int $body_of_water_id;
-
-    public $poolOwners;
-    public int $pool_owner_id;
 
     public $measurementsPerPage = 10;
     public $scaledColorimetric = 0;
@@ -37,7 +23,7 @@ class MeasurementTable extends Component
 
 //    public $calibrationMetric = false;
 //    public $measurementMetric = true;
-
+    public $bumblebeeID = 0;
     public $metric = "all";
     public $method = "all";
     public $types = "2";
@@ -55,18 +41,6 @@ class MeasurementTable extends Component
 
     public function mount(){
         debugbar()->info('mount: MeasurementTable');
-
-        $this->changed = false;
-        $this->message = '';
-
-        $this->poolOwners = User::allPoolOwners();
-        $this->pool_owner_id = -1;
-        $this->bodiesOfWater = BodiesOfWater::all();
-        $this->body_of_water_id = -1;
-        $this->bumblebees = Bumblebee::all();
-        $this->bumblebee_id = -1;
-
-
         if($this->actualOnly){
             debugbar()->info('Actual Only Measurements');
             $this->types = 3;
@@ -87,8 +61,14 @@ class MeasurementTable extends Component
         if(isset($this->bumblebee_select)){
             debugbar()->info('Use only this bumblebee: '.$this->bumblebee_select);
         }
+
     }
 
+    /**
+     * All Measurements Index/Search
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
     public function render()
     {
         debugbar()->info('render: MeasurementTable');
@@ -96,7 +76,7 @@ class MeasurementTable extends Component
         return view('livewire.measurement-table',[
 
             'measurements' => Measurement::searchView(
-                $this->bumblebee_id,
+                $this->bumblebeeID,
                 $this->metric,
                 $this->method,
                 $this->types,
@@ -105,33 +85,9 @@ class MeasurementTable extends Component
                 $this->sort_by,
                 $this->orderAscending)
                 ->paginate($this->measurementsPerPage),
+
+            'bumblebees' => Bumblebee::all(),
         ]);
-    }
-
-    public function changed(string $what){
-        debugbar()->info('changed: MeasurementTable');
-        $this->changed = true;
-
-        switch ($what){
-            case ('pool_owner_id'):
-                if($this->pool_owner_id == -1) {
-                    $this->bodiesOfWater = BodiesOfWater::all();
-                    $this->bumblebees = Bumblebee::all();
-                } else {
-                    $this->bodiesOfWater = BodiesOfWater::wherePoolOwnerId($this->pool_owner_id);
-                    $this->bumblebees = Bumblebee::whereOwnerId($this->pool_owner_id);
-                }
-                break;
-            case ('body_of_water_id'):
-                if($this->body_of_water_id == -1) {
-                    $this->bodiesOfWater = BodiesOfWater::wherePoolOwnerId($this->pool_owner_id);
-                    $this->bumblebees = Bumblebee::whereOwnerId($this->pool_owner_id);
-                } else {
-                    $this->bodiesOfWater = BodiesOfWater::wherePoolOwnerId($this->pool_owner_id);
-
-                }
-                break;
-        }
     }
 
     /**
@@ -142,7 +98,7 @@ class MeasurementTable extends Component
     public function excel(){
 
         return redirect('/export/measurements/search')->with([
-            'bumblebeeID' => $this->bumblebee_id,
+            'bumblebeeID' => $this->bumblebeeID,
             'metric' => $this->metric,
             'method' => $this->method,
             'types' => $this->types,
@@ -218,7 +174,7 @@ class MeasurementTable extends Component
         // get all the measurements, not just the paginated ones.
         // must sort by timestamp ascending to get proper order
         $allMeasurements = Measurement::searchView(
-            $this->bumblebee_id,
+            $this->bumblebeeID,
             $this->metric,
             $this->method,
             $this->types,

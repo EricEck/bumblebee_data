@@ -204,7 +204,18 @@ class Measurement extends Model
             ->orderBy('measurement_timestamp', 'desc')
             ->first();
     }
-
+    /**
+     * Oldest non-calibration measurement for bow between two times
+     * @param int $bow_id
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public static function oldestNonCalibrationMeasurementforBowID(int $bow_id){
+        return Measurement::query()
+            ->where('bodies_of_water_id', $bow_id)
+            ->where('calibration_value', 0)
+            ->orderBy('measurement_timestamp', 'asc')
+            ->first();
+    }
 
 
     // METHODS

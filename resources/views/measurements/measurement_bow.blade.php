@@ -3,8 +3,6 @@
         {{ request()->get('niblet') ?? 'All Measurements for a Body of Water'}}
     </x-slot>
 
-    @livewire('measurement-table2', [
-        'params' => $params,
-            ])
+    @livewire('measurement-bow')
 
 </x-app-layout>

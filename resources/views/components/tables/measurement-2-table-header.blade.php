@@ -10,7 +10,7 @@
     </th>
 
     @for($i = 0; $i < $timeColumns; $i++)
-        <th scope="col" class="sticky top-0 left-0 z-10 bg-gray-50 md:px-6 md:py-3 sm:px-2 sm:py-1 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+        <th scope="col" class="sticky top-0 left-0 z-10 bg-gray-50 md:px-6 md:py-3 sm:px-2 sm:py-1 text-left text-xs font-bold text-blue-800 uppercase tracking-wider">
             @if(isset($timeList))
                 {{ $timeList[$i] }}
             @else
