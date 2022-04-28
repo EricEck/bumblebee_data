@@ -96,7 +96,7 @@
             <!-- Measurement Table -->
             <table class="min-w-full divide-y divide-gray-200 relative">
 
-                <x-tables.measurement-2-table-header
+                <x-tables.measurement-bow-table-header
                     :show-actions="true"
                     :time-columns="$timeSlotCount"
                     :time-list="$timeSlots"/>
@@ -105,7 +105,7 @@
 
                 @for($j = 0; $j < count($metricsToDisplay); $j++)
                     @if($metricsToDisplay[$j]['values'])
-                        <x-tables.measurement-2-table-row
+                        <x-tables.measurement-bow-table-row
                             :show-actions="true"
                             :time-columns="$timeSlotCount"
                             :value-display-at-time="$metricsToDisplay[$j]['values']">
@@ -114,7 +114,7 @@
                                 {{$metricsToDisplay[$j]['metric']}} ({{$metricsToDisplay[$j]['unit']}})<br/>
                                 <span class="text-xs italic">{{'('.$metricsToDisplay[$j]['method'].')'}}</span>
                             </x-slot>
-                        </x-tables.measurement-2-table-row>
+                        </x-tables.measurement-bow-table-row>
                     @endif
                 @endfor
 

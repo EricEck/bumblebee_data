@@ -50,16 +50,22 @@ class CalibrationForm extends Component
 
     public function mount(){
         debugbar()->info('CalibrationForm.php::mount()');
+        \Debugbar::info($this->calibration->attributesToArray());
+        \Debugbar::info($this->measurement->attributesToArray());
+
+        if(Session::get("measurement")) {
+            $this->measurement = Session::get("measurement");
+        }
+
+        $this->newCalibration = false;
 
         // update from reference measurement
-        if(Session::get("measurement")){
-            $this->measurement =  Session::get("measurement");
-
-            $this->newCalibration = false;
-
+        if(isset($this->measurement) & !isset($this->calibration)){
             if($this->measurement->calibration_id > 0){
+                // use an existing calibration
                 $this->calibration = $this->measurement->calibration;
             } else {
+                // Create a new calibration
                 $this->calibration = new Calibration();
                 $this->newCalibration = true;
                 $this->calibration->bumblebee_id = $this->measurement->bumblebee_id;
@@ -71,8 +77,6 @@ class CalibrationForm extends Component
                 $this->calibration->effective = 1;
                 $this->calibration->effective_timestamp = $this->measurement->measurement_timestamp;
             }
-        } else {
-            $this->redirect(abort(404));
         }
 
         $this->bumblebees = Bumblebee::all();
@@ -92,14 +96,10 @@ class CalibrationForm extends Component
         // short the string to remove seconds from the effective timestamp both for HTML and to assist in this calibration always being BEFORE the measurement
         $this->calibration_datetime = substr(str_replace(' ', 'T', $this->calibration->effective_timestamp), 0, 16);
     }
-
-    public function render()
-    {
+    public function render(){
         debugbar()->info('CalibrationForm.php::render()');
-        debugbar()->info($this->calibration->attributesToArray());
         return view('livewire.calibration-form');
     }
-
     public function changed(){
 
         debugbar()->info('CalibrationForm.php::changed()');

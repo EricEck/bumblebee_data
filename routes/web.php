@@ -114,21 +114,28 @@ Route::group(['middleware' => ['auth']], function (){
         [MeasurementController::class, 'measurementFormNew'])
         ->name('measurementFormNew');
 
+    // Horizontal Time shifts
     Route::get('measurements/bow',
         [MeasurementController::class, 'measurementBow'])
         ->name('measurementBow');
 
     // using get search parameters
-    Route::get('measurements',
-        [MeasurementController::class, 'measurementSearchTable'])
-    ->name('measurement_search');
+//    Route::get('measurements',
+//        [MeasurementController::class, 'measurementSearchTable'])
+//    ->name('measurement_search');
 
-    Route::get('/calibrations/new',
+    Route::get('calibrations',
+        [CalibrationController::class, 'calibrationTable'])
+        ->name('calibrationTable');
+    Route::get('calibrations/new',
         [CalibrationController::class, 'calibrationFormNew'])
         ->name('calibrationFormNew');
-    Route::get('/calibrations/existing',
+    Route::get('calibrations/existing',
         [CalibrationController::class, 'calibrationFromExisting'])
         ->name('calibrationFormExisting');
+    Route::get('calibrations/edit/{calibration_id}',
+        [CalibrationController::class, 'editCalibrationForm'])
+        ->name('editCalibration');
 
     // Data Table Downloads
 //    Route::get('/export/users/excel', [UserController::class, 'exportExcel']);

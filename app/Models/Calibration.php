@@ -26,6 +26,7 @@ class Calibration extends Model
 {
     use HasFactory;
 
+
     //  these are the fields that are mass fillable
     protected $fillable = [
         'bumblebee_id',// bumblebee model link
@@ -120,6 +121,22 @@ class Calibration extends Model
                 ->where('measurement_timestamp', ">=", $this->effective_timestamp)
                 ->get();
     }
+
+    /**
+     * Remove the calibration and uncalibrate effected measurements
+     * @return void
+     */
+    public function removeCalibrationAndUncalibrateEffectedMeasurements(){
+        Measurement::query()
+            ->where('calibration_id', $this->id)
+            ->update(['calibrated_unit' => '',
+                'calibrated_value' => 0.0,
+                'calibration_value' => 0,
+                'calibration_id' => 0]);
+        $this->effective = 0;
+        $this->save();
+    }
+
 
 
     /**

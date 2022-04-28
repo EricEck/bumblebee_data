@@ -899,6 +899,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .content-center {
   align-content: center;
 }
+.content-evenly {
+  align-content: space-evenly;
+}
 .items-end {
   align-items: flex-end;
 }
@@ -2145,8 +2148,16 @@ Ensure the default browser behavior of the `hidden` attribute.
     display: block;
   }
 
+  .md\:inline {
+    display: inline;
+  }
+
   .md\:flex {
     display: flex;
+  }
+
+  .md\:table-cell {
+    display: table-cell;
   }
 
   .md\:grid {
@@ -2303,6 +2314,10 @@ Ensure the default browser behavior of the `hidden` attribute.
     display: block;
   }
 
+  .lg\:table-cell {
+    display: table-cell;
+  }
+
   .lg\:w-1\/4 {
     width: 25%;
   }
@@ -2327,6 +2342,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   }
 }
 @media (min-width: 1280px) {
+
+  .xl\:table-cell {
+    display: table-cell;
+  }
 
   .xl\:text-lg {
     font-size: 1.125rem;

@@ -35,25 +35,25 @@ class MeasurementController extends Controller
     public function measurementBow(){
         return view('measurements.measurement_bow');
     }
-    /**
-     * Load the Horizontal Time BoW Measurement View 2
-     * @param Request $request
-     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
-     */
-    public function measurementSearchTable(Request $request){
-        $params = $request->all();
-
-        if(isset($params["bow_id"])) {
-            $bow_id = urldecode($params["bow_id"]);
-
-            if ($bodyOfWater = BodiesOfWater::find($bow_id))
-                return view('measurements.bow', [
-                    'params' => $params]);
-        }
-
-        return view('measurements.bow', [
-            'params' => array()]);
-    }
+//    /**
+//     * Load the Horizontal Time BoW Measurement View 2
+//     * @param Request $request
+//     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+//     */
+//    public function measurementSearchTable(Request $request){
+//        $params = $request->all();
+//
+//        if(isset($params["bow_id"])) {
+//            $bow_id = urldecode($params["bow_id"]);
+//
+//            if ($bodyOfWater = BodiesOfWater::find($bow_id))
+//                return view('measurements.bow', [
+//                    'params' => $params]);
+//        }
+//
+//        return view('measurements.bow', [
+//            'params' => array()]);
+//    }
 
     /**
      * VIEW: Show the Measurements View for one bumblebee

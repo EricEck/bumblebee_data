@@ -100,10 +100,10 @@
                         <x-slot name="trigger">
                             <x-nav-link
                                 :active="request()->routeIs('measurementFormNew')
-
                                     |request()->routeIs('measurementBow')
-                                |request()->routeIs('measurements_table')
-                                |request()->routeIs('measurements_table_actual')">
+                                    |request()->routeIs('calibrationTable')
+                                    |request()->routeIs('measurements_table')
+                                    |request()->routeIs('measurements_table_actual')">
                                 {{ __('Measurements') }}
                                 <div class="ml-1">
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -115,11 +115,11 @@
 
                         <x-slot name="content">
 
-                            <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
-                                {{ __('All Measurements') }}
-                            </x-dropdown-link><br>
                             <x-dropdown-link :href="route('measurementBow')" :active="request()->routeIs('measurementBow')">
                                 {{ __('Measurements for a BoW') }}
+                            </x-dropdown-link><br>
+                            <x-dropdown-link :href="route('measurements_table')" :active="request()->routeIs('measurements_table')">
+                                {{ __('All Measurements') }}
                             </x-dropdown-link><br>
                             <x-dropdown-link :href="route('measurements_table_actual')" :active="request()->routeIs('measurements_table_actual')">
                                 {{ __('Actual/Calibrated Measurements') }}
@@ -127,6 +127,9 @@
                             <x-dropdown-link :href="route('measurementFormNew')" :active="request()->routeIs('measurementFormNew')">
                                 {{ __('New Measurement') }}
                             </x-dropdown-link><br>
+                            <x-dropdown-link :href="route('calibrationTable')" :active="request()->routeIs('calibrationTable')">
+                                {{ __('Bumblebee Calibrations') }}
+                            </x-dropdown-link><br/>
                         </x-slot>
                     </x-dropdown>
                 </div>

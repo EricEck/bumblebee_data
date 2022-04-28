@@ -115,7 +115,7 @@
                                     <option selected value="0" disabled>--Which Bumblebee to Calibrate (required)</option>
 
                                     @foreach($bumblebees as $bumblebee)
-                                        <option value="{{ $bumblebee->id }}">{{ $bumblebee->serial_number }}, Current owner: ({{ $bumblebee->owner()->name }})</option>
+                                        <option value="{{ $bumblebee->id }}">{{ $bumblebee->serial_number }}, Current owner: ({{ $bumblebee->owner->name }})</option>
                                     @endforeach
                                 </select>
                             </div>

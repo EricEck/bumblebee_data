@@ -12,6 +12,11 @@ use Illuminate\Support\Facades\Session;
 class CalibrationController extends Controller
 {
 
+    public function calibrationTable(){
+        \Debugbar::info('CalibrationController: calibrationTable');
+        return view('calibrations.index');
+    }
+
     /**
      * Open a new Larawire Calibration Form Page
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
@@ -28,6 +33,26 @@ class CalibrationController extends Controller
         return view('calibrations.calibration_form', [
             'allow_edit' => true,
             'create_new' => true,
+            'calibration' =>$calibration,
+            'measurement' =>$measurement,
+        ]);
+    }
+
+    /**
+     * Open Calibration Form from only an existing Calibration
+     * @param int $calibration_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function editCalibrationForm(int $calibration_id){
+        $calibration = Calibration::find($calibration_id);
+        if(!$calibration) abort(404);
+
+        $measurement = $calibration->effectedMeasurements()[0]; // get the first effected Measurement
+        if(!$measurement) abort(404);
+
+        return view('calibrations.calibration_form', [
+            'allow_edit' => true,
+            'create_new' => false,
             'calibration' =>$calibration,
             'measurement' =>$measurement,
         ]);
