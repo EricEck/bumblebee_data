@@ -183,7 +183,7 @@ class MeasurementController extends Controller
     }
 
     /**
-     * Store a newly created measurement in storage.
+     * Store a newly created measurement in the measurement table
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
@@ -217,7 +217,11 @@ class MeasurementController extends Controller
 
         $request['calibration_value'] = false;
 
-        return response(Measurement::create($request->all()));
+        // Calibrate the measurement if a calibration is available
+        $newMeasurement = Measurement::create($request->all());  // todo: handle the possible failure
+        $newMeasurement->calibrate(); // saves the measurement todo: handle the returned potential exception
+
+        return response($newMeasurement);
     }
 
     /**

@@ -166,11 +166,12 @@ class MeasurementTable extends Component
      * @return void
      */
     public function calibrateMeasurements(){
-        debugbar()->info('calibrateMeasurements');
+        debugbar()->info('MeasurementTable: calibrateMeasurements');
 
         $this->emit('hideCalibrationButton');
         $this->emit('calibrating');   // alpine JS $this.on('saved',() => {}) event
 
+        \Debugbar::info('working');
         // get all the measurements, not just the paginated ones.
         // must sort by timestamp ascending to get proper order
         $allMeasurements = Measurement::searchView(
@@ -183,9 +184,13 @@ class MeasurementTable extends Component
             "time",
             "asc")->get();
 
+        \Debugbar::info('Meas to Cal: '.count($allMeasurements));
+        $i = 1;
+
         foreach ($allMeasurements as $measurement) {
             try {
-                $measurement->calibrate();
+//                $measurement->calibrate();
+                \Debugbar::info('Done: '.$measurement->id.' ('.$i++.')');
             } catch (\Exception $e){
                 debugbar()->error('MeasurementTable::calibrateMeasurements => Error...');
                 debugbar()->error($e);

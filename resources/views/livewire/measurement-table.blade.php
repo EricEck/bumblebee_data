@@ -89,9 +89,10 @@
             </div>
             <div class="w-1/3 relative">
                 <a wire:click="calibrateMeasurements"
-                   x-data="{showCalibrationButton: true}"
-                   x-show="showCalibrationButton"
-                   x-init="@this.on('hideCalibrationButton',() => { showCalibrationButton = false; setTimeout(() => { showCalibrationButton = true; },5000);  })">
+{{--                   x-data="{showCalibrationButton: true}"--}}
+{{--                   x-show="showCalibrationButton"--}}
+{{--                   x-init="@this.on('hideCalibrationButton',() => { showCalibrationButton = false; setTimeout(() => { showCalibrationButton = true; },5000);  })" --}}
+                >
                     <x-buttons.calculate>Cal</x-buttons.calculate>
                 </a>
                 <div class="font-bold text-xs text-blue-700 text-center bg-gray-200 py-4"
