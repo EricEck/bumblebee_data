@@ -59,8 +59,10 @@ class CalibrationForm extends Component
 
         $this->newCalibration = false;
 
-        // update from reference measurement
-        if(isset($this->measurement) & !isset($this->calibration)){
+
+        // update from reference measurement if passed
+        if($this->measurement->id > 0 && $this->calibration->id == 0){
+
             if($this->measurement->calibration_id > 0){
                 // use an existing calibration
                 $this->calibration = $this->measurement->calibration;
@@ -85,6 +87,7 @@ class CalibrationForm extends Component
         $this->meas_methods = $this->calibration->calibrationMethodEnums();
         $this->calibrationTypes = $this->calibration->calibrationTypesForMethod();
         $this->default_output_units = $this->measurement->validOutputUnitsForMetric();
+
 
         $this->effectedMeasurementsCount = count($this->calibration->effectedMeasurements());   // not eloquent
         $this->calibratedMeasurementsCount = count($this->calibration->calibratedMeasurements);

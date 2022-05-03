@@ -10,7 +10,8 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <h2 class="text-xl">Welcome {{ Auth::user()->name }} to Elliptic Works'  Elliptic Einstein Cloud System</h2>
                 <div style="color: #6b7280" class="mt-8 ml-12 mb-4">
-                    <p>Version: {{config('app.name').' '.config('app.app_version')}}</p>
+                    <p>Application Version: {{config('app.name').' v'.config('app.app_version')}}</p>
+                    <p>Laravel Framework: v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})</p>
                     <p>✉ <a href="mailto:eeckstein@ellpticworks.com">click here to email Eric with any questions/issues</a></p>
                     <p>© 2022 Elliptic Works, LLC - All Rights Reserved</p>
                 </div>
