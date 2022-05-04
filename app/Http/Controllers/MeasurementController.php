@@ -245,9 +245,17 @@ class MeasurementController extends Controller
             'calibration_value' => 'exclude'
         ]);
 
-        if (!Bumblebee::find($request['bumblebee_id'])){
-            return response(['message' => 'Bumblebee unit not found'], 200);
+        if(strlen($request['bumblebee_id'])) {
+            $bb = Bumblebee::find($request['bumblebee_id']);
+            if (!$bb) {
+                return response(['message' => 'Bumblebee unit not found'], 200);
+            }
+            // Add the current body of water to the measurement if not already assigned/overridden
+            if(strlen($request['bodies_of_water_id']) == 0){
+                $request['bodies_of_water_id'] = $bb->bodyOfWater()->id;
+            }
         }
+
         $request['calibration_value'] = true;
 
         return response(Measurement::create($request->all()));

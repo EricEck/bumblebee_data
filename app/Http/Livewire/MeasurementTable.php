@@ -189,7 +189,7 @@ class MeasurementTable extends Component
 
         foreach ($allMeasurements as $measurement) {
             try {
-//                $measurement->calibrate();
+                $measurement->calibrate();
                 \Debugbar::info('Done: '.$measurement->id.' ('.$i++.')');
             } catch (\Exception $e){
                 debugbar()->error('MeasurementTable::calibrateMeasurements => Error...');
