@@ -149,6 +149,7 @@ class Measurement extends Model
             ['metric' => 'orp', 'method' => 'probe', 'unit' => 'mV'],
             ['metric' => 'ph', 'method' => 'colorimetric', 'unit' => ''],
             ['metric' => 'conductivity', 'method' => 'probe', 'unit' => 'uS/cm'],
+//            ['metric' => 'TDS', 'method' => 'calculation', 'calculation' => 'tds', 'unit' => 'mg/L'],
             ['metric' => 'temperature', 'method' => 'probe', 'unit' => 'F'],
             ['metric' => 'pressure', 'method' => 'probe', 'unit' => 'psi'],
             ['metric' => 'free chlorine', 'method' => 'colorimetric', 'unit' => 'ppm'],
@@ -239,19 +240,40 @@ class Measurement extends Model
 
         if ($this->calibration_id) {
             if ($this->calibration->effective) {
-                if ($this->doTheCalibrationMath())
+                if ($this->doTheCalibrationMath()) {
+                    $this->patch_UnsetAddedColorimetricFields();    // todo: fix this patch
                     return $this->updateOrFail(); // catch any error on the calling function to this!
+                }
                 return false;
             }
         } elseif ($calibration_id = $this->getEffectiveCalibration()->id) {
             $this->calibration_id = $calibration_id;
-            if ($this->doTheCalibrationMath())
+            if ($this->doTheCalibrationMath()) {
+                $this->patch_UnsetAddedColorimetricFields(); // todo: fix this patch
                 return $this->updateOrFail(); // catch any error on the calling function to this!
+            }
             return false;
         }
 
         $this->clearTheCalibration();
         return $this->updateOrFail();
+    }
+
+    /**
+     * Patch to fix the colorimetric attributed added by doTheCalibrationMath()
+     * @return void
+     */
+    public function patch_UnsetAddedColorimetricFields(){
+        unset($this->violet);
+        unset($this->indigo);
+        unset($this->blue);
+        unset($this->cyan);
+        unset($this->green);
+        unset($this->yellow);
+        unset($this->orange);
+        unset($this->red);
+        unset($this->nearIR);
+        unset($this->clear);
     }
 
     /**

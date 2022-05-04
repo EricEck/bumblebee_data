@@ -146,11 +146,18 @@ class MeasurementBow extends Component
 
         for($mtd = 0; $mtd < count($this->metricsToDisplay); $mtd++){
             $this->metricsToDisplay[$mtd]['values'] = array();
+
             for($ts = 0; $ts < count($this->timeSlots) - 1; $ts++) {
 
                 if($this->metricsToDisplay[$mtd]['method'] == 'calculation'){
                     // if a calculation will perform calculation here
-                    $this->metricsToDisplay[$mtd]['values'][] = '--';
+                    if ($this->metricsToDisplay[$mtd]['calculation'] == 'tds'){
+                        $this->metricsToDisplay[$mtd]['values'][] = '-tds-';
+                    }
+                    if ($this->metricsToDisplay[$mtd]['calculation'] == 'lsi'){
+                        $this->metricsToDisplay[$mtd]['values'][] = '-lsi-';
+                    }
+//                    $this->metricsToDisplay[$mtd]['values'][] = '--';
                 } else {
                     // if actual readings, will bring in those readings here
 
