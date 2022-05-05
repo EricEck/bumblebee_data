@@ -39,7 +39,7 @@
     @if($bodyOfWaterFound)
         @if($measurementsFoundforBow)
 
-            <!-- Time Shift Bar -->
+            <!-- Time Shift Bar and Controls-->
             <div class="md:pb-3 sm:pb-1 flex flex-row content-center">
                 <div class="flex flex-row basis-1/6">
                     <x-buttons.arrow_fast_backward
@@ -55,8 +55,8 @@
                         <div class="text-blue-800 m-auto text-xs">{{$latestMeasurement->measurement_timestamp}}</div>
                     </div>
                 </div>
-                <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1">
-                    <select class="block text-xs text-center appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1 shadow shadow-sm shadow-gray-500">
+                    <select class="block text-xs text-center appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 sm:px-1 px-0.5 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             wire:model="minutesBetweenTimeSlots"
                             wire:change="changed('minutes_between_slots')">
                         <option value="15">15 Minute Period</option>
@@ -69,8 +69,8 @@
                         <option value="1440">24 Hour Period</option>
                     </select>
                 </div>
-                <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1">
-                    <select class="block text-xs text-center appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+                <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1 shadow shadow-sm shadow-gray-500">
+                    <select class="block text-xs text-center appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 sm:px-1 px-0.5 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             wire:model="data_display_type"
                             wire:change="changed('data_display_type')">
                         <option value="raw">Not Calibrated</option>
@@ -104,17 +104,25 @@
                 <tbody class="bg-white divide-y divide-gray-200">
 
                 @for($j = 0; $j < count($metricsToDisplay); $j++)
-                    @if($metricsToDisplay[$j]['values'])
-                        <x-tables.measurement-bow-table-row
-                            :show-actions="true"
-                            :time-columns="$timeSlotCount"
-                            :value-display-at-time="$metricsToDisplay[$j]['values']">
+{{--                    Only display if there exist values AND display is requested --}}
+                    @if(count($metricsToDisplay[$j]['values']) && $metricsToDisplay[$j]['displayDefault'])
+{{--                    Do not display calculation rows when the data is not calibrated--}}
+                        @if(!($metricsToDisplay[$j]['dataType'][0] == 'calc' && $metricsToDisplay[$j]['none'][0] == true))
 
-                            <x-slot name="metric_name">
-                                {{$metricsToDisplay[$j]['metric']}} ({{$metricsToDisplay[$j]['unit']}})<br/>
-                                <span class="text-xs italic">{{'('.$metricsToDisplay[$j]['method'].')'}}</span>
-                            </x-slot>
-                        </x-tables.measurement-bow-table-row>
+                            <x-tables.measurement-bow-table-row
+                                :show-actions="true"
+                                :time-columns="$timeSlotCount"
+                                :value-display-at-time="$metricsToDisplay[$j]['values']"
+                                :value-data-type="$metricsToDisplay[$j]['dataType']"
+                                :value-none="$metricsToDisplay[$j]['none']"
+                                :value-holdover="$metricsToDisplay[$j]['holdOver']">
+
+                                <x-slot name="metric_name">
+                                    {{$metricsToDisplay[$j]['metric']}} ({{$metricsToDisplay[$j]['unit']}})<br/>
+                                    <span class="text-xs italic">{{'('.$metricsToDisplay[$j]['method'].')'}}</span>
+                                </x-slot>
+                            </x-tables.measurement-bow-table-row>
+                        @endif
                     @endif
                 @endfor
 

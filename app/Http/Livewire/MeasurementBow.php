@@ -141,61 +141,20 @@ class MeasurementBow extends Component
         $this->generateMetricsToDisplay();
     }
 
+    /**
+     * Generate & Replace metricsToDisplay array based upon class variables
+     * $this->>timeSlots
+     * $this->data_display_type
+     * @return void
+     */
    private function generateMetricsToDisplay(){
-        $this->metricsToDisplay = Measurement::displayMetricMethodUnits();
 
-        for($mtd = 0; $mtd < count($this->metricsToDisplay); $mtd++){
-            $this->metricsToDisplay[$mtd]['values'] = array();
+       $this->metricsToDisplay = Measurement::fillMetricsTable(
+           $this->bow_id,
+           $this->timeSlots,
+           $this->data_display_type);
 
-            for($ts = 0; $ts < count($this->timeSlots) - 1; $ts++) {
-
-                if($this->metricsToDisplay[$mtd]['method'] == 'calculation'){
-                    // if a calculation will perform calculation here
-                    if ($this->metricsToDisplay[$mtd]['calculation'] == 'tds'){
-                        $this->metricsToDisplay[$mtd]['values'][] = '-tds-';
-                    }
-                    if ($this->metricsToDisplay[$mtd]['calculation'] == 'lsi'){
-                        $this->metricsToDisplay[$mtd]['values'][] = '-lsi-';
-                    }
-//                    $this->metricsToDisplay[$mtd]['values'][] = '--';
-                } else {
-                    // if actual readings, will bring in those readings here
-
-                    // get all the relevant measurements
-                    $tempMeasArray = Measurement::allNonCalibrationBetweenTimesforMetricMethodBowId(
-                        $this->bow_id,
-                        $this->metricsToDisplay[$mtd]['metric'],
-                        $this->metricsToDisplay[$mtd]['method'],
-                        $this->timeSlots[$ts],
-                        $this->timeSlots[$ts + 1]);
-
-                    // TODO: Do we want to add a fetch here for latest OUTside the time measurement?
-
-                    // average them
-                    $valueAverage = 0;
-                    for ($m = 0; $m < count($tempMeasArray); $m++) {
-                        // raw or calibrated value
-                        if($this->data_display_type == "raw") {
-                            if ($tempMeasArray[$m]->colorimetricMethod()) {
-                                $valueAverage += $tempMeasArray[$m]->metricColorimetryValue();
-                            } elseif ($tempMeasArray[$m]->probeMethod()) {
-                                $valueAverage += $tempMeasArray[$m]->valueDecodeNumber();
-                            }
-                        } else {
-                            // Use the calibrated value
-                            $valueAverage += $tempMeasArray[$m]->calibrated_value;
-                        }
-                    }
-                    // return the average OR 'n/a' if no reading
-                    if (count($tempMeasArray)) {
-                        $valueAverage = $valueAverage / count($tempMeasArray);
-                        $this->metricsToDisplay[$mtd]['values'][] = round($valueAverage, 3);
-                    } else {
-                        $this->metricsToDisplay[$mtd]['values'][] = 'n/a';
-                    }
-                }
-            }
-        }
+\Debugbar::info($this->metricsToDisplay);
     }
 
     /**

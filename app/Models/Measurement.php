@@ -143,20 +143,29 @@ class Measurement extends Model
     public static function methodManualEnums(){
         return array('manual_titration', 'manual_colorimetric', 'manual_teststrip', 'manual_probe');
     }
-    public static function displayMetricMethodUnits(){
+    /**
+     * Return an array of all the metrics (measurements and calculations)
+     * @return array[]
+     */
+    public static function allMetricsTable(){
         return array(
-            ['metric' => 'ph', 'method' => 'probe', 'unit' => ''],
-            ['metric' => 'orp', 'method' => 'probe', 'unit' => 'mV'],
-            ['metric' => 'ph', 'method' => 'colorimetric', 'unit' => ''],
-            ['metric' => 'conductivity', 'method' => 'probe', 'unit' => 'uS/cm'],
-//            ['metric' => 'TDS', 'method' => 'calculation', 'calculation' => 'tds', 'unit' => 'mg/L'],
-            ['metric' => 'temperature', 'method' => 'probe', 'unit' => 'F'],
-            ['metric' => 'pressure', 'method' => 'probe', 'unit' => 'psi'],
-            ['metric' => 'free chlorine', 'method' => 'colorimetric', 'unit' => 'ppm'],
-            ['metric' => 'total chlorine', 'method' => 'colorimetric', 'unit' => 'ppm'],
-            ['metric' => 'alkalinity', 'method' => 'colorimetric', 'unit' => 'ppm'],
-            ['metric' => 'calcium', 'method' => 'colorimetric', 'unit' => 'ppm'],
-            ['metric' => 'LSI', 'method' => 'calculation', 'calculation' => 'lsi', 'unit' => ''],
+            ['metric' => 'ph', 'method' => 'probe', 'order' => 0, 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'orp', 'method' => 'probe', 'order' => 1, 'unit' => 'mV', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'ph', 'method' => 'colorimetric', 'order' => 2, 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'conductivity', 'method' => 'probe', 'order' => 3, 'unit' => 'uS/cm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'salinity', 'method' => 'calculation', 'order' => 4, 'calculation' => 'salinity', 'unit' => '%', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'TDS', 'method' => 'calculation', 'order' => 5, 'calculation' => 'tds', 'unit' => 'mg/L', 'displayDefault' => false, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'TDS-x', 'method' => 'calculation', 'order' => 6, 'calculation' => 'tdsIndex', 'unit' => '', 'displayDefault' => false, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'temperature', 'method' => 'probe', 'order' => 7, 'unit' => 'F', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'temperature-x', 'method' => 'calculation', 'order' => 8, 'calculation' => 'temperatureIndex', 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'pressure', 'method' => 'probe', 'order' => 9, 'unit' => 'psi', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'free chlorine', 'method' => 'colorimetric', 'order' => 10, 'unit' => 'ppm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'total chlorine', 'method' => 'colorimetric', 'order' => 11, 'unit' => 'ppm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'alkalinity', 'method' => 'colorimetric', 'order' => 12, 'unit' => 'ppm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'alkalinity-x', 'method' => 'calculation', 'order' => 13, 'calculation' => 'alkalinityIndex', 'unit' => '', 'displayDefault' => false, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'calcium', 'method' => 'colorimetric', 'order' => 14, 'unit' => 'ppm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'calcium-x', 'method' => 'calculation', 'order' => 15, 'calculation' => 'calciumIndex', 'unit' => '', 'displayDefault' => false, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'LSI', 'method' => 'calculation', 'order' => 16, 'calculation' => 'lsi', 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
         );
     }
     public static function allBetweenTimesforBowId(int $bow_id, string $endTime, string $startTime){
@@ -168,7 +177,7 @@ class Measurement extends Model
             ->get();
     }
     /**
-     * Find all non-calibration bow/metric/method between two times
+     * Find all non-calibration Measurements bow/metric/method between two times
      * @param int $bow_id
      * @param string $metric
      * @param string $method
@@ -186,6 +195,24 @@ class Measurement extends Model
             ->where('measurement_timestamp', '>=', $startTime)
             ->orderBy('measurement_timestamp', 'desc')
             ->get();
+    }
+    /**
+     * Find first non-calibration Measurement bow/metric/method alder than a time
+     * @param int $bow_id
+     * @param string $metric
+     * @param string $method
+     * @param string $startTime
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public static function oneNewestNonCalibrationOlderThanforMetricMethodBowId(int $bow_id, string $metric, string $method, string $startTime){
+        return Measurement::query()
+            ->where('calibration_value', 0)
+            ->where('bodies_of_water_id', $bow_id)
+            ->where('metric', $metric)
+            ->where('method', $method)
+            ->where('measurement_timestamp', '<=', $startTime)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->first();
     }
     public static function latestMeasurementforBowID(int $bow_id){
         return Measurement::query()
@@ -218,7 +245,6 @@ class Measurement extends Model
             ->first();
     }
 
-
     // METHODS
 
     public function filled(){
@@ -229,6 +255,150 @@ class Measurement extends Model
             && strlen($this->unit) > 0
             && strlen($this->value) > 0
         );
+    }
+
+    /**
+     * Return a Body of Water's Table of Raw or Calibrated - Taken and Calculated Measurements Grouped by Time Slots
+     * @param int $bow_id
+     * @param array $timeSlots array of N+1 times in mySql datetime format
+     * @param string $data_type enum of 'raw' or
+     * @return array[]
+     */
+    public static function fillMetricsTable(int $bow_id, array $timeSlots, string $data_type ){
+        $metricsTable = self::allMetricsTable();
+
+        // first pass for non-calculated measurements
+        for($mtd = 0; $mtd < count($metricsTable); $mtd++){
+
+            if ($metricsTable[$mtd]['method'] != 'calculation') {
+
+                $metricsTable[$mtd]['values'] = array();
+                $metricsTable[$mtd]['holdOver'] = array();
+                $metricsTable[$mtd]['none'] = array();
+                $metricsTable[$mtd]['dataType'] = array();
+
+                for ($ts = 0; $ts < count($timeSlots) - 1; $ts++) {
+
+                    // if actual readings, will bring in those readings here
+
+                    $metricsTable[$mtd]['holdOver'][$ts] = false;
+                    $metricsTable[$mtd]['none'][$ts] = false;
+
+                    // get all the relevant Measurements between two times (could be zero if none in range)
+                    $tempMeasArray = Measurement::allNonCalibrationBetweenTimesforMetricMethodBowId(
+                        $bow_id,
+                        $metricsTable[$mtd]['metric'],
+                        $metricsTable[$mtd]['method'],
+                        $timeSlots[$ts],
+                        $timeSlots[$ts + 1]);
+
+
+                    // look further back if no measurements
+                    if (count($tempMeasArray) == 0) {
+                        $tempMeasArray[] = Measurement::oneNewestNonCalibrationOlderThanforMetricMethodBowId(
+                            $bow_id,
+                            $metricsTable[$mtd]['metric'],
+                            $metricsTable[$mtd]['method'],
+                            $timeSlots[$ts + 1]
+                        );
+                        // empty the array if query returns null
+                        if ($tempMeasArray[0] == null) {
+                            $metricsTable[$mtd]['none'][$ts] = true;
+                            $tempMeasArray = array();
+                        }
+                        $metricsTable[$mtd]['holdOver'][$ts] = true;   // mark this as a holdover
+                    }
+
+                    // average all measurements within the timeSlot
+                    $valueAverage = 0;
+                    for ($m = 0; $m < count($tempMeasArray); $m++) {
+                        // raw or calibrated value
+                        if ($data_type == "raw") {
+                            $metricsTable[$mtd]['dataType'][$ts] = 'raw';
+                            if ($tempMeasArray[$m]->colorimetricMethod()) {
+                                $valueAverage += $tempMeasArray[$m]->metricColorimetryValue();
+                            } elseif ($tempMeasArray[$m]->probeMethod()) {
+                                $valueAverage += $tempMeasArray[$m]->valueDecodeNumber();
+                            }
+                        } else {
+                            // Use the calibrated/actual value
+                            $metricsTable[$mtd]['dataType'][$ts] = 'cal';
+                            $valueAverage += $tempMeasArray[$m]->calibrated_value;
+                        }
+                    }
+
+                    // return the average OR 0.0 if no reading
+                    if (count($tempMeasArray)) {
+                        $valueAverage = $valueAverage / count($tempMeasArray);
+                        $metricsTable[$mtd]['values'][$ts] = $valueAverage;
+                    } else {
+                        // no measurements in this entry
+                        $metricsTable[$mtd]['values'][$ts] = 0.0;
+                        $metricsTable[$mtd]['none'][$ts] = true;
+                        if ($data_type == "raw") {
+                            $metricsTable[$mtd]['dataType'][$ts] = 'raw';
+                        } else {
+                            $metricsTable[$mtd]['dataType'][$ts] = 'cal';
+                        }
+                    }
+                }
+            }
+        }
+
+        // second pass for calculated measurements
+        for($mtd = 0; $mtd < count($metricsTable); $mtd++){
+
+            if ($metricsTable[$mtd]['method'] == 'calculation') {
+
+                $metricsTable[$mtd]['values'] = array();
+                $metricsTable[$mtd]['holdOver'] = array();
+                $metricsTable[$mtd]['none'] = array();
+                $metricsTable[$mtd]['dataType'] = array();
+
+                // todo: what do we want to do with calculations there are 'raw' only?
+
+                for ($ts = 0; $ts < count($timeSlots) - 1; $ts++) {
+
+                    $metricsTable[$mtd]['holdOver'][$ts]  = false;
+                    $metricsTable[$mtd]['none'][$ts]  = false;
+                    $metricsTable[$mtd]['dataType'][$ts] = 'calc';
+
+                    if ($data_type == 'raw') {
+                        $metricsTable[$mtd]['values'][$ts] = 0;
+                        $metricsTable[$mtd]['none'][$ts] = true;
+                    } else {
+                        // if a calculation will perform calculation here AFTER Measurements are populated
+                        switch ($metricsTable[$mtd]['calculation']) {
+                            case 'tds':
+                                $metricsTable[$mtd]['values'][$ts] = '-tds-';
+                                break;
+                            case 'tdsIndex':
+                                $metricsTable[$mtd]['values'][$ts] = '-tds(x)-';
+                                break;
+                            case 'salinity':
+                                $metricsTable[$mtd]['values'][$ts] = '-salt-';
+                                break;
+                            case 'temperatureIndex':
+                                $metricsTable[$mtd]['values'][$ts] = '-temp(x)-';
+                                break;
+                            case 'alkalinityIndex':
+                                $metricsTable[$mtd]['values'][$ts] = '-alk(x)-';
+                                break;
+                            case 'calciumIndex':
+                                $metricsTable[$mtd]['values'][$ts] = '-clcm(x)-';
+                                break;
+                            case 'lsi':
+                                $metricsTable[$mtd]['values'][$ts] = '-lsi-';
+                                break;
+                            default:
+                                $metricsTable[$mtd]['values'][$ts] = '-???-';
+                                break;
+                        }
+                    }
+                }
+            }
+        }
+        return $metricsTable;
     }
 
     /**
