@@ -110,7 +110,7 @@
                         @if(!($metricsToDisplay[$j]['dataType'][0] == 'calc' && $metricsToDisplay[$j]['none'][0] == true))
 
                             <x-tables.measurement-bow-table-row
-                                :show-actions="true"
+                                :show-actions="false"
                                 :time-columns="$timeSlotCount"
                                 :value-display-at-time="$metricsToDisplay[$j]['values']"
                                 :value-data-type="$metricsToDisplay[$j]['dataType']"

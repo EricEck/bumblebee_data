@@ -36,18 +36,23 @@
             @endif
 
             @if($valueDataType[$i] == 'calc')
-                <x-datahelpers.data-tooltip>
+                @if(is_string($valueDisplayAtTime[$i]))
+                    {{ $valueDisplayAtTime[$i] }}
+                @elseif(is_float($valueDisplayAtTime[$i]))
+                    {{ round($valueDisplayAtTime[$i],3) }}
+                @endif
+                <x-datahelpers.icon-tooltip>
                     <x-slot name="datafield">
-                        {{ $valueDisplayAtTime[$i] }}
+                        c
                     </x-slot>
                     <x-slot name="tooltipfield">
                         @if($valueNone[$i])
-                            Calculation not possible
+                            Calculation not available
                         @else
                             Calculated Data Field
                         @endif
                     </x-slot>
-                </x-datahelpers.data-tooltip>
+                </x-datahelpers.icon-tooltip>
             @endif
 
 
