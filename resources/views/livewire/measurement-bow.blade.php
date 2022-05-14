@@ -73,8 +73,8 @@
                     <select class="block text-xs text-center appearance-none w-full bg-indigo-50 border border-gray-200 text-gray-700 sm:px-1 px-0.5 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                             wire:model="data_display_type"
                             wire:change="changed('data_display_type')">
-                        <option value="raw">Not Calibrated</option>
                         <option value="cal">Calibrated</option>
+                        <option value="raw">Raw Data</option>
                     </select>
                 </div>
                 <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1">

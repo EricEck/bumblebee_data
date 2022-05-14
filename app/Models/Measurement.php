@@ -153,7 +153,7 @@ class Measurement extends Model
             ['metric' => 'orp', 'method' => 'probe', 'order' => 1, 'unit' => 'mV', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
             ['metric' => 'ph', 'method' => 'colorimetric', 'order' => 2, 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
             ['metric' => 'conductivity', 'method' => 'probe', 'order' => 3, 'unit' => 'uS/cm', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
-            ['metric' => 'salinity', 'method' => 'calculation', 'order' => 4, 'calculation' => 'salinity', 'unit' => '%', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
+            ['metric' => 'salinity', 'method' => 'calculation', 'order' => 4, 'calculation' => 'salinity', 'unit' => 'mg/L', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
             ['metric' => 'TDS', 'method' => 'calculation', 'order' => 5, 'calculation' => 'tds', 'unit' => 'mg/L', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
             ['metric' => 'TDS-x', 'method' => 'calculation', 'order' => 6, 'calculation' => 'tdsIndex', 'unit' => '', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
             ['metric' => 'temperature', 'method' => 'probe', 'order' => 7, 'unit' => 'F', 'displayDefault' => true, 'values' =>array(), 'holdOver' =>array(), 'none' => array(), 'dataType' => array() ],
@@ -261,6 +261,17 @@ class Measurement extends Model
      */
     public static function temperatureCtoF(float $tempC){
         return ($tempC * 1.8) +32;
+    }
+
+    /**
+     * Convert Conductivity to Salt Concentration
+     * @param float $conductivity in  uS/cm
+     * @return float in mg/L
+     *
+     * url: https://sciencing.com/convert-centimeters-meters-5329285.html
+     */
+    public static function salinityFromConductivity(float $conductivity): float {
+        return ($conductivity/1000 ** 1.0878) * 0.4665 * 1000;
     }
     /**
      * Convert Conductivity to Total Dissolved Solids
@@ -472,7 +483,9 @@ class Measurement extends Model
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'salinity':
-                                $metricsTable[$mtd]['values'][$ts] = '-salt-';
+                                $metricsTable[$mtd]['values'][$ts] = self::salinityFromConductivity(
+                                    self::findMetricMethodInMetricsTable($metricsTable, 'conductivity', 'probe')['values'][$ts]);
+                                $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'temperatureIndex':
                                 $metricsTable[$mtd]['values'][$ts] = self::temperatureIndex(
@@ -481,31 +494,31 @@ class Measurement extends Model
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'alkalinityIndex':
-                                $metricsTable[$mtd]['values'][$ts] = 'nada';
-//                                $metricsTable[$mtd]['values'][$ts] = self::alkalinityIndex(
-//                                    self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity', 'colorimetric')['values'][$ts]);
+//                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+                                $metricsTable[$mtd]['values'][$ts] = self::alkalinityIndex(
+                                    self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity', 'colorimetric')['values'][$ts]);
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'calciumIndex':
-                                $metricsTable[$mtd]['values'][$ts] = 'nada';
-//                                $metricsTable[$mtd]['values'][$ts] = self::calciumIndex(
-//                                    self::findMetricMethodInMetricsTable($metricsTable, 'calcium', 'colorimetric')['values'][$ts]);
+//                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+                                $metricsTable[$mtd]['values'][$ts] = self::calciumIndex(
+                                    self::findMetricMethodInMetricsTable($metricsTable, 'calcium', 'colorimetric')['values'][$ts]);
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'lsi':
-                                $metricsTable[$mtd]['values'][$ts] = 'nada';
-//                                $ph = self::findMetricMethodInMetricsTable($metricsTable, 'ph', 'probe')['values'][$ts];
-//                                $tdsIndex = self::findMetricMethodInMetricsTable($metricsTable, 'TDS-x', 'calculation')['values'][$ts];
-//                                $temperatureIndex = self::findMetricMethodInMetricsTable($metricsTable, 'temperature-x', 'calculation')['values'][$ts];
-//                                $calciumIndex = self::findMetricMethodInMetricsTable($metricsTable, 'calcium-x', 'calculation')['values'][$ts];
-//                                $alkalinityIndex = self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity-x', 'calculation')['values'][$ts];
-//                                $metricsTable[$mtd]['values'][$ts] = self::lsIndex(
-//                                    $ph,
-//                                    $tdsIndex,
-//                                    $temperatureIndex,
-//                                    $calciumIndex,
-//                                    $alkalinityIndex);
-//                                $metricsTable[$mtd]['none'][$ts] = false;
+//                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+                                $ph = self::findMetricMethodInMetricsTable($metricsTable, 'ph', 'probe')['values'][$ts];
+                                $tdsIndex = self::findMetricMethodInMetricsTable($metricsTable, 'TDS-x', 'calculation')['values'][$ts];
+                                $temperatureIndex = self::findMetricMethodInMetricsTable($metricsTable, 'temperature-x', 'calculation')['values'][$ts];
+                                $calciumIndex = self::findMetricMethodInMetricsTable($metricsTable, 'calcium-x', 'calculation')['values'][$ts];
+                                $alkalinityIndex = self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity-x', 'calculation')['values'][$ts];
+                                $metricsTable[$mtd]['values'][$ts] = self::lsIndex(
+                                    $ph,
+                                    $tdsIndex,
+                                    $temperatureIndex,
+                                    $calciumIndex,
+                                    $alkalinityIndex);
+                                $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             default:
                                 $metricsTable[$mtd]['values'][$ts] = '-???-';

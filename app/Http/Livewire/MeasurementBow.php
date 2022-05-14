@@ -44,7 +44,7 @@ class MeasurementBow extends Component
         $this->measurementsFoundforBow = false;
         $this->timeSlotCount = 4;
         $this->minutesBetweenTimeSlots = 15;
-        $this->data_display_type = "raw";
+        $this->data_display_type = "cal";
     }
     public function render(){
         if ($this->timeSlots) {
