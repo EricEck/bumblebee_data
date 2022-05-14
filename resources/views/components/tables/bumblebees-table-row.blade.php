@@ -1,5 +1,6 @@
 @props(['showActions' => 0, 'bumblebee' => new \App\Models\Bumblebee()])
-@php($lastMeasurement = $bumblebee->measurements->last())
+@php($lastMeasurement = \App\Models\Measurement::bumblebeeIdLastMeasurement($bumblebee->id))
+{{--@php($lastMeasurement = null)--}}
 <tr>
     <td class="border px-4 py-2">{{ $bumblebee->id }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->serial_number }}</td>
@@ -9,7 +10,7 @@
     <td class="border px-4 py-2">{{ $bumblebee->owner ? $bumblebee->owner->name : '--' }}</td>
     <td class="border px-4 py-2">{!! $bumblebee->removed_from_service  !!}</td>
     <td class="border px-4 py-2">{{ $bumblebee->bodyOfWater() ? $bumblebee->bodyOfWater()->name : 'None' }}</td>
-    <td class="border px-4 py-2">{{ empty($lastMeasurement) ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
+    <td class="border px-4 py-2">{{ $lastMeasurement == null ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->updated_at->diffForHumans() }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
 

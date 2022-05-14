@@ -18,16 +18,18 @@ class BumblebeeTable extends Component
 
     public function mount(){
         debugbar()->info('mount: BumblebeeTable');
+
+
     }
 
     public function render()
     {
         debugbar()->info('render: BumblebeeTable');
 
-        return view('livewire.bumblebee-table',[
+        return view('livewire.bumblebee-table', [
             'bumblebees' => Bumblebee::searchView($this->searchString)
                 ->orderBy($this->orderBy, $this->orderAscending ? 'asc' : 'desc')
-                ->paginate($this->bumblebeesPerPage)
+                ->paginate($this->bumblebeesPerPage),
         ]);
     }
 

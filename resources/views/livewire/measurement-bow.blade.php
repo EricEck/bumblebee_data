@@ -50,7 +50,7 @@
                         wire:click="newerShift"/>
                 </div>
                 <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1 align-middle">
-                    <div class="flex flex-col items-center">
+                    <div class="flex flex-col items-center pl-2 sm:pl-0">
                         <div class="text-blue-800 m-auto text-xs">Newest: {{$latestMeasurementTime->longRelativeToNowDiffForHumans()}}</div>
                         <div class="text-blue-800 m-auto text-xs">{{$latestMeasurement->measurement_timestamp}}</div>
                     </div>
@@ -78,7 +78,7 @@
                     </select>
                 </div>
                 <div class="flex flex-row basis-1/6 bg-indigo-50 border-gray-200 border border-1">
-                    <div class="">
+                    <div class="pl-2">
                         <p class="text-blue-800 text-center text-xs">Oldest: {{$oldestMeasurementTime->longRelativeToNowDiffForHumans()}}</p>
                         <p class="text-blue-800 text-center text-xs">{{$oldestMeasurement->measurement_timestamp}}</p>
                     </div>

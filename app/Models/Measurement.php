@@ -99,6 +99,12 @@ class Measurement extends Model
 
     // STATIC METHODS
 
+    public static function bumblebeeIdLastMeasurement(int $bb_id): Measurement|null {
+        return Measurement::query()
+            ->where('bumblebee_id', $bb_id)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->first();
+    }
     /**
      * All Possible metrics for measurements
      *
