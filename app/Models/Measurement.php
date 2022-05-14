@@ -481,28 +481,31 @@ class Measurement extends Model
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'alkalinityIndex':
-                                $metricsTable[$mtd]['values'][$ts] = self::alkalinityIndex(
-                                    self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity', 'colorimetric')['values'][$ts]);
+                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+//                                $metricsTable[$mtd]['values'][$ts] = self::alkalinityIndex(
+//                                    self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity', 'colorimetric')['values'][$ts]);
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'calciumIndex':
-                                $metricsTable[$mtd]['values'][$ts] = self::calciumIndex(
-                                    self::findMetricMethodInMetricsTable($metricsTable, 'calcium', 'colorimetric')['values'][$ts]);
+                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+//                                $metricsTable[$mtd]['values'][$ts] = self::calciumIndex(
+//                                    self::findMetricMethodInMetricsTable($metricsTable, 'calcium', 'colorimetric')['values'][$ts]);
                                 $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             case 'lsi':
-                                $ph = self::findMetricMethodInMetricsTable($metricsTable, 'ph', 'probe')['values'][$ts];
-                                $tdsIndex = self::findMetricMethodInMetricsTable($metricsTable, 'TDS-x', 'calculation')['values'][$ts];
-                                $temperatureIndex = self::findMetricMethodInMetricsTable($metricsTable, 'temperature-x', 'calculation')['values'][$ts];
-                                $calciumIndex = self::findMetricMethodInMetricsTable($metricsTable, 'calcium-x', 'calculation')['values'][$ts];
-                                $alkalinityIndex = self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity-x', 'calculation')['values'][$ts];
-                                $metricsTable[$mtd]['values'][$ts] = self::lsIndex(
-                                    $ph,
-                                    $tdsIndex,
-                                    $temperatureIndex,
-                                    $calciumIndex,
-                                    $alkalinityIndex);
-                                $metricsTable[$mtd]['none'][$ts] = false;
+                                $metricsTable[$mtd]['values'][$ts] = 'nada';
+//                                $ph = self::findMetricMethodInMetricsTable($metricsTable, 'ph', 'probe')['values'][$ts];
+//                                $tdsIndex = self::findMetricMethodInMetricsTable($metricsTable, 'TDS-x', 'calculation')['values'][$ts];
+//                                $temperatureIndex = self::findMetricMethodInMetricsTable($metricsTable, 'temperature-x', 'calculation')['values'][$ts];
+//                                $calciumIndex = self::findMetricMethodInMetricsTable($metricsTable, 'calcium-x', 'calculation')['values'][$ts];
+//                                $alkalinityIndex = self::findMetricMethodInMetricsTable($metricsTable, 'alkalinity-x', 'calculation')['values'][$ts];
+//                                $metricsTable[$mtd]['values'][$ts] = self::lsIndex(
+//                                    $ph,
+//                                    $tdsIndex,
+//                                    $temperatureIndex,
+//                                    $calciumIndex,
+//                                    $alkalinityIndex);
+//                                $metricsTable[$mtd]['none'][$ts] = false;
                                 break;
                             default:
                                 $metricsTable[$mtd]['values'][$ts] = '-???-';
