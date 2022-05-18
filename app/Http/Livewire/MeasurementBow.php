@@ -39,23 +39,30 @@ class MeasurementBow extends Component
         $this->poolOwners = User::allPoolOwners();
         $this->pool_owner_id = 0;
         $this->bodiesOfWater = BodiesOfWater::all();
-        $this->bow_id = 0;
+
         $this->bodyOfWaterFound = false;
         $this->measurementsFoundforBow = false;
         $this->timeSlotCount = 4;
         $this->minutesBetweenTimeSlots = 15;
         $this->data_display_type = "cal";
+
+        if ($this->bow_id){
+            if(!$this->setupForBodyOfWater()){
+                abort(403, 'Body of Water ID Not Found');
+            }
+        }
     }
     public function render(){
+        debugbar()->info('render: MeasurementBow');
         if ($this->timeSlots) {
             $this->atNewest = $this->timeSlotsContainNewestMeasurement();
             $this->atOldest = $this->timeSlotsContainOldestMeasurement();
         }
-
-        debugbar()->info('render: MeasurementBow');
         return view('livewire.measurement-bow');
     }
-    public function changed($what = ''){
+
+
+    public function changed(string $what = ''){
         debugbar()->info('changed: MeasurementBow:: '.$what);
 
         switch ($what){
@@ -70,28 +77,13 @@ class MeasurementBow extends Component
                 $this->bow_id = 0;
                 break;
             case ('bow_id'):
-                $this->bodyOfWaterFound = false;
-                $this->measurementsFoundforBow = false;
-                if($this->bodyOfWater = BodiesOfWater::find($this->bow_id)){
-                    $this->bodyOfWaterFound = true;
-                    $this->pool_owner_id = $this->bodyOfWater->owner->id;
-                    if(Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id)){
-                        $this->measurementsFoundforBow = true;
-
-                        $this->latestMeasurement = Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id);
-                        $this->oldestMeasurement = Measurement::oldestNonCalibrationMeasurementforBowID($this->bow_id);
-                        $this->latestMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
-                        $this->oldestMeasurementTime = Carbon::parse($this->oldestMeasurement->measurement_timestamp);
-
-                        $this->latestDisplayMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
-                        $this->getNearestTimeRoundedUp($this->latestDisplayMeasurementTime, $this->minutesBetweenTimeSlots);
-
-                        $this->updateMinutesBetweenSlots($this->minutesBetweenTimeSlots);
-                    }
+                if(!$this->setupForBodyOfWater()){
+                    abort(403, 'Body of Water ID Not Found');
                 }
                 break;
             case ('minutes_between_slots'):
                 $this->updateMinutesBetweenSlots($this->minutesBetweenTimeSlots);
+                $this->generateMetricsToDisplay();
                 break;
             case ('data_display_type'):
                 $this->generateMetricsToDisplay();
@@ -99,19 +91,51 @@ class MeasurementBow extends Component
         }
     }
 
+    /**
+     * Setup timeslots and metric display for a body of water
+     * @return bool success
+     */
+    public function setupForBodyOfWater(){
+        $this->bodyOfWaterFound = false;
+        $this->measurementsFoundforBow = false;
+        if($this->bodyOfWater = BodiesOfWater::find($this->bow_id)){
+            $this->bodyOfWaterFound = true;
+            $this->pool_owner_id = $this->bodyOfWater->owner->id;
+            if(Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id)){
+                $this->measurementsFoundforBow = true;
+
+                $this->latestMeasurement = Measurement::latestNonCalibrationMeasurementforBowID($this->bow_id);
+                $this->oldestMeasurement = Measurement::oldestNonCalibrationMeasurementforBowID($this->bow_id);
+                $this->latestMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
+                $this->oldestMeasurementTime = Carbon::parse($this->oldestMeasurement->measurement_timestamp);
+
+                $this->latestDisplayMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
+                $this->getNearestTimeRoundedUp($this->latestDisplayMeasurementTime, $this->minutesBetweenTimeSlots);
+
+                $this->updateMinutesBetweenSlots($this->minutesBetweenTimeSlots);
+                $this->generateMetricsToDisplay();
+                return true;
+            }
+        }
+        return false;
+    }
+
     // METHODS supporting Livewire
 
     public function olderShift(){
         $this->shiftBodyOfWaterDataTimeSlots( -1);
+        $this->generateMetricsToDisplay();
     }
     public function oldestShift(){
         $this->latestDisplayMeasurementTime = Carbon::parse($this->oldestMeasurement->measurement_timestamp);
         $this->getNearestTimeRoundedUp($this->latestDisplayMeasurementTime, $this->minutesBetweenTimeSlots);
         $this->latestDisplayMeasurementTime->addMinutes($this->minutesBetweenTimeSlots);
         $this->updateMinutesBetweenSlots($this->minutesBetweenTimeSlots);
+        $this->generateMetricsToDisplay();
     }
     public function newerShift(){
         $this->shiftBodyOfWaterDataTimeSlots( 1);
+        $this->generateMetricsToDisplay();
     }
     public function newestShift(){
         $this->latestDisplayMeasurementTime = Carbon::parse($this->latestMeasurement->measurement_timestamp);
@@ -126,7 +150,6 @@ class MeasurementBow extends Component
             $this->minutesBetweenTimeSlots,
             $this->timeSlotCount,
             $this->minutesBetweenTimeSlots);
-
         $this->generateMetricsToDisplay();
     }
     public function updateMinutesBetweenSlots($minutesBetweenTimeSlots){
@@ -138,8 +161,11 @@ class MeasurementBow extends Component
             $this->timeSlotCount,
             $minutesBetweenTimeSlots);
 
+
         $this->generateMetricsToDisplay();
     }
+
+
 
     /**
      * Generate & Replace metricsToDisplay array based upon class variables
@@ -153,8 +179,6 @@ class MeasurementBow extends Component
            $this->bow_id,
            $this->timeSlots,
            $this->data_display_type);
-
-\Debugbar::info($this->metricsToDisplay);
     }
 
     /**

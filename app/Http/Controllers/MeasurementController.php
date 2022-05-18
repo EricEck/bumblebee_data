@@ -29,12 +29,21 @@ class MeasurementController extends Controller
     }
 
     /**
-     * Show all measurements for a body of water
+     * Show all measurements for any body of water
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function measurementBow(){
-        return view('measurements.measurement_bow');
+        return view('measurements.measurement_bow', ['bow_id' => -1]);
     }
+
+    /**
+     * Show all measurements for a specific  body of water
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function measurementBowById(int $bow_id){
+        return view('measurements.measurement_bow', ['bow_id' => $bow_id]);
+    }
+
 //    /**
 //     * Load the Horizontal Time BoW Measurement View 2
 //     * @param Request $request
