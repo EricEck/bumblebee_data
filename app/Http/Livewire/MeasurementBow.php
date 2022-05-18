@@ -46,7 +46,7 @@ class MeasurementBow extends Component
         $this->minutesBetweenTimeSlots = 15;
         $this->data_display_type = "cal";
 
-        if ($this->bow_id){
+        if ($this->bow_id > 0){
             if(!$this->setupForBodyOfWater()){
                 abort(403, 'Body of Water ID Not Found');
             }

@@ -33,7 +33,7 @@ class MeasurementController extends Controller
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
      */
     public function measurementBow(){
-        return view('measurements.measurement_bow', ['bow_id' => -1]);
+        return view('measurements.measurement_bow', ['bow_id' => 0]);
     }
 
     /**
