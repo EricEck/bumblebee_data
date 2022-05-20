@@ -530,6 +530,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .col-auto {
   grid-column: auto;
 }
+.col-span-5 {
+  grid-column: span 5 / span 5;
+}
 .float-right {
   float: right;
 }
@@ -569,13 +572,17 @@ Ensure the default browser behavior of the `hidden` attribute.
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
+.mx-0 {
+  margin-left: 0px;
+  margin-right: 0px;
+}
 .-my-2 {
   margin-top: -0.5rem;
   margin-bottom: -0.5rem;
 }
-.mx-0 {
-  margin-left: 0px;
-  margin-right: 0px;
+.my-1 {
+  margin-top: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 .mt-8 {
   margin-top: 2rem;
@@ -819,6 +826,12 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .basis-1\/5 {
   flex-basis: 20%;
+}
+.basis-1\/4 {
+  flex-basis: 25%;
+}
+.basis-1\/2 {
+  flex-basis: 50%;
 }
 .table-auto {
   table-layout: auto;
@@ -1157,9 +1170,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .p-2 {
   padding: 0.5rem;
 }
-.p-0 {
-  padding: 0px;
-}
 .p-1 {
   padding: 0.25rem;
 }
@@ -1223,6 +1233,14 @@ Ensure the default browser behavior of the `hidden` attribute.
   padding-left: 2rem;
   padding-right: 2rem;
 }
+.px-0\.5 {
+  padding-left: 0.125rem;
+  padding-right: 0.125rem;
+}
+.px-0 {
+  padding-left: 0px;
+  padding-right: 0px;
+}
 .py-5 {
   padding-top: 1.25rem;
   padding-bottom: 1.25rem;
@@ -1238,14 +1256,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .py-1\.5 {
   padding-top: 0.375rem;
   padding-bottom: 0.375rem;
-}
-.px-0 {
-  padding-left: 0px;
-  padding-right: 0px;
-}
-.px-0\.5 {
-  padding-left: 0.125rem;
-  padding-right: 0.125rem;
 }
 .pt-8 {
   padding-top: 2rem;
@@ -1280,6 +1290,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pr-8 {
   padding-right: 2rem;
 }
+.pl-2 {
+  padding-left: 0.5rem;
+}
 .pt-0\.5 {
   padding-top: 0.125rem;
 }
@@ -1307,9 +1320,6 @@ Ensure the default browser behavior of the `hidden` attribute.
 .pr-1 {
   padding-right: 0.25rem;
 }
-.pl-2 {
-  padding-left: 0.5rem;
-}
 .pl-4 {
   padding-left: 1rem;
 }
@@ -1318,6 +1328,9 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .pl-10 {
   padding-left: 2.5rem;
+}
+.pb-0 {
+  padding-bottom: 0px;
 }
 .text-left {
   text-align: left;
@@ -2061,6 +2074,11 @@ Ensure the default browser behavior of the `hidden` attribute.
     padding-right: 0px;
   }
 
+  .sm\:px-1 {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+
   .sm\:px-2 {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -2069,11 +2087,6 @@ Ensure the default browser behavior of the `hidden` attribute.
   .sm\:py-1 {
     padding-top: 0.25rem;
     padding-bottom: 0.25rem;
-  }
-
-  .sm\:px-1 {
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
   }
 
   .sm\:pt-0 {
@@ -2090,6 +2103,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .sm\:pb-1 {
     padding-bottom: 0.25rem;
+  }
+
+  .sm\:pl-0 {
+    padding-left: 0px;
   }
 
   .sm\:text-right {
@@ -2277,11 +2294,6 @@ Ensure the default browser behavior of the `hidden` attribute.
     padding-bottom: 0.5rem;
   }
 
-  .md\:px-2 {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-  }
-
   .md\:pl-4 {
     padding-left: 1rem;
   }
@@ -2292,6 +2304,10 @@ Ensure the default browser behavior of the `hidden` attribute.
 
   .md\:pb-3 {
     padding-bottom: 0.75rem;
+  }
+
+  .md\:pb-2 {
+    padding-bottom: 0.5rem;
   }
 
   .md\:text-xl {
@@ -2336,6 +2352,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   .lg\:px-8 {
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+
+  .lg\:pb-3 {
+    padding-bottom: 0.75rem;
   }
 
   .lg\:text-sm {

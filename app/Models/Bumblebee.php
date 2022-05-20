@@ -92,6 +92,17 @@ class Bumblebee extends Authenticatable
 
     // METHODS
 
+    /**
+     * Is this assigned to Elliptic Product
+     * @return bool
+     */
+    public function isEllipticProduct(): bool {
+        if ($this->ellipticProduct === null){
+            return false;
+        }
+        return true;
+    }
+
     public function bodyOfWater(){
         if($this->ellipticProduct)
             if($this->ellipticProduct->bowComponent)

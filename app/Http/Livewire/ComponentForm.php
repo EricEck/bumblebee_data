@@ -36,6 +36,7 @@ class ComponentForm extends Component
     public $poolOwners;
     public int $pool_owner_id;
     public $bodiesOfWater;
+    public int $installation_location_id, $bodies_of_water_id;
 
     // Form Flags & Messaging
     public bool $showBack, $allow_edit, $create_new;
@@ -72,7 +73,7 @@ class ComponentForm extends Component
     public function mount(){
         debugbar()->info('mount:ComponentForm');
         $this->componentManufacturers = ComponentManufacturer::allEllipticFirst();
-        $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);
+
         $this->showAddComponentManufacturer = false;
         $this->showAddComponentLocation = false;
 
@@ -88,7 +89,16 @@ class ComponentForm extends Component
                 $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
             }
         }
+
+        $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bowComponent->bodies_of_water_id);
+        $this->installation_location_id = $this->bowComponent->installation_location_id;
+        $this->bodies_of_water_id = $this->bowComponent->bodies_of_water_id;
+
         $this->ellipticProductsAvailable = EllipticProduct::allAvailable();
+        $ownersProducts = EllipticProduct::allOwnedByUserId($this->pool_owner_id);
+        foreach ($ownersProducts as $ownersProduct) {
+            $this->ellipticProductsAvailable->push($ownersProduct);
+        }
 
         $this->poolOwners = User::allPoolOwners();
     }
@@ -124,8 +134,8 @@ class ComponentForm extends Component
         $this->componentManufacturers = ComponentManufacturer::allEllipticFirst();  // reload the equipement mfg
     }
 
-    public function changed(){
-        debugbar()->info('ComponentForm Changed');
+    public function changed($what = ''){
+        debugbar()->info('ComponentForm Changed: '.$what);
         debugbar()->info($this->productModelId);
         debugbar()->info($this->bowComponent->filled());
 
@@ -135,6 +145,27 @@ class ComponentForm extends Component
             $this->ellipticProductsAvailable = EllipticProduct::allAvailableByModelId($this->productModelId);
             $this->ellipticProductModel = EllipticModel::find($this->productModelId);
         }
+
+        switch($what){
+            case('pool_owner_id'):
+                $this->bodies_of_water_id = 0;
+                $this->bodiesOfWater = BodiesOfWater::allForPoolOwnerId($this->pool_owner_id);
+                $this->installation_location_id = 0;
+                break;
+            case('bodies_of_water_id'):
+                $this->installation_location_id = 0;
+                $this->componentLocations = BowComponentLocation::allForBodyOfWaterId($this->bodies_of_water_id);
+                break;
+            case('installation_location_id'):
+                break;
+        }
+
+        $this->ellipticProductsAvailable = EllipticProduct::allAvailable();
+        $ownersProducts = EllipticProduct::allOwnedByUserId($this->pool_owner_id);
+        foreach ($ownersProducts as $ownersProduct) {
+            $this->ellipticProductsAvailable->push($ownersProduct);
+        }
+
 
         $this->readyToSave = false;
         if($this->bowComponent->filled())
@@ -172,7 +203,14 @@ class ComponentForm extends Component
             }
         }
 
+        $this->installation_location_id = $this->bowComponent->installation_location_id;
+        $this->bodies_of_water_id = $this->bowComponent->bodies_of_water_id;
+
         $this->ellipticProductsAvailable = EllipticProduct::allAvailable();
+        $ownersProducts = EllipticProduct::allOwnedByUserId($this->pool_owner_id);
+        foreach ($ownersProducts as $ownersProduct) {
+            $this->ellipticProductsAvailable->push($ownersProduct);
+        }
 
         $this->showAddComponentManufacturer = false;
         $this->readyToSave = false;
@@ -184,14 +222,16 @@ class ComponentForm extends Component
     public function save(){
         debugbar()->info('Saving bowComponent');
 
-         // run validation rule
-        $validatedData = $this->validate();
+
+
 //        debugbar()->info($this->bowComponent->attributesToArray());
 //        debugbar()->info($this->bowComponent->modelNumber());
 //        debugbar()->info($this->bowComponent->serialNumber());
 
-
-
+        $this->bowComponent->bodies_of_water_id = $this->bodies_of_water_id;
+        $this->bowComponent->installation_location_id = $this->installation_location_id;
+        // run validation rule
+        $validatedData = $this->validate();
         try {
             $this->bowComponent->saveOrFail();
             debugbar()->info('bowComponent Saved');

@@ -69,12 +69,12 @@ class EllipticProduct extends Model
     public function bowComponent(){
         return $this->belongsTo(BowComponent::class, 'id', 'elliptic_product_id');
     }
+    /**
+     * Get the body of Water for this product
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function bodyOfWater(){
-        return $this->hasOneThrough(
-            BodiesOfWater::class,
-            BowComponent::class,
-            'bodies_of_water_id',
-            'id');
+        return $this->bowComponent->bodyOfWater();
     }
     public function owner(){
         return $this->hasOne(User::class, 'id', 'pool_owner_id');

@@ -6,11 +6,20 @@
     <td class="border px-4 py-2">{{ $bumblebee->serial_number }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->manufactured_date }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->current_version }}</td>
-    <td class="border px-4 py-2">{{ $bumblebee->ellipticProduct ? 'Yes' : 'No' }}</td>
-    <td class="border px-4 py-2">{{ $bumblebee->owner ? $bumblebee->owner->name : '--' }}</td>
-    <td class="border px-4 py-2">{!! $bumblebee->removed_from_service  !!}</td>
-    <td class="border px-4 py-2">{{ $bumblebee->bodyOfWater() ? $bumblebee->bodyOfWater()->name : 'None' }}</td>
-    <td class="border px-4 py-2">{{ $lastMeasurement == null ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
+    @if($bumblebee->isEllipticProduct())
+        <td class="border px-4 py-2">Yes</td>
+        <td class="border px-4 py-2">{{ $bumblebee->owner ? $bumblebee->owner->name : '--' }}</td>
+        <td class="border px-4 py-2">{!! $bumblebee->removed_from_service ? 'No' : 'Yes'  !!}</td>
+        <td class="border px-4 py-2">{{ $bumblebee->bodyOfWater() ? $bumblebee->bodyOfWater()->name : 'None' }}</td>
+        <td class="border px-4 py-2">{{ $lastMeasurement == null ? 'No Measurements' : $lastMeasurement->created_at->diffForHumans() }}</td>
+    @else
+        <td class="border px-4 py-2">No</td>
+        <td class="border px-4 py-2">--</td>
+        <td class="border px-4 py-2">--</td>
+        <td class="border px-4 py-2">--</td>
+        <td class="border px-4 py-2">--</td>
+    @endif
+
     <td class="border px-4 py-2">{{ $bumblebee->updated_at->diffForHumans() }}</td>
     <td class="border px-4 py-2">{{ $bumblebee->created_at->diffForHumans() }}</td>
 

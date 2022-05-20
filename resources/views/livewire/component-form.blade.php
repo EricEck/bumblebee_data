@@ -53,7 +53,7 @@
 
             <x-forms.field-input-select
                 allow-edit={{$allow_edit}}
-                change-method="changed"
+                    change-method="changed('pool_owner_id')"
                 model-method="pool_owner_id"
                 label="Pool Owner">
                 <x-slot name="first_option">
@@ -67,11 +67,10 @@
             </x-forms.field-input-select>
 
             @if($pool_owner_id > 0)
-                @php($bodiesOfWater = \App\Models\BodiesOfWater::where('pool_owner_id', $pool_owner_id)->get())
                 <x-forms.field-input-select
                     allow-edit={{$allow_edit}}
-                    change-method="changed"
-                    model-method="bowComponent.bodies_of_water_id"
+                    change-method="changed('bodies_of_water_id')"
+                    model-method="bodies_of_water_id"
                     label="Body Of Water">
                     <x-slot name="first_option">
                         -- Select Body of Water (required)
@@ -84,106 +83,55 @@
                 </x-forms.field-input-select>
             @endif
 
-            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                         value="Name"/>
-                <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                    <input type="text"
-                           wire:model.lazy="bowComponent.name"
-                           wire:change="changed"
-                           placeholder="identifying name or labeled part"
-                           {{ $allow_edit ?? '' ?  '' : 'disabled'}}
-                           class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                </div>
-            </div>
+        <!-- Component Locations -->
+            @if($bodies_of_water_id > 0)
 
-            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                         value="Description"/>
-                <div class="mt-0.5 sm:mt-0 sm:col-span-4">
-                    <textarea wire:model.lazy="bowComponent.description"
-                              wire:change="changed"
-                              placeholder="important details about this component..."
-                              {{ $allow_edit ?  '' : 'disabled'}}
-                              class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                    </textarea>
-                </div>
-            </div>
+                <x-forms.field-input-select
+                    allow-edit="allow_edit"
+                    change-method="changed('installation_location_id')"
+                    model-method="installation_location_id"
+                    label="Installation Location">
 
-            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                         value="Installed now?"/>
-                <div class="mt-0.5 sm:mt-0 sm:col-span-1">
-                    <select wire:model.lazy="bowComponent.installed_now"
-                            wire:change="changed"
-                            {{ $allow_edit ?  '' : 'disabled'}}
-                            class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                        <option value="0">No</option>
-                        <option value="1">Yes</option>
-                    </select>
-                </div>
-            </div>
+                    <x-slot name="first_option">
+                        -- Select Installation Location (required)
+                    </x-slot>
 
-            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                         value="Installation Date"/>
-                <div class="mt-0.5 sm:mt-0 sm:col-span-2">
-                    <input type="date"
-                           wire:model.lazy="bowComponent.installation_date"
-                           wire:change="changed"
-                           placeholder="identifying name or labeled part"
-                           {{ $allow_edit ?? '' ?  '' : 'disabled'}}
-                           class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
-                </div>
-                <div class="mt-0.5 sm:mt-0 sm:col-span-2">
-                    <p class="text-sm text-indigo-400 italic">(estimate if not known)</p>
-                </div>
-            </div>
+                    <x-slot name="select_options">
+                        @foreach($componentLocations as $componentLocation)
+                            <option value="{{$componentLocation->id}}">{{ $componentLocation->name }}</option>
+                        @endforeach
+                    </x-slot>
 
-            <!-- Component Locations -->
-            <x-forms.field-input-select
-                allow-edit="allow_edit"
-                change-method="changed"
-                model-method="bowComponent.installation_location_id"
-                label="Installation Location">
+                    <x-slot name="explanation">
+                        @if(!$showAddComponentLocation)
+                            <a href="" wire:click.prevent="addComponentLocation">
+                                <x-buttons.new >Add Location</x-buttons.new>
+                            </a>
+                        @else
+                            <a href="" wire:click.prevent="closeAddComponentLocation">
+                                <x-buttons.close>Close</x-buttons.close>
+                            </a>
+                        @endif
+                    </x-slot>
+                </x-forms.field-input-select>
 
-                <x-slot name="first_option">
-                    -- Select Installation Location (required)
-                </x-slot>
+                <!-- New Component Location -->
+                @if($showAddComponentLocation)
+                    <div class="md:w-3/4 sm:w-full mx-auto md:my-5 sm:my-2 md:p-5 sm:p-2  bg-gray-50 shadow sm:shadow-sm md:shadow-md border border-gray-200 border-2">
+                        @livewire('component-location-form', [
+                             'create_new' => true,
+                             'allow_edit' => true,
+                             'closeAfterSaved' => true,
+                             'showBack' => false,
+                             'showClose' => true,
+                             'bow_id' => $bowComponent->bodies_of_water_id,
+                             'componentLocation' => $newComponentLocation])
+                    </div>
+                @endif
 
-                <x-slot name="select_options">
-                    @foreach($componentLocations as $componentLocation)
-                        <option value="{{$componentLocation->id}}">{{ $componentLocation->name }}</option>
-                    @endforeach
-                </x-slot>
-
-                <x-slot name="explanation">
-                    @if(!$showAddComponentLocation)
-                        <a href="" wire:click.prevent="addComponentLocation">
-                            <x-buttons.new >Add Location</x-buttons.new>
-                        </a>
-                    @else
-                        <a href="" wire:click.prevent="closeAddComponentLocation">
-                            <x-buttons.close>Close</x-buttons.close>
-                        </a>
-                    @endif
-                </x-slot>
-            </x-forms.field-input-select>
-            <!-- New Component Location -->
-            @if($showAddComponentLocation)
-                <div class="md:w-3/4 sm:w-full mx-auto md:my-5 sm:my-2 md:p-5 sm:p-2  bg-gray-50 shadow sm:shadow-sm md:shadow-md border border-gray-200 border-2">
-                    @livewire('component-location-form', [
-                         'create_new' => true,
-                         'allow_edit' => true,
-                         'closeAfterSaved' => true,
-                         'showBack' => false,
-                         'showClose' => true,
-                         'bow_id' => $bowComponent->bodies_of_water_id,
-                         'componentLocation' => $newComponentLocation])
-                </div>
             @endif
 
-            <!--Component Manufacturer -->
+        <!--Component Manufacturer -->
             <x-forms.field-input-select
                 allow-edit="allow_edit"
                 change-method="changed"
@@ -227,7 +175,7 @@
 
 
             @if($bowComponent->manufacturer_id == \App\Models\ComponentManufacturer::ellipticWorks()->id)
-{{-- Elliptic Works Available Products --}}
+                {{-- Elliptic Works Available Products --}}
                 <x-forms.field-input-select
                     allow-edit="allow_edit"
                     change-method="changed"
@@ -305,6 +253,67 @@
                 </div>
             @endif
 
+
+            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
+                         value="Name"/>
+                <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                    <input type="text"
+                           wire:model.lazy="bowComponent.name"
+                           wire:change="changed"
+                           placeholder="identifying name or labeled part"
+                           {{ $allow_edit ?? '' ?  '' : 'disabled'}}
+                           class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                </div>
+            </div>
+
+            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
+                         value="Description"/>
+                <div class="mt-0.5 sm:mt-0 sm:col-span-4">
+                    <textarea wire:model.lazy="bowComponent.description"
+                              wire:change="changed"
+                              placeholder="important details about this component..."
+                              {{ $allow_edit ?  '' : 'disabled'}}
+                              class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                    </textarea>
+                </div>
+            </div>
+
+            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
+                         value="Installed now?"/>
+                <div class="mt-0.5 sm:mt-0 sm:col-span-1">
+                    <select wire:model.lazy="bowComponent.installed_now"
+                            wire:change="changed"
+                            {{ $allow_edit ?  '' : 'disabled'}}
+                            class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
+                         value="Installation Date"/>
+                <div class="mt-0.5 sm:mt-0 sm:col-span-2">
+                    <input type="date"
+                           wire:model.lazy="bowComponent.installation_date"
+                           wire:change="changed"
+                           placeholder="identifying name or labeled part"
+                           {{ $allow_edit ?? '' ?  '' : 'disabled'}}
+                           class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
+                </div>
+                <div class="mt-0.5 sm:mt-0 sm:col-span-2">
+                    <p class="text-sm text-indigo-400 italic">(estimate if not known)</p>
+                </div>
+            </div>
+
+
+
+
+
             <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                 <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
                          value="In Warranty?"/>
@@ -338,7 +347,7 @@
             @endif
 
             @if(!$create_new)
-{{--                Only display if not creating new--}}
+                {{--                Only display if not creating new--}}
 
                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                     <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
@@ -372,9 +381,9 @@
     <!-- Errors Display Markup -->
     @if($errors->any())
         <x-form-error-block :errors="$errors"/>
-    @endif
+@endif
 
-    <!-- Process Buttons -->
+<!-- Process Buttons -->
     <div class="flex flex-row items-end mt-4 mb-1">
         <div class="basis-1/3">
             @if(!$changed && $showBack)

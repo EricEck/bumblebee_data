@@ -4,7 +4,6 @@
         {{ $create_new ? 'New Elliptic Product' : 'Edit Elliptic Product'}}
     </x-slot>
 
-
     <!--Message Event Handler -->
     <div class="font-extrabold text-xl text-green-700"
          x-data="{show: false}"
@@ -39,6 +38,8 @@
             @endif
         </div>
     </div>
+
+
 
     <!--  Form Markup -->
     <form onkeydown="return event.key != 'Enter';">
@@ -78,9 +79,11 @@
 
             <!-- Bumblebee -->
             @if($ellipticProduct->ellipticModel && $ellipticProduct->ellipticModel->is_bumblebee)
+
                 <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+
                     <x-label class="mt-0.5 sm:mt-0 sm:col-span-1"
-                             value="Bumblebee"/>
+                             value="Unassigned Bumblebees"/>
                     <div class="mt-0.5 sm:mt-0 sm:col-span-4">
                         <select wire:model.lazy="ellipticProduct.bumblebee_id"
                                 wire:change="changed"
@@ -88,11 +91,16 @@
                                 class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
                             <option disabled selected value="0">-- Select Bumblebee</option>
                             @foreach($ellipticBumblebees as $ellipticBumblebee)
-                                <option value="{{$ellipticBumblebee->id}}">{{ $ellipticBumblebee->serial_number }}</option>
+                                @if(!$ellipticBumblebee->isEllipticProduct() || ($ellipticProduct->bumblebee_id == $ellipticBumblebee->id))
+                                    <option value="{{$ellipticBumblebee->id}}">{{ $ellipticBumblebee->serial_number }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
+
                 </div>
+
+
                 @if($ellipticProduct->bumblebee)
                     <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                         <x-label class="md:mt-0.5 sm:mt-0 sm:col-span-1"
@@ -237,6 +245,45 @@
                            class="{{ $allow_edit ?  'bg-white' : 'bg-indigo-50'   }} mt-1 px-3 py-3 text-black block w-full py-2 px-3 text-sm font-medium leading-5 text-gray-700 rounded-lg border border-gray-200 sm:mt-px sm:pt-2 shadow-sm border-gray-300 transition duration-150 ease-in-out sm:text-sm sm:leading-5 ">
                 </div>
             </div>
+
+            <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
+                <div class="col-span-5">
+                    Assign Elliptic Product to Pool Owner and Body of Water
+                </div>
+            </div>
+
+            <x-forms.field-input-select
+                :allow-edit="$allow_edit"
+                first-option-value="-1"
+                change-method="changed('pool_owner_id')"
+                model-method="pool_owner_id"
+                label="Pool Owner">
+                <x-slot name="first_option">
+                    -- Select Pool Owner (optional)
+                </x-slot>
+                <x-slot name="select_options">
+                    @foreach($poolOwners as $poolOwner)
+                        <option value="{{$poolOwner->id}}">{{ $poolOwner->name }}</option>
+                    @endforeach
+                </x-slot>
+            </x-forms.field-input-select>
+
+            @if($pool_owner_id > 0)
+                <x-forms.field-input-select
+                    :allow-edit="$allow_edit"
+                    change-method="changed('bow_id')"
+                    model-method="bow_id"
+                    label="Body Of Water">
+                    <x-slot name="first_option">
+                        -- Select Body of Water (optional)
+                    </x-slot>
+                    <x-slot name="select_options">
+                        @foreach($bodiesOfWater as $bow)
+                            <option value="{{$bow->id}}">{{ $bow->name }} [id: {{$bow->id}}]</option>
+                        @endforeach
+                    </x-slot>
+                </x-forms.field-input-select>
+            @endif
 
         </div>
 
