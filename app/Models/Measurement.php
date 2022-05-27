@@ -954,8 +954,8 @@ class Measurement extends Model
            $this->extractToColors();
            $prevCalMeas = $this->previousCalibrationMeasurement();
            if ($prevCalMeas) {
-               $prevCalMeas->extractToColors();
-               $prevCalMeas->divideAllColorsByFloat($prevCalMeas->maximumColorValue());
+               $prevCalMeas->extractToColors();                                         // extract all colors to temporary values
+               $prevCalMeas->divideAllColorsByFloat($prevCalMeas->maximumColorValue()); // normalize to the maximum COLOR in the previous measurement (all values 0->1)
                $this->divideAllColorsByMeasurement($prevCalMeas);
                $this->divideAllColorsByClear();
                return true;
@@ -980,6 +980,7 @@ class Measurement extends Model
             $this->red = round($this->red / $measDivisor->red, 4);
             $this->nearIR = round($this->nearIR / $measDivisor->nearIR, 4);
         } catch (\Exception $e){
+            debugbar()->info($this->attributesToArray());
             return;
         } finally {
             return;
@@ -992,15 +993,22 @@ class Measurement extends Model
      */
     public function divideAllColorsByFloat(float $divisor){
 
-        $this->violet = round($this->violet / $divisor, 4);
-        $this->indigo = round($this->indigo / $divisor, 4);
-        $this->blue = round($this->blue / $divisor, 4);
-        $this->cyan = round($this->cyan / $divisor, 4);
-        $this->green = round($this->green / $divisor, 4);
-        $this->yellow = round($this->yellow / $divisor, 4);
-        $this->orange = round($this->orange / $divisor, 4);
-        $this->red = round($this->red / $divisor, 4);
-        $this->nearIR = round($this->nearIR / $divisor, 4);
+        try {
+            $this->violet = round($this->violet / $divisor, 4);
+            $this->indigo = round($this->indigo / $divisor, 4);
+            $this->blue = round($this->blue / $divisor, 4);
+            $this->cyan = round($this->cyan / $divisor, 4);
+            $this->green = round($this->green / $divisor, 4);
+            $this->yellow = round($this->yellow / $divisor, 4);
+            $this->orange = round($this->orange / $divisor, 4);
+            $this->red = round($this->red / $divisor, 4);
+            $this->nearIR = round($this->nearIR / $divisor, 4);
+        } catch (\Exception $exception){
+            debugbar()->info($this->attributesToArray());
+            return;
+        } finally {
+            return;
+        }
     }
 
     /**

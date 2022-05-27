@@ -6,8 +6,8 @@
     <td class="border px-1 py-1">{{ $calibration->effective_timestamp }}</td>
     <td class="border px-1 py-1">{{ $calibration->bumblebee->id }}</td>
     <td class="border px-1 py-1 lg:table-cell hidden">{{ $calibration->bumblebee->bodyOfWater() ? $calibration->bumblebee->bodyOfWater()->id : '--' }}</td>
-    <td class="border px-1 py-1 md:table-cell hidden">{{ $calibration->calibratedMeasurements->count() }}</td>
-    <td class="border px-1 py-1 md:table-cell hidden">{{ $calibration->effectedMeasurements()->count() }}</td>
+{{--    <td class="border px-1 py-1 md:table-cell hidden">{{ $calibration->calibratedMeasurements->count() }}</td>--}}
+{{--    <td class="border px-1 py-1 md:table-cell hidden">{{ $calibration->effectedMeasurements()->count() }}</td>--}}
     <td class="border px-1 py-1 ">{{ $calibration->metric }}</td>
     <td class="border px-1 py-1 ">{{ $calibration->method }}</td>
     <td class="border px-1 py-1 lg:table-cell hidden">{{ $calibration->default_output_units }}</td>

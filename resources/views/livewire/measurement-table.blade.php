@@ -180,6 +180,8 @@
             <tbody>
                 @foreach($measurements as $measurement)
                     <x-measurement-table-row :measurement="$measurement" :method="$method" :types="$types" :show-actions="1" :scaled-colorimetric="$scaledColorimetric"></x-measurement-table-row>
+
+{{--                    @php(Debugbar::info($measurement->attributesToArray()))--}}
                 @endforeach
             </tbody>
         </table>
