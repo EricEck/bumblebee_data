@@ -58,6 +58,8 @@ class CalibrationForm extends Component
         }
 
         $this->newCalibration = false;
+        $this->changed = false;
+        $this->saved = false;
 
 
         // update from reference measurement if passed
@@ -167,6 +169,37 @@ class CalibrationForm extends Component
 
 //        $this->measurement->refresh();
 //        $this->calibration->refresh();
+    }
+
+    /**
+     * Run a Calibration on a specific Measurement
+     * @param $measurementID
+     * @return void
+     * @throws \Throwable
+     */
+    public function runCalibrationOnMeasurementId($measurementID){
+        debugbar()->info($measurementID);
+
+        if($this->changed && !$this->saved){
+            $this->message="Save the calibration prior to running the calibrations";
+            $this->emit('message');
+            return;
+        }
+
+        // pull in the measurement
+        $m = Measurement::find($measurementID);
+
+        $this->message="Running Calibration on Bumblebee Measurement ID ".$m->id;
+        $this->emit('message');
+
+        // Run the calibration
+        if ($m->calibrate()){
+            $this->message="Successfully Calibrated Measurement ID ".$m->id;
+        } else {
+            $this->message="Failure to calibrate Measurement ID ".$m->id;
+        }
+
+        $this->emit('message');
     }
 
     public function save(){

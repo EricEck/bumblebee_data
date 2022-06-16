@@ -48,7 +48,7 @@
     @else
         <!-- Calibration Value -->
         <td class="border px-1 py-2 text-xs text-center border-r-green-100">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibration_id : ''   }}</td>
-        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibrated_value : ''  }}</td>
+        <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id && !$measurement->calibration_value ? round($measurement->calibrated_value, 2) : ''  }}</td>
         <td class="border px-1 py-2 text-xs">{{ $measurement->calibration_id && !$measurement->calibration_value ? $measurement->calibrated_unit : '' }}</td>
     @endif
 

@@ -50,6 +50,9 @@
                                 <x-buttons.calculate>Run Calibration</x-buttons.calculate>
                             </a>
                         @endif
+                        <a wire:click.debounce.500ms="runCalibrationOnMeasurementId({{$measurement->id}})">
+                            <x-buttons.calculate>ReCal Only ID<br>{{$measurement->id}}</x-buttons.calculate>
+                        </a>
                     </div>
                 </div>
 
@@ -326,6 +329,9 @@
                                 <x-buttons.calculate>Run Calibration</x-buttons.calculate>
                             </a>
                         @endif
+                        <a wire:click.debounce.500ms="runCalibrationOnMeasurementId({{$measurement->id}})">
+                            <x-buttons.calculate>ReCal Only ID<br>{{$measurement->id}}</x-buttons.calculate>
+                        </a>
                     </div>
 
                 </div>
