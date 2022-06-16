@@ -53,6 +53,9 @@
                         <a wire:click.debounce.500ms="runCalibrationOnMeasurementId({{$measurement->id}})">
                             <x-buttons.calculate>ReCal Only ID<br>{{$measurement->id}}</x-buttons.calculate>
                         </a>
+                        <a wire:click.debounce.500ms="runCalibrationOnMeasurementIdAndNewer({{$measurement->id}})">
+                            <x-buttons.calculate>ReCal ID<br>{{$measurement->id}}<br>& Newer</x-buttons.calculate>
+                        </a>
                     </div>
                 </div>
 
@@ -331,6 +334,9 @@
                         @endif
                         <a wire:click.debounce.500ms="runCalibrationOnMeasurementId({{$measurement->id}})">
                             <x-buttons.calculate>ReCal Only ID<br>{{$measurement->id}}</x-buttons.calculate>
+                        </a>
+                        <a wire:click.debounce.500ms="runCalibrationOnMeasurementIdAndNewer({{$measurement->id}})">
+                            <x-buttons.calculate>ReCal ID<br>{{$measurement->id}}<br>& Newer</x-buttons.calculate>
                         </a>
                     </div>
 

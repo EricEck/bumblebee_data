@@ -106,7 +106,14 @@ class Calibration extends Model
 //        ,'calibration_id', 'id');
     }
 
-
+    /**
+     * Measurements effected by this that are from a specific Measurement ID
+     * @param $measurementID
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function effectedMeasurementsFromMeasurementId($measurementID){
+        return $this->effectedMeasurements()->where('id', ">=", $measurementID);
+    }
 
     /**
      * All Measurements that are effected by this calibration
@@ -199,6 +206,21 @@ class Calibration extends Model
                 if($measurement->calibrate()) $numberCalibrated++;
             }
             return $numberCalibrated;
+        }
+        return $numberCalibrated;
+    }
+
+    /**
+     * Calibrate effected measurements that are from a Measurement ID
+     * @param $measurementID
+     * @return int
+     */
+    public function runCalibrationOnMeasurementIdAndNewer($measurementID){
+        $numberCalibrated = 0;
+        if (count($measurements = $this->effectedMeasurementsFromMeasurementId($measurementID))){
+            foreach ($measurements as $measurement) {
+                if($measurement->calibrate()) $numberCalibrated++;
+            }
         }
         return $numberCalibrated;
     }

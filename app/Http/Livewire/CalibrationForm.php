@@ -202,6 +202,31 @@ class CalibrationForm extends Component
         $this->emit('message');
     }
 
+    /**
+     * Run a Calibration on a Measurement and Newer
+     * @param $measurementID
+     * @return void
+     */
+    public function runCalibrationOnMeasurementIdAndNewer($measurementID){
+
+        if($this->changed && !$this->saved){
+            $this->message="Save the calibration prior to running the calibrations";
+            $this->emit('message');
+            return;
+        }
+
+        // pull in the measurement
+        $m = Measurement::find($measurementID);
+
+        $this->message="Running Calibration on Bumblebee Measurement ID and Newer".$m->id;
+        $this->emit('message');
+
+        // Run the calibration
+        $caled = $this->calibration->runCalibrationOnMeasurementIdAndNewer($m->id);
+        $this->message="Successfully Calibrated ".$caled." Measurement(s)";
+        $this->emit('message');
+    }
+
     public function save(){
         debugbar()->info('Saving New Calibration');
 
