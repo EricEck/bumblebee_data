@@ -45,9 +45,10 @@ class CalibrationController extends Controller
      */
     public function editCalibrationForm(int $calibration_id){
         $calibration = Calibration::find($calibration_id);
+
         if(!$calibration) abort(404);
 
-        $measurement = $calibration->effectedMeasurements()[0]; // get the first effected Measurement
+        $measurement = $calibration->oldestEffectedMeasurement(); // get the oldest effected Measurement
         if(!$measurement) abort(404);
 
         return view('calibrations.calibration_form', [

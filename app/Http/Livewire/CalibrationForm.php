@@ -50,8 +50,8 @@ class CalibrationForm extends Component
 
     public function mount(){
         debugbar()->info('CalibrationForm.php::mount()');
-        \Debugbar::info($this->calibration->attributesToArray());
-        \Debugbar::info($this->measurement->attributesToArray());
+//        \Debugbar::info($this->calibration->attributesToArray());
+//        \Debugbar::info($this->measurement->attributesToArray());
 
         if(Session::get("measurement")) {
             $this->measurement = Session::get("measurement");
@@ -88,9 +88,9 @@ class CalibrationForm extends Component
         $this->calibrationTypes = $this->calibration->calibrationTypesForMethod();
         $this->default_output_units = $this->measurement->validOutputUnitsForMetric();
 
-
-        $this->effectedMeasurementsCount = count($this->calibration->effectedMeasurements());   // not eloquent
-        $this->calibratedMeasurementsCount = count($this->calibration->calibratedMeasurements);
+// Removed 061522 EAE for timing issue
+//        $this->effectedMeasurementsCount = count($this->calibration->effectedMeasurements());   // not eloquent
+//        $this->calibratedMeasurementsCount = count($this->calibration->calibratedMeasurements);
 
         $this->no_changes = true;       // never not associated with a measurement at this stage
         $this->saved = false;

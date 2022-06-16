@@ -123,6 +123,47 @@ class Calibration extends Model
     }
 
     /**
+     * Count of All Measurements that are effected by this calibration
+     * NOT an eloquent relationship
+     * @return int
+     */
+    public function effectedMeasurementsCount(): int{
+        return Measurement::query()
+            ->where('bumblebee_id', $this->bumblebee_id )
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('measurement_timestamp', ">=", $this->effective_timestamp)
+            ->count();
+    }
+    /**
+     * Find the newest effected measurements for this calibration
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function newestEffectedMeasurement(){
+        return Measurement::query()
+            ->where('bumblebee_id', $this->bumblebee_id )
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('measurement_timestamp', ">=", $this->effective_timestamp)
+            ->orderBy('measurement_timestamp', 'desc')
+            ->first();
+    }
+    /**
+     * Find the oldest effected measurements for this calibration
+     * @return Measurement|\Illuminate\Database\Eloquent\Builder|Model|\Illuminate\Database\Query\Builder|object|null
+     */
+    public function oldestEffectedMeasurement(){
+        return Measurement::query()
+            ->where('bumblebee_id', $this->bumblebee_id )
+            ->where('metric', $this->metric)
+            ->where('method', $this->method)
+            ->where('measurement_timestamp', ">=", $this->effective_timestamp)
+            ->orderBy('measurement_timestamp', 'asc')
+            ->first();
+    }
+
+
+    /**
      * Remove the calibration and uncalibrate effected measurements
      * @return void
      */

@@ -84,12 +84,13 @@
                                 </div>
                             </div>
 
+{{--                            Removed for timing issue 061522 EAE--}}
                             <div class="sm:grid sm:grid-cols-5 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
                                 <x-label value="Measurements Calibrated with this"/>
                                 <div class="mt-0.5 sm:mt-0 sm:col-span-4">
                                     <x-input type="number"
                                              disabled
-                                             value="{{ $calibratedMeasurementsCount }}"/>
+                                             value="{{ $calibration->effectedMeasurementsCount() }}"/>
                                 </div>
                             </div>
                         @endif

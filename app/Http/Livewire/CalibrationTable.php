@@ -26,6 +26,7 @@ class CalibrationTable extends Component
     public function editCalibration($calibration_id){
         $this->redirectRoute('editCalibration', ['calibration_id' => $calibration_id]);
     }
+
     public function removeCalibration($calibration_id){
         $calibration = Calibration::find($calibration_id);
         if(!$calibration) abort(403, 'Calibration Not Found');
