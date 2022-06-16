@@ -11,7 +11,10 @@ class CalibrationTable extends Component
 
     public function mount(){
         \Debugbar::info('mount:CalibrationTable');
-        $this->calibrations = Calibration::all();
+        $this->calibrations = Calibration::query()
+            ->where('id', '>', 0)
+            ->orderBy('id', 'desc')
+            ->get();
     }
     public function render(){
         \Debugbar::info('render:CalibrationTable');
