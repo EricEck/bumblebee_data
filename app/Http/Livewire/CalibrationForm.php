@@ -209,6 +209,7 @@ class CalibrationForm extends Component
      */
     public function runCalibrationOnMeasurementIdAndNewer($measurementID){
 
+        debugbar()->info('runCalibrationOnMeasurementIdAndNewer');
         if($this->changed && !$this->saved){
             $this->message="Save the calibration prior to running the calibrations";
             $this->emit('message');
@@ -218,11 +219,22 @@ class CalibrationForm extends Component
         // pull in the measurement
         $m = Measurement::find($measurementID);
 
-        $this->message="Running Calibration on Bumblebee Measurement ID and Newer".$m->id;
+        $measurements = $this->calibration->effectedMeasurementsFromMeasurementId($m->id);
+        $this->message="Running Calibration on ".count($measurements)." Bumblebee Measurements";
         $this->emit('message');
 
-        // Run the calibration
-        $caled = $this->calibration->runCalibrationOnMeasurementIdAndNewer($m->id);
+        debugbar()->info('Calibrating: '.count($measurements));
+
+
+        $caled = 0;
+        foreach ($measurements as $m){
+            if($m->calibrate()){
+                $this->message="Successfully Calibrated Measurement ID ".$m->id;
+                $this->emit('message');
+                $caled++;
+            }
+        }
+
         $this->message="Successfully Calibrated ".$caled." Measurement(s)";
         $this->emit('message');
     }

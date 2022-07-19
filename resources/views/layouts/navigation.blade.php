@@ -194,9 +194,54 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('dashboard')"
+                                   :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
             </x-responsive-nav-link>
+            <p class="italic border-t border-gray-200">Elliptic Products</p>
+            <div class="pt-2 pb-1 space-y-0.5">
+                <x-responsive-nav-link :href="route('elliptic_product_list')"
+                                       :active="request()->routeIs('elliptic_product_list')">
+                    {{ __('All Elliptic Products') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('elliptic_product_new')"
+                                       :active="request()->routeIs('elliptic_product_new')">
+                    {{ __('New Elliptic Product') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('bumblebees_table')"
+                                       :active="request()->routeIs('bumblebees_table')">
+                    {{ __('All Bumblebees') }}</x-responsive-nav-link>
+            </div>
+            <p class="italic border-t border-gray-200">People & Places</p>
+            <div class="pt-2 pb-1 space-y-0.5">
+                <x-responsive-nav-link :href="route('users_table')"
+                                       :active="request()->routeIs('users_table')">
+                    {{ __('All Users') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('bodies_of_water')"
+                                       :active="request()->routeIs('bodies_of_water')">
+                    {{ __('All Bodies of Water') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('body_of_water_new')"
+                                       :active="request()->routeIs('body_of_water_new')">
+                    {{ __('New Body of Water') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('bow_components_all')"
+                                       :active="request()->routeIs('bow_components_all')">
+                    {{ __('All BoW Components') }}</x-responsive-nav-link>
+            </div>
+            <p class="italic border-t border-gray-200">Measurements</p>
+            <div class="pt-2 pb-1 space-y-0.5">
+                <x-responsive-nav-link :href="route('measurementBow')"
+                                       :active="request()->routeIs('measurementBow')">
+                    {{ __('Measurements for a BoW') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('measurements_table')"
+                                       :active="request()->routeIs('measurements_table')">
+                    {{ __('All Measurements') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('measurements_table_actual')"
+                                       :active="request()->routeIs('measurements_table_actual')">
+                    {{ __('Actual/Calibrated Measurements') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('measurementFormNew')"
+                                       :active="request()->routeIs('measurementFormNew')">
+                    {{ __('New Measurement') }}</x-responsive-nav-link>
+                <x-responsive-nav-link :href="route('calibrationTable')"
+                                       :active="request()->routeIs('calibrationTable')">
+                    {{ __('Bumblebee Calibrations') }}</x-responsive-nav-link>
         </div>
 
         <!-- Responsive Settings Options -->
@@ -205,6 +250,7 @@
                 <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
                 <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
             </div>
+
 
             <div class="mt-3 space-y-1">
                 <!-- Authentication -->

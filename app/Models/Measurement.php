@@ -272,12 +272,13 @@ class Measurement extends Model
     /**
      * Convert Conductivity to Salt Concentration
      * @param float $conductivity in  uS/cm
-     * @return float in mg/L
+     * @return float in mg/L or ppm (same)
      *
      * url: https://sciencing.com/convert-centimeters-meters-5329285.html
      */
     public static function salinityFromConductivity(float $conductivity): float {
-        return ($conductivity/1000 ** 1.0878) * 0.4665 * 1000;
+        return $conductivity * 550;     // per SW 6/17/22
+//  old      return ($conductivity/1000 ** 1.0878) * 0.4665 * 1000;
     }
     /**
      * Convert Conductivity to Total Dissolved Solids
@@ -285,7 +286,8 @@ class Measurement extends Model
      * @return float total dissolved solids  in mg/L
      */
     public static function totalDissolvedSolidsFromConductivity(float $conductivity): float {
-        return $conductivity * 0.4216286 - 0.0016286; // from EE spreadsheet todo: may want to remove the offset
+        return $conductivity * 770;     // per SW 6/17/22
+//  old      return $conductivity * 0.4216286 - 0.0016286; // from EE spreadsheet todo: may want to remove the offset
     }
     /**
      * Convert TDS to TDS Index
@@ -331,7 +333,7 @@ class Measurement extends Model
      * @return float
      */
     public static function lsIndex(float $pH, float $tdsIndex, float $tempIndex, float $calciumIndex, float $alkalinityIndex): float {
-        return $pH - (9.3 + $tdsIndex + $tempIndex) - ($calciumIndex + $alkalinityIndex);
+        return $pH - ((9.3 + $tdsIndex + $tempIndex) - ($calciumIndex + $alkalinityIndex));
     }
 
 
@@ -551,25 +553,24 @@ class Measurement extends Model
      */
     public function calibrate():bool {
 
-        if ($this->calibration_id) {
-            if ($this->calibration->effective) {
-                if ($this->doTheCalibrationMath()) {
-                    $this->patch_UnsetAddedColorimetricFields();    // todo: fix this patch
-                    return $this->updateOrFail(); // catch any error on the calling function to this!
-                }
-                return false;
-            }
-        } elseif ($calibration_id = $this->getEffectiveCalibration()->id) {
+        $measurementTimestamp = $this->measurement_timestamp;
+
+        if ($calibration_id = $this->getEffectiveCalibration()->id) {
+            // If measurement HAS calibration
             $this->calibration_id = $calibration_id;
             if ($this->doTheCalibrationMath()) {
                 $this->patch_UnsetAddedColorimetricFields(); // todo: fix this patch
-                return $this->updateOrFail(); // catch any error on the calling function to this!
+                $this->updateOrFail(); // catch any error on the calling function to this!
+                $this->measurement_timestamp = $measurementTimestamp;       // doing this because WEIRD that timestamp is sometimes changing
+                return $this->update();
             }
             return false;
         }
-
+        // ELSE If no effective calibration
         $this->clearTheCalibration();
-        return $this->updateOrFail();
+        $this->updateOrFail(); // catch any error on the calling function to this!
+        $this->measurement_timestamp = $measurementTimestamp;       // doing this because WEIRD that timestamp is sometimes changing
+        return $this->update();
     }
 
     /**
