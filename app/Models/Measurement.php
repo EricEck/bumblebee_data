@@ -366,6 +366,8 @@ class Measurement extends Model
         }
         return null;
     }
+
+
     /**
      * Return a Body of Water's Table of Raw or Calibrated - Taken and Calculated Measurements Grouped by Time Slots
      * @param int $bow_id
@@ -544,6 +546,31 @@ class Measurement extends Model
             }
         }
         return $metricsTable;
+    }
+
+
+    /**
+     * Find a specific Measurement from a Metrics Table
+     * @param array $metricsTable
+     * @param string $metric
+     * @param string $method
+     * @return false|mixed
+     */
+    public static function findInMetricsTable(array $metricsTable, string $metric, string $method){
+        foreach ($metricsTable as $measure ){
+
+            if ($metric == $measure['metric'] && $method == $measure['method']){
+                return $measure;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Metrics Table Test Data
+     */
+    public static function testdata(){
+        return json_decode('[{"metric":"ph","method":"probe","order":0,"unit":"","displayDefault":true,"values":[8],"holdOver":[false],"none":[false],"dataType":["cal"]},{"metric":"orp","method":"probe","order":1,"unit":"mV","displayDefault":true,"values":[615],"holdOver":[false],"none":[false],"dataType":["cal"]},{"metric":"ph","method":"colorimetric","order":2,"unit":"","displayDefault":true,"values":[8],"holdOver":[true],"none":[false],"dataType":["cal"]},{"metric":"conductivity","method":"probe","order":3,"unit":"uS\/cm","displayDefault":true,"values":[7],"holdOver":[false],"none":[false],"dataType":["cal"]},{"metric":"salinity","method":"calculation","order":4,"calculation":"salinity","unit":"ppm","displayDefault":true,"values":[3850],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"TDS","method":"calculation","order":5,"calculation":"tds","unit":"ppm","displayDefault":true,"values":[5390],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"TDS-x","method":"calculation","order":6,"calculation":"tdsIndex","unit":"","displayDefault":true,"values":[0.2731588765186739],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"temperature","method":"probe","order":7,"unit":"F","displayDefault":true,"values":[84],"holdOver":[false],"none":[false],"dataType":["cal"]},{"metric":"temperature-x","method":"calculation","order":8,"calculation":"temperatureIndex","unit":"","displayDefault":true,"values":[2.0144056678066704],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"pressure","method":"probe","order":9,"unit":"psi","displayDefault":true,"values":[-2],"holdOver":[false],"none":[false],"dataType":["cal"]},{"metric":"free chlorine","method":"colorimetric","order":10,"unit":"ppm","displayDefault":true,"values":[0],"holdOver":[true],"none":[false],"dataType":["cal"]},{"metric":"total chlorine","method":"colorimetric","order":11,"unit":"ppm","displayDefault":true,"values":[4],"holdOver":[true],"none":[false],"dataType":["cal"]},{"metric":"alkalinity","method":"colorimetric","order":12,"unit":"ppm","displayDefault":true,"values":[50],"holdOver":[true],"none":[false],"dataType":["cal"]},{"metric":"alkalinity-x","method":"calculation","order":13,"calculation":"alkalinityIndex","unit":"","displayDefault":true,"values":[1.6989700043360187],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"calcium","method":"colorimetric","order":14,"unit":"ppm","displayDefault":true,"values":[314],"holdOver":[true],"none":[false],"dataType":["cal"]},{"metric":"calcium-x","method":"calculation","order":15,"calculation":"calciumIndex","unit":"","displayDefault":true,"values":[2.096929648073215],"holdOver":[false],"none":[false],"dataType":["calc"]},{"metric":"LSI","method":"calculation","order":16,"calculation":"lsi","unit":"","displayDefault":true,"values":[0.20833510808388933],"holdOver":[false],"none":[false],"dataType":["calc"]}]');
     }
 
     /**

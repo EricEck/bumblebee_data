@@ -44,6 +44,15 @@ class MeasurementController extends Controller
         return view('measurements.measurement_bow', ['bow_id' => $bow_id]);
     }
 
+    /**
+     * Show a summary of current measurements for a specific body of water
+     * @param int $bow_id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View
+     */
+    public function bowSummaryById(int $bow_id){
+        return view('bow.summary', ['bow_id' => $bow_id]);
+    }
+
 //    /**
 //     * Load the Horizontal Time BoW Measurement View 2
 //     * @param Request $request

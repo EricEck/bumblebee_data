@@ -122,6 +122,11 @@ Route::group(['middleware' => ['auth']], function (){
         [MeasurementController::class, 'measurementBowById'])
         ->name('measurementBowId');
 
+    // BoW Summary - App Like
+    Route::get('bow/summary/{bow_id}',
+        [MeasurementController::class, 'bowSummaryById'])
+        ->name('bowSummaryById');
+
     // using get search parameters
 //    Route::get('measurements',
 //        [MeasurementController::class, 'measurementSearchTable'])
