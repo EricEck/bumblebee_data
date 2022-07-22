@@ -35,6 +35,11 @@ Route::get('/token', function (Request $request) {
 
 });
 
+// BoW Summary - App Like outside of authentication
+Route::get('bow/summary/{bow_id}',
+    [MeasurementController::class, 'bowSummaryById'])
+    ->name('bowSummaryById');
+
 /**
  * Only Authorized Users
  */
@@ -122,10 +127,7 @@ Route::group(['middleware' => ['auth']], function (){
         [MeasurementController::class, 'measurementBowById'])
         ->name('measurementBowId');
 
-    // BoW Summary - App Like
-    Route::get('bow/summary/{bow_id}',
-        [MeasurementController::class, 'bowSummaryById'])
-        ->name('bowSummaryById');
+
 
     // using get search parameters
 //    Route::get('measurements',
